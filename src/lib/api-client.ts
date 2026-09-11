@@ -2,6 +2,7 @@ import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 
 import { env } from "../config/env";
 import { AUTH_ENDPOINTS } from "./api/endpoints";
+import { useAuthStore } from "../stores/authStore";
 
 type RetryableRequestConfig = InternalAxiosRequestConfig & {
   _retry?: boolean;
@@ -67,6 +68,8 @@ api.interceptors.response.use(
 
       return api(originalRequest);
     } catch (refreshError) {
+      useAuthStore.getState().resetAuth();
+
       return Promise.reject(refreshError);
     }
   },
