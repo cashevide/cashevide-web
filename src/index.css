@@ -1,1 +1,170 @@
 @import "tailwindcss";
+
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@theme {
+  /* Font */
+  --font-sans: "Geist", sans-serif;
+
+  /* Font sizes (matches Expo's fontSize scale) */
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 14px;
+  --text-sm--line-height: 20px;
+  --text-base: 16px;
+  --text-base--line-height: 24px;
+  --text-lg: 18px;
+  --text-lg--line-height: 26px;
+  --text-xl: 20px;
+  --text-xl--line-height: 28px;
+  --text-2xl: 24px;
+  --text-2xl--line-height: 32px;
+  --text-3xl: 30px;
+  --text-3xl--line-height: 36px;
+  --text-4xl: 36px;
+  --text-4xl--line-height: 42px;
+
+  /* Border radius */
+  --radius-none: 0px;
+  --radius-sm: 6px;
+  --radius-DEFAULT: 10px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Box shadow */
+  --shadow-sm: 0px 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-DEFAULT: 0px 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0px 8px 16px rgba(0, 0, 0, 0.12);
+
+  /* Max width */
+  --max-width-narrow: 480px;
+  --max-width-desktop: 1200px;
+
+  /* Colors — light theme defaults (overridden for .dark further down).
+     Tailwind v4's native bg-primary/50 slash-opacity syntax works
+     automatically on plain colors like these via color-mix() — no
+     <alpha-value> placeholder trick needed (that was v3-only, JS-config
+     specific, and doesn't apply inside @theme). */
+  --color-background: #fcfcfa;
+  --color-foreground: #0d0d0d;
+
+  --color-card: #ffffff;
+  --color-card-foreground: #0d0d0d;
+  --color-popover: #f6f6f4;
+  --color-popover-foreground: #0d0d0d;
+  --color-overlay: #000000;
+
+  --color-brand: #377aff;
+  --color-brand-foreground: #ffffff;
+  --color-primary: #0d0d0d;
+  --color-primary-foreground: #fcfcfa;
+  --color-secondary: #ebebe8;
+  --color-secondary-foreground: #0d0d0d;
+  --color-accent: #f0f0ee;
+  --color-accent-foreground: #0d0d0d;
+  --color-link: #377aff;
+
+  --color-destructive: #c91221;
+  --color-destructive-foreground: #fafafa;
+  --color-destructive-text: #b71f2c;
+  --color-success: #09ba38;
+  --color-success-foreground: #fafafa;
+  --color-success-text: #1a8938;
+  --color-warning: #b45309;
+  --color-warning-foreground: #fafafa;
+  --color-warning-text: #b45309;
+  --color-info: #377aff;
+  --color-info-foreground: #ffffff;
+  --color-info-text: #1d5bcc;
+
+  --color-muted: #f0f0ee;
+  --color-muted-foreground: #646460;
+  --color-disabled: #ebebe8;
+  --color-disabled-foreground: #969691;
+
+  --color-border: #e1e1dd;
+  --color-input: #ebebe8;
+  --color-ring: #5a5a57;
+}
+
+.dark {
+  --color-background: #0d0d0d;
+  --color-foreground: #f2f2f0;
+
+  --color-card: #141414;
+  --color-card-foreground: #f2f2f0;
+  --color-popover: #1a1a1a;
+  --color-popover-foreground: #f2f2f0;
+  --color-overlay: #000000;
+
+  --color-brand: #377aff;
+  --color-brand-foreground: #ffffff;
+  --color-primary: #f2f2f0;
+  --color-primary-foreground: #0d0d0d;
+  --color-secondary: #141414;
+  --color-secondary-foreground: #f2f2f0;
+  --color-accent: #1a1a1a;
+  --color-accent-foreground: #f2f2f0;
+  --color-link: #5b9dff;
+
+  --color-destructive: #c91221;
+  --color-destructive-foreground: #fafafa;
+  --color-destructive-text: #e35965;
+  --color-success: #09ba38;
+  --color-success-foreground: #fafafa;
+  --color-success-text: #3eda68;
+  --color-warning: #f59e0b;
+  --color-warning-foreground: #010101;
+  --color-warning-text: #f59e0b;
+  --color-info: #377aff;
+  --color-info-foreground: #ffffff;
+  --color-info-text: #82b0ff;
+
+  --color-muted: #141414;
+  --color-muted-foreground: #a3a3a0;
+  --color-disabled: #141414;
+  --color-disabled-foreground: #50504d;
+
+  --color-border: #232323;
+  --color-input: #141414;
+  --color-ring: #787876;
+}
+
+/*
+  Custom scrollbar — browser default (Chrome/Edge/Safari) scrollbar replace ചെയ്ത്,
+  app theme-നോട് match ചെയ്യുന്ന thin, rounded scrollbar കാണിക്കാൻ.
+  --color-border/--color-muted-foreground tokens ഉപയോഗിക്കുന്നത് കൊണ്ട് dark/light theme
+  മാറുമ്പോൾ scrollbar color automatic ആയി sync ആകും.
+*/
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-muted-foreground);
+}
