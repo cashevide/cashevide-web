@@ -53,6 +53,12 @@ export const router = createBrowserRouter([
         <Outlet />
       </ProtectedRoute>
     ),
-    children: [{ path: "/dashboard", element: <DashboardRoute /> }],
+    // Path is /invoices, not /dashboard — matches Expo's structure,
+    // where the invoices feature's own dashboard page is the app's
+    // home (reviews dropped, so invoices is the only top-level tab
+    // left that makes sense as home). DashboardRoute is still a
+    // placeholder component name here; it gets replaced with the real
+    // InvoiceDashboardRoute when the invoices feature is built.
+    children: [{ path: "/invoices", element: <DashboardRoute /> }],
   },
 ]);

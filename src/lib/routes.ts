@@ -3,7 +3,7 @@
 // the app's default home; every redirect site should reference
 // ROUTES.home, never a specific feature's own route directly.
 export const ROUTES = {
-  home: "/dashboard",
+  home: "/invoices",
 
   welcome: "/",
   login: "/login",
