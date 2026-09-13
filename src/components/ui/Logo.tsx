@@ -1,0 +1,26 @@
+interface LogoProps {
+  width?: number;
+  color?: string;
+}
+
+export function Logo({
+  width = 100,
+  color = "var(--color-foreground)",
+}: LogoProps) {
+  const calculatedHeight = width * 0.691;
+
+  return (
+    <svg
+      width={width}
+      height={calculatedHeight}
+      viewBox="0 0 540.47 373.7"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M497.62,207.74v-42.3h-82.72V42.13h-40.34V0h-208.34v42.13h-41.11v124.58H42.38v41.03H0v123.91h42.38v42.04h330.89v-42.04h41.62v-123.91h42.34v165.96h83.23v-165.96h-42.85ZM207.45,82.72h41.23v-40.6h46.89v40.6h36.08v83.99h-124.21v-83.99ZM81.7,331.66v-123.91h43.4v123.91h-43.4ZM207.45,331.66v-123.91h124.21v123.91h-124.21Z"
+        fill={color}
+      />
+    </svg>
+  );
+}

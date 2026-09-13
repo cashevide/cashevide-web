@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @font-face {
   font-family: "Geist";
@@ -138,12 +139,6 @@
   --color-ring: #787876;
 }
 
-/*
-  Custom scrollbar — browser default (Chrome/Edge/Safari) scrollbar replace ചെയ്ത്,
-  app theme-നോട് match ചെയ്യുന്ന thin, rounded scrollbar കാണിക്കാൻ.
-  --color-border/--color-muted-foreground tokens ഉപയോഗിക്കുന്നത് കൊണ്ട് dark/light theme
-  മാറുമ്പോൾ scrollbar color automatic ആയി sync ആകും.
-*/
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--color-border) transparent;
