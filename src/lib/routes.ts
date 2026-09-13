@@ -30,4 +30,20 @@ export const ROUTES = {
     terms: "/legal/terms",
     privacyPolicy: "/legal/privacy-policy",
   },
+
+  // Only the tab-root paths are here for now (needed by AppShell's
+  // sidebar/bottom-tabs). Sub-routes (invoices.list, settings.account,
+  // profile.edit, etc.) get added when each feature is actually built
+  // — see Expo's routes.ts for the full set when that time comes.
+  invoices: {
+    dashboard: "/invoices",
+  },
+
+  settings: {
+    home: "/settings",
+  },
+
+  profile: {
+    home: "/profile",
+  },
 } as const;

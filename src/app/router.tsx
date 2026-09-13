@@ -12,8 +12,11 @@ import { AccountRoute } from "./routes/signup/AccountRoute";
 import { GoogleReferralRoute } from "./routes/signup/google/GoogleReferralRoute";
 import { GoogleUsernameRoute } from "./routes/signup/google/GoogleUsernameRoute";
 import { DashboardRoute } from "./routes/DashboardRoute";
+import { SettingsRoute } from "./routes/SettingsRoute";
+import { ProfileRoute } from "./routes/ProfileRoute";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import { PublicOnlyRoute } from "./routes/PublicOnlyRoute";
+import { AppShell } from "../components/layout/AppShell";
 import { DesignSystemLayout } from "./routes/public/design-system/DesignSystemLayout";
 import { DesignSystemIndexRoute } from "./routes/public/design-system/DesignSystemIndexRoute";
 import { LogoRoute } from "./routes/public/design-system/LogoRoute";
@@ -93,12 +96,23 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    // Layout route: same pattern for protected routes.
+    // Layout route: ProtectedRoute (auth guard) wraps AppShell
+    // (sidebar/bottom-tabs chrome), which in turn wraps whichever tab
+    // page is active via its own <Outlet />.
     element: (
       <ProtectedRoute>
         <Outlet />
       </ProtectedRoute>
     ),
-    children: [{ path: "/invoices", element: <DashboardRoute /> }],
+    children: [
+      {
+        element: <AppShell />,
+        children: [
+          { path: "/invoices", element: <DashboardRoute /> },
+          { path: "/settings", element: <SettingsRoute /> },
+          { path: "/profile", element: <ProfileRoute /> },
+        ],
+      },
+    ],
   },
 ]);

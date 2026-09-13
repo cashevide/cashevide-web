@@ -5,7 +5,7 @@ export function DashboardRoute() {
   const logoutMutation = useLogout();
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background text-foreground">
+    <div className="flex flex-1 flex-col items-center justify-center gap-4 bg-background text-foreground">
       <p className="text-lg">Dashboard (placeholder)</p>
       <Button
         variant="outline"
