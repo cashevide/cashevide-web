@@ -39,19 +39,25 @@ function GoogleLogo() {
 // DOM stack, not a simulated/dispatched click event — so it keeps
 // Google's real ID-token flow (popup, FedCM, etc.) working exactly
 // as it does when GoogleLogin is visible.
+//
+// pointer-events-none on the visible Button is required — without it,
+// the visible layer (being on top in paint order even though it's
+// rendered first in markup — the overlay div comes after it and is
+// stacked above) intercepts the click itself and it never reaches the
+// real, invisible Google button underneath.
 export function GoogleButton({ onCredential }: GoogleButtonProps) {
   return (
     <div className="relative w-full">
-      <Button
-        variant="outline"
-        title="Continue with Google"
-        leftIcon={<GoogleLogo />}
-        fullWidth
-        // Purely visual — the real click target is the invisible
-        // Google button positioned exactly on top of this one.
-        tabIndex={-1}
-        aria-hidden="true"
-      />
+      <div className="pointer-events-none">
+        <Button
+          variant="outline"
+          title="Continue with Google"
+          leftIcon={<GoogleLogo />}
+          fullWidth
+          tabIndex={-1}
+          aria-hidden="true"
+        />
+      </div>
 
       <div className="absolute inset-0 opacity-0 overflow-hidden">
         <GoogleLogin
