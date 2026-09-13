@@ -14,6 +14,24 @@ import { GoogleUsernameRoute } from "./routes/signup/google/GoogleUsernameRoute"
 import { DashboardRoute } from "./routes/DashboardRoute";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import { PublicOnlyRoute } from "./routes/PublicOnlyRoute";
+import { DesignSystemLayout } from "./routes/public/design-system/DesignSystemLayout";
+import { DesignSystemIndexRoute } from "./routes/public/design-system/DesignSystemIndexRoute";
+import { LogoRoute } from "./routes/public/design-system/LogoRoute";
+import { ColorsRoute } from "./routes/public/design-system/ColorsRoute";
+import { TextRoute } from "./routes/public/design-system/TextRoute";
+import { ButtonsRoute } from "./routes/public/design-system/ButtonsRoute";
+import { InputsRoute } from "./routes/public/design-system/InputsRoute";
+import { CheckboxRoute } from "./routes/public/design-system/CheckboxRoute";
+import { SwitchRoute } from "./routes/public/design-system/SwitchRoute";
+import { ModalRoute } from "./routes/public/design-system/ModalRoute";
+import { PillTabsRoute } from "./routes/public/design-system/PillTabsRoute";
+import { AvatarRoute } from "./routes/public/design-system/AvatarRoute";
+import { BadgeRoute } from "./routes/public/design-system/BadgeRoute";
+import { DividerRoute } from "./routes/public/design-system/DividerRoute";
+import { AvatarPickerRoute } from "./routes/public/design-system/AvatarPickerRoute";
+import { CurrencyPickerRoute } from "./routes/public/design-system/CurrencyPickerRoute";
+import { DateFieldRoute } from "./routes/public/design-system/DateFieldRoute";
+import { SpinnerRoute } from "./routes/public/design-system/SpinnerRoute";
 
 export const router = createBrowserRouter([
   {
@@ -47,18 +65,40 @@ export const router = createBrowserRouter([
     ],
   },
   {
+    // NOT nested under PublicOnlyRoute — Expo's PublicLayout explicitly
+    // excluded design-system (and legal) routes from the logged-in
+    // redirect (`if (isAuthenticated && !isLegalRoute &&
+    // !isDesignSystemRoute)`), so this reference page stays reachable
+    // whether the visitor is signed in or not.
+    path: "/design-system",
+    element: <DesignSystemLayout />,
+    children: [
+      { index: true, element: <DesignSystemIndexRoute /> },
+      { path: "logo", element: <LogoRoute /> },
+      { path: "colors", element: <ColorsRoute /> },
+      { path: "text", element: <TextRoute /> },
+      { path: "buttons", element: <ButtonsRoute /> },
+      { path: "inputs", element: <InputsRoute /> },
+      { path: "checkbox", element: <CheckboxRoute /> },
+      { path: "switch", element: <SwitchRoute /> },
+      { path: "modal", element: <ModalRoute /> },
+      { path: "pilltabs", element: <PillTabsRoute /> },
+      { path: "avatar", element: <AvatarRoute /> },
+      { path: "badge", element: <BadgeRoute /> },
+      { path: "divider", element: <DividerRoute /> },
+      { path: "avatarpicker", element: <AvatarPickerRoute /> },
+      { path: "currencypicker", element: <CurrencyPickerRoute /> },
+      { path: "datefield", element: <DateFieldRoute /> },
+      { path: "spinner", element: <SpinnerRoute /> },
+    ],
+  },
+  {
     // Layout route: same pattern for protected routes.
     element: (
       <ProtectedRoute>
         <Outlet />
       </ProtectedRoute>
     ),
-    // Path is /invoices, not /dashboard — matches Expo's structure,
-    // where the invoices feature's own dashboard page is the app's
-    // home (reviews dropped, so invoices is the only top-level tab
-    // left that makes sense as home). DashboardRoute is still a
-    // placeholder component name here; it gets replaced with the real
-    // InvoiceDashboardRoute when the invoices feature is built.
     children: [{ path: "/invoices", element: <DashboardRoute /> }],
   },
 ]);
