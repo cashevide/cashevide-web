@@ -8,6 +8,12 @@ export const ROUTES = {
   welcome: "/welcome",
   login: "/login",
 
+  passwordReset: {
+    entry: "/password-reset",
+    otp: "/password-reset/otp",
+    reset: "/password-reset/reset",
+  },
+
   signup: {
     referral: "/signup/referral",
     email: "/signup/email",

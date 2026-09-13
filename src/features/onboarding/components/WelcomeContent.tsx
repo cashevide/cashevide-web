@@ -8,7 +8,7 @@ import { GoogleButton } from "../../../components/ui/GoogleButton";
 import { Divider } from "../../../components/ui/Divider";
 import { Logo } from "../../../components/ui/Logo";
 import { Spinner } from "../../../components/ui/Spinner";
-import { useGoogleAuth } from "../hooks/useGoogleAuth";
+import { useGoogleAuth } from "../../auth/hooks/useGoogleAuth";
 import { ROUTES } from "../../../lib/routes";
 
 export function WelcomeContent() {

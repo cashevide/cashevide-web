@@ -1,4 +1,4 @@
-import type { LoginPlatform, AuthUser } from "../../auth/types/authTypes";
+import type { LoginPlatform, AuthUser } from "./authTypes";
 
 // -------------------- Request --------------------
 

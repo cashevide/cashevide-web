@@ -7,10 +7,10 @@ import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Spinner } from "../../../components/ui/Spinner";
 import { useCheckUser } from "../hooks/useCheckUser";
-import { useGoogleAuth } from "../hooks/useGoogleAuth";
+import { useGoogleAuth } from "../../auth/hooks/useGoogleAuth";
 import { useGoogleAuthStore } from "../../../stores/googleAuthStore";
 
-import type { GoogleAuthError } from "../types/googleAuthTypes";
+import type { GoogleAuthError } from "../../auth/types/googleAuthTypes";
 
 export function GoogleUsernameContent() {
   const [username, setUsername] = useState("");
