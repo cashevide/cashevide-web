@@ -1,9 +1,9 @@
 import { ArrowRight, Trash2, X } from "lucide-react";
 
-import { Container } from "../../../../../components/layout/Container";
-import { Text } from "../../../../../components/ui/Text";
-import { Button } from "../../../../../components/ui/Button";
-import { GoogleButton } from "../../../../../components/ui/GoogleButton";
+import { Container } from "../../../../components/layout/Container";
+import { Text } from "../../../../components/ui/Text";
+import { Button } from "../../../../components/ui/Button";
+import { GoogleButton } from "../../../../components/ui/GoogleButton";
 
 const BUTTON_VARIANTS = [
   "primary",

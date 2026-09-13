@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-import { Container } from "../../../../../components/layout/Container";
-import { Text } from "../../../../../components/ui/Text";
-import { Input } from "../../../../../components/ui/Input";
-import { SearchInput } from "../../../../../components/ui/SearchInput";
-import { OtpInput } from "../../../../../components/ui/OtpInput";
-import { PhoneNumberInput } from "../../../../../components/ui/PhoneNumberInput";
+import { Container } from "../../../../components/layout/Container";
+import { Text } from "../../../../components/ui/Text";
+import { Input } from "../../../../components/ui/Input";
+import { SearchInput } from "../../../../components/ui/SearchInput";
+import { OtpInput } from "../../../../components/ui/OtpInput";
+import { PhoneNumberInput } from "../../../../components/ui/PhoneNumberInput";
 
 export function InputsRoute() {
   const [password, setPassword] = useState("");

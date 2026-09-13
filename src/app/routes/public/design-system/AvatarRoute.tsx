@@ -1,6 +1,6 @@
-import { Container } from "../../../../../components/layout/Container";
-import { Text } from "../../../../../components/ui/Text";
-import { Avatar } from "../../../../../components/ui/Avatar";
+import { Container } from "../../../../components/layout/Container";
+import { Text } from "../../../../components/ui/Text";
+import { Avatar } from "../../../../components/ui/Avatar";
 
 export function AvatarRoute() {
   return (

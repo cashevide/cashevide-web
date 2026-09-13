@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { Container } from "../../../../../components/layout/Container";
-import { Text } from "../../../../../components/ui/Text";
-import { Checkbox } from "../../../../../components/ui/Checkbox";
+import { Container } from "../../../../components/layout/Container";
+import { Text } from "../../../../components/ui/Text";
+import { Checkbox } from "../../../../components/ui/Checkbox";
 
 // No Expo equivalent — Expo's Checkbox.tsx was an empty placeholder
 // file, never implemented or given a design-system page there. This

@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { Container } from "../../../../../components/layout/Container";
-import { Text } from "../../../../../components/ui/Text";
-import { CurrencyPicker } from "../../../../../components/ui/CurrencyPicker";
+import { Container } from "../../../../components/layout/Container";
+import { Text } from "../../../../components/ui/Text";
+import { CurrencyPicker } from "../../../../components/ui/CurrencyPicker";
 
 export function CurrencyPickerRoute() {
   const [currency, setCurrency] = useState("");

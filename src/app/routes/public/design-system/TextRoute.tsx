@@ -1,5 +1,5 @@
-import { Container } from "../../../../../components/layout/Container";
-import { Text } from "../../../../../components/ui/Text";
+import { Container } from "../../../../components/layout/Container";
+import { Text } from "../../../../components/ui/Text";
 
 const TYPOGRAPHY_VARIANTS = [
   { variant: "display", label: "Display" },

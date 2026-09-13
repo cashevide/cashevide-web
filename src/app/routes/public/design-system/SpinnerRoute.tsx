@@ -1,6 +1,6 @@
-import { Container } from "../../../../../components/layout/Container";
-import { Text } from "../../../../../components/ui/Text";
-import { Spinner } from "../../../../../components/ui/Spinner";
+import { Container } from "../../../../components/layout/Container";
+import { Text } from "../../../../components/ui/Text";
+import { Spinner } from "../../../../components/ui/Spinner";
 
 export function SpinnerRoute() {
   return (

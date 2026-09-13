@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { Container } from "../../../../../components/layout/Container";
-import { Text } from "../../../../../components/ui/Text";
-import { Switch } from "../../../../../components/ui/Switch";
+import { Container } from "../../../../components/layout/Container";
+import { Text } from "../../../../components/ui/Text";
+import { Switch } from "../../../../components/ui/Switch";
 
 export function SwitchRoute() {
   const [interactiveValue, setInteractiveValue] = useState(true);

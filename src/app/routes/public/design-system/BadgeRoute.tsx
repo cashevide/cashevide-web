@@ -1,6 +1,6 @@
-import { Container } from "../../../../../components/layout/Container";
-import { Text } from "../../../../../components/ui/Text";
-import { Badge } from "../../../../../components/ui/Badge";
+import { Container } from "../../../../components/layout/Container";
+import { Text } from "../../../../components/ui/Text";
+import { Badge } from "../../../../components/ui/Badge";
 
 // No Expo equivalent — Badge is a new component in this project, so
 // this page is freshly written to match the existing design-system

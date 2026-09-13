@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-import { Container } from "../../../../../components/layout/Container";
-import { Text } from "../../../../../components/ui/Text";
-import { Button } from "../../../../../components/ui/Button";
-import { AvatarPicker } from "../../../../../components/ui/AvatarPicker";
+import { Container } from "../../../../components/layout/Container";
+import { Text } from "../../../../components/ui/Text";
+import { Button } from "../../../../components/ui/Button";
+import { AvatarPicker } from "../../../../components/ui/AvatarPicker";
 
 export function AvatarPickerRoute() {
   const [circleImageUri, setCircleImageUri] = useState<string | null>(

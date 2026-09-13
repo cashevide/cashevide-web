@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { Container } from "../../../../../components/layout/Container";
-import { Text } from "../../../../../components/ui/Text";
-import { PillTabs } from "../../../../../components/ui/PillTabs";
+import { Container } from "../../../../components/layout/Container";
+import { Text } from "../../../../components/ui/Text";
+import { PillTabs } from "../../../../components/ui/PillTabs";
 
 const SECTION_TABS = [
   { key: "dashboard", label: "Dashboard" },

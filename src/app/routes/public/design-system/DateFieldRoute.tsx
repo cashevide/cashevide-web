@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { Container } from "../../../../../components/layout/Container";
-import { Text } from "../../../../../components/ui/Text";
-import { DateField } from "../../../../../components/ui/DateField";
+import { Container } from "../../../../components/layout/Container";
+import { Text } from "../../../../components/ui/Text";
+import { DateField } from "../../../../components/ui/DateField";
 
 export function DateFieldRoute() {
   const [date, setDate] = useState<string | undefined>(undefined);

@@ -1,6 +1,6 @@
-import { Container } from "../../../../../components/layout/Container";
-import { Text } from "../../../../../components/ui/Text";
-import { Logo } from "../../../../../components/ui/Logo";
+import { Container } from "../../../../components/layout/Container";
+import { Text } from "../../../../components/ui/Text";
+import { Logo } from "../../../../components/ui/Logo";
 
 export function LogoRoute() {
   return (

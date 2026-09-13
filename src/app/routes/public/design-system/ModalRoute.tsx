@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-import { Container } from "../../../../../components/layout/Container";
-import { Text } from "../../../../../components/ui/Text";
-import { Button } from "../../../../../components/ui/Button";
-import { Modal } from "../../../../../components/ui/Modal";
-import { ConfirmDialog } from "../../../../../components/ui/ConfirmDialog";
-import { InfoDialog } from "../../../../../components/ui/InfoDialog";
+import { Container } from "../../../../components/layout/Container";
+import { Text } from "../../../../components/ui/Text";
+import { Button } from "../../../../components/ui/Button";
+import { Modal } from "../../../../components/ui/Modal";
+import { ConfirmDialog } from "../../../../components/ui/ConfirmDialog";
+import { InfoDialog } from "../../../../components/ui/InfoDialog";
 
 const LOREM_PARAGRAPHS = Array.from({ length: 8 }, (_, i) => i);
 
