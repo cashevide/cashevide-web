@@ -49,7 +49,7 @@ function MobileTabButton({
       aria-label={tab.label}
       aria-current={isActive ? "page" : undefined}
       style={{ height: MOBILE_TAB_SIZE }}
-      className="flex-1 flex items-center justify-center rounded-full"
+      className="relative z-10 flex-1 flex items-center justify-center rounded-full"
     >
       {isProfileTab ? (
         <Avatar
@@ -161,7 +161,7 @@ function MobileTabBar() {
       >
         <div
           className={cn(
-            "absolute inset-0",
+            "absolute inset-0 z-0",
             theme === "dark" ? "bg-background/60" : "bg-background/70",
           )}
           style={{ backdropFilter: "blur(16px)" }}
@@ -169,7 +169,7 @@ function MobileTabBar() {
 
         <div
           aria-hidden="true"
-          className="absolute rounded-full bg-foreground/10"
+          className="absolute z-0 rounded-full bg-foreground/10"
           style={{
             top: MOBILE_BAR_INNER_PADDING,
             left: MOBILE_BAR_INNER_PADDING,
@@ -206,18 +206,20 @@ function DesktopSidebar() {
     : undefined;
 
   return (
-    <div
-      style={{ width: SIDEBAR_WIDTH }}
-      className="h-full flex flex-col gap-1 border-r border-border bg-background px-3 py-6 shrink-0"
-    >
-      {APP_TABS.map((tab) => (
-        <DesktopTabButton
-          key={tab.name}
-          tab={tab}
-          isActive={isTabActive(location.pathname, tab)}
-          profile={profile}
-        />
-      ))}
+    <div className="shrink-0 py-4 pl-4">
+      <div
+        style={{ width: SIDEBAR_WIDTH }}
+        className="h-full flex flex-col gap-1 rounded-lg bg-secondary border border-border shadow-lg px-3 py-6"
+      >
+        {APP_TABS.map((tab) => (
+          <DesktopTabButton
+            key={tab.name}
+            tab={tab}
+            isActive={isTabActive(location.pathname, tab)}
+            profile={profile}
+          />
+        ))}
+      </div>
     </div>
   );
 }
