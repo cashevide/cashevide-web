@@ -148,12 +148,12 @@ body {
   --color-info-foreground: #ffffff;
   --color-info-text: #82b0ff;
 
-  --color-muted: #141414;
+  --color-muted: #1c1c1c;
   --color-muted-foreground: #a3a3a0;
   --color-disabled: #141414;
   --color-disabled-foreground: #50504d;
 
-  --color-border: #232323;
+  --color-border: #424242;
   --color-input: #212121;
   --color-ring: #787876;
 }
