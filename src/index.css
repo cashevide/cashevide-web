@@ -116,10 +116,10 @@ body {
 }
 
 .dark {
-  --color-background: #0d0d0d;
+  --color-background: #0a0a0a;
   --color-foreground: #f2f2f0;
 
-  --color-card: #141414;
+  --color-card: #171717;
   --color-card-foreground: #f2f2f0;
   --color-popover: #1a1a1a;
   --color-popover-foreground: #f2f2f0;
@@ -129,7 +129,7 @@ body {
   --color-brand-foreground: #ffffff;
   --color-primary: #f2f2f0;
   --color-primary-foreground: #0d0d0d;
-  --color-secondary: #141414;
+  --color-secondary: #171717;
   --color-secondary-foreground: #f2f2f0;
   --color-accent: #1a1a1a;
   --color-accent-foreground: #f2f2f0;
@@ -154,16 +154,10 @@ body {
   --color-disabled-foreground: #50504d;
 
   --color-border: #232323;
-  --color-input: #141414;
+  --color-input: #212121;
   --color-ring: #787876;
 }
 
-/*
-  Custom scrollbar — browser default (Chrome/Edge/Safari) scrollbar replace ചെയ്ത്,
-  app theme-നോട് match ചെയ്യുന്ന thin, rounded scrollbar കാണിക്കാൻ.
-  --color-border/--color-muted-foreground tokens ഉപയോഗിക്കുന്നത് കൊണ്ട് dark/light theme
-  മാറുമ്പോൾ scrollbar color automatic ആയി sync ആകും.
-*/
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--color-border) transparent;

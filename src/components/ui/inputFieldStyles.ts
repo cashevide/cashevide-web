@@ -24,7 +24,7 @@ export function getInputFieldClasses({
   className = "",
 }: InputFieldClassesOptions) {
   return cn(
-    "h-12 px-4 bg-card text-foreground rounded-lg border outline-none placeholder:text-muted-foreground",
+    "h-12 px-4 bg-input text-foreground rounded-lg border outline-none placeholder:text-muted-foreground",
     BORDER_CLASS[state],
     disabled && "opacity-50",
     className,
