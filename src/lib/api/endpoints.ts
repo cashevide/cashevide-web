@@ -20,3 +20,10 @@ export const AUTH_ENDPOINTS = {
   changePassword: "/users/change-password/",
   deleteAccount: "/users/profile/delete/",
 } as const;
+
+// Only the dashboard-analytics path is here for now (needed by the
+// invoices dashboard). Sub-routes (list, create, detail, downloadPdf,
+// etc.) get added when each feature is actually built.
+export const INVOICE_ENDPOINTS = {
+  dashboardAnalytics: "/invoices/dashboard-analytics/",
+} as const;

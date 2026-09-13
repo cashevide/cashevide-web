@@ -3,7 +3,7 @@
 // the app's default home; every redirect site should reference
 // ROUTES.home, never a specific feature's own route directly.
 export const ROUTES = {
-  home: "/invoices",
+  home: "/dashboard",
 
   welcome: "/",
   login: "/login",
@@ -31,12 +31,23 @@ export const ROUTES = {
     privacyPolicy: "/legal/privacy-policy",
   },
 
-  // Only the tab-root paths are here for now (needed by AppShell's
-  // sidebar/bottom-tabs). Sub-routes (invoices.list, settings.account,
-  // profile.edit, etc.) get added when each feature is actually built
-  // — see Expo's routes.ts for the full set when that time comes.
+  // Dashboard is now its own top-level tab (deliberately deviates from
+  // Expo, where dashboard content lived inside /invoices as its first
+  // sub-tab).
+  dashboard: {
+    home: "/dashboard",
+  },
+
   invoices: {
-    dashboard: "/invoices",
+    list: "/invoices",
+
+    clients: {
+      list: "/invoices/clients",
+    },
+
+    products: {
+      list: "/invoices/products",
+    },
   },
 
   settings: {

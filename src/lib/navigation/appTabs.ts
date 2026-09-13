@@ -1,8 +1,14 @@
-import { Home, Settings, User, type LucideIcon } from "lucide-react";
+import {
+  LayoutDashboard,
+  FileText,
+  Settings,
+  User,
+  type LucideIcon,
+} from "lucide-react";
 
 import { ROUTES } from "../routes";
 
-export type AppTabName = "invoices" | "settings" | "profile";
+export type AppTabName = "dashboard" | "invoices" | "settings" | "profile";
 
 export interface AppTabConfig {
   name: AppTabName;
@@ -15,6 +21,11 @@ export interface AppTabConfig {
 // bottom bar and the desktop sidebar. "reviews" tab intentionally
 // dropped — that feature has been removed entirely.
 //
+// Deliberate deviation from Expo: Dashboard is its own top-level tab
+// here, rather than living inside Invoices as its first sub-tab (see
+// InvoiceSubTabs.tsx). Invoices now points straight to the invoice
+// list.
+//
 // Unlike Expo (which used separate outline/solid Heroicons per tab
 // for the active/inactive state), Lucide is a single-style,
 // stroke-based icon set with no true filled variant — the active
@@ -22,10 +33,16 @@ export interface AppTabConfig {
 // not by swapping to a different icon.
 export const APP_TABS: AppTabConfig[] = [
   {
+    name: "dashboard",
+    href: ROUTES.dashboard.home,
+    label: "Dashboard",
+    icon: LayoutDashboard,
+  },
+  {
     name: "invoices",
-    href: ROUTES.invoices.dashboard,
+    href: ROUTES.invoices.list,
     label: "Invoices",
-    icon: Home,
+    icon: FileText,
   },
   {
     name: "settings",
