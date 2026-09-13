@@ -19,4 +19,9 @@ export const ROUTES = {
       username: "/signup/google/username",
     },
   },
+
+  legal: {
+    terms: "/legal/terms",
+    privacyPolicy: "/legal/privacy-policy",
+  },
 } as const;
