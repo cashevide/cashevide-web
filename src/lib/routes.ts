@@ -5,7 +5,7 @@
 export const ROUTES = {
   home: "/dashboard",
 
-  welcome: "/welcome",
+  welcome: "/",
   login: "/login",
 
   passwordReset: {
