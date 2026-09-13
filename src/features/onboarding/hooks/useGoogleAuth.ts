@@ -1,9 +1,9 @@
-import type { CredentialResponse } from "@react-oauth/google";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 
 import { googleAuthApi } from "../api/googleAuthApi";
 import { useAuthStore } from "../../../stores/authStore";
+import { useGoogleAuthStore } from "../../../stores/googleAuthStore";
 import { ROUTES } from "../../../lib/routes";
 
 import type {
@@ -13,16 +13,14 @@ import type {
 
 type GoogleAuthMutationPayload = Omit<GoogleAuthRequest, "platform">;
 
-type UseGoogleAuthOptions = {
-  onPromptReferral?: (email: string, fullName: string) => void;
-};
-
-export function useGoogleAuth(options: UseGoogleAuthOptions = {}) {
-  const { onPromptReferral } = options;
-
+export function useGoogleAuth() {
   const navigate = useNavigate();
 
   const setAuthenticated = useAuthStore((state) => state.setAuthenticated);
+  const setGoogleIdToken = useGoogleAuthStore(
+    (state) => state.setGoogleIdToken,
+  );
+  const setProfileInfo = useGoogleAuthStore((state) => state.setProfileInfo);
 
   const googleAuthMutation = useMutation<
     GoogleAuthResponse,
@@ -32,7 +30,7 @@ export function useGoogleAuth(options: UseGoogleAuthOptions = {}) {
     mutationFn: (payload) => googleAuthApi(payload),
     onSuccess: (data) => {
       if ("status" in data && data.status === "prompt_referral") {
-        onPromptReferral?.(data.email, data.full_name);
+        setProfileInfo(data.email, data.full_name);
         navigate(ROUTES.signup.google.referral);
         return;
       }
@@ -42,11 +40,12 @@ export function useGoogleAuth(options: UseGoogleAuthOptions = {}) {
     },
   });
 
-  function handleGoogleCredential(credentialResponse: CredentialResponse) {
+  function handleGoogleCredential(credentialResponse: { credential?: string }) {
     if (!credentialResponse.credential) {
       return;
     }
 
+    setGoogleIdToken(credentialResponse.credential);
     googleAuthMutation.mutate({
       google_id_token: credentialResponse.credential,
     });

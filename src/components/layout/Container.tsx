@@ -25,7 +25,11 @@ export function Container({
 }: ContainerProps) {
   const content = (
     <div
-      className={cn("flex-1 w-full mx-auto", VARIANT_CLASS[variant], className)}
+      className={cn(
+        "flex flex-1 flex-col w-full mx-auto",
+        VARIANT_CLASS[variant],
+        className,
+      )}
       {...props}
     >
       {children}
@@ -34,9 +38,13 @@ export function Container({
 
   if (scroll) {
     return (
-      <div className="flex-1 bg-background overflow-y-auto">{content}</div>
+      <div className="flex flex-col min-h-screen bg-background overflow-y-auto">
+        {content}
+      </div>
     );
   }
 
-  return <div className="flex-1 bg-background">{content}</div>;
+  return (
+    <div className="flex flex-col min-h-screen bg-background">{content}</div>
+  );
 }

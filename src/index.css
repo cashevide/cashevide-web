@@ -8,6 +8,25 @@
   font-display: swap;
 }
 
+/*
+  React Native's root view is full-height by default, so Expo's
+  `<View className="flex-1">` layouts worked without any extra setup.
+  On web, `flex-1` (flex-grow: 1) only has something to grow *into* if
+  every ancestor up to the viewport has a real height — html/body/#root
+  are 0-height (or content-sized) by default, so without this, any
+  flex-1 container (e.g. Container.tsx) collapses to its content's
+  natural height instead of filling the screen.
+*/
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-background);
+}
+
 @theme {
   /* Font */
   --font-sans: "Geist", sans-serif;
@@ -139,6 +158,12 @@
   --color-ring: #787876;
 }
 
+/*
+  Custom scrollbar — browser default (Chrome/Edge/Safari) scrollbar replace ചെയ്ത്,
+  app theme-നോട് match ചെയ്യുന്ന thin, rounded scrollbar കാണിക്കാൻ.
+  --color-border/--color-muted-foreground tokens ഉപയോഗിക്കുന്നത് കൊണ്ട് dark/light theme
+  മാറുമ്പോൾ scrollbar color automatic ആയി sync ആകും.
+*/
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--color-border) transparent;
