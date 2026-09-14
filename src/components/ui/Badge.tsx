@@ -53,7 +53,7 @@ export function Badge({
   return (
     <div
       className={cn(
-        "self-start rounded-full px-2.5 py-1",
+        "self-start rounded-full px-2 leading-none",
         BG_CLASS[variant],
         className,
       )}
@@ -61,7 +61,7 @@ export function Badge({
     >
       <Text
         variant="caption"
-        className={cn("font-semibold", TEXT_CLASS[variant])}
+        className={cn("font-semibold leading-none", TEXT_CLASS[variant])}
       >
         {label}
       </Text>

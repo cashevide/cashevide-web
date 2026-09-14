@@ -160,7 +160,7 @@ function InvoiceRow({ invoice }: { invoice: Invoice }) {
           Not sent yet
         </Text>
       ) : (
-        <div className="flex flex-row items-center justify-between gap-2 bg-background/40 border border-border/50 rounded-md py-2.5 px-3">
+        <div className="flex flex-row items-center justify-between gap-2 bg-input border border-border/50 rounded-md py-2.5 px-3">
           <div className="flex flex-col gap-0.5">
             <Text variant="caption">{amountLabel}</Text>
 
@@ -285,76 +285,82 @@ export function InvoiceListContent() {
             variant="brand"
             shape="md"
             size="sm"
+            className="h-9 min-w-0 px-3 rounded-sm"
             title="New Invoice"
-            leftIcon={<Plus size={16} />}
+            leftIcon={<Plus size={14} />}
             onClick={() => navigate(ROUTES.invoices.create)}
           />
         </div>
       </ScreenHeader>
 
-      <Container variant="desktop" scroll>
-        <div className="flex flex-1 flex-col gap-4 px-6 py-6">
-          <InvoiceSubTabs />
+      {/* Fixed block: sub-tabs, search/filter, active-filter chips, sort
+          tabs. Deliberately OUTSIDE Container's scroll area — only the
+          invoice cards below should scroll. Sits between ScreenHeader and
+          Container, same fixed-chrome role ScreenHeader plays; the list
+          section below is the only part that scrolls. */}
+      <div className="w-full mx-auto max-w-desktop px-6 pt-6 pb-4 flex flex-col gap-4">
+        <InvoiceSubTabs />
 
-          <div className="flex flex-row items-center gap-2">
-            <SearchInput
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              onClear={() => setSearchText("")}
-              placeholder="Search by invoice #, name, email or phone"
-              className="flex-1"
-            />
-
-            <button
-              type="button"
-              onClick={() => setFilterModalVisible(true)}
-              className={cn(
-                "h-12 w-12 flex items-center justify-center rounded-lg border cursor-pointer",
-                filtersActive
-                  ? "bg-secondary border-border"
-                  : "bg-card border-border",
-              )}
-            >
-              <Funnel
-                size={20}
-                className={
-                  filtersActive ? "text-foreground" : "text-muted-foreground"
-                }
-              />
-            </button>
-          </div>
-
-          {chips.length > 0 && (
-            <div className="flex flex-row flex-wrap gap-2">
-              {chips.map((chip) => (
-                <button
-                  type="button"
-                  key={chip.key}
-                  onClick={() => removeChip(chip.key)}
-                  className="flex flex-row items-center gap-1.5 rounded-full bg-secondary border border-border pl-3 pr-2 py-1.5 cursor-pointer"
-                >
-                  <Text variant="body-sm">{chip.label}</Text>
-                  <X size={14} className="text-muted-foreground" />
-                </button>
-              ))}
-            </div>
-          )}
-
-          <PillTabs
-            items={ORDERING_OPTIONS}
-            activeKey={ordering ?? ORDERING_OPTIONS[0].key}
-            onSelect={(key) =>
-              setOrdering(key as GetInvoicesParams["ordering"])
-            }
-            layout="segmented"
+        <div className="flex flex-row items-center gap-2">
+          <SearchInput
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            onClear={() => setSearchText("")}
+            placeholder="Search by invoice #, name, email or phone"
+            className="flex-1"
           />
 
-          {!invoices.isLoading && allInvoices.length > 0 && (
-            <Text variant="caption" className="px-1">
-              {totalCount} {totalCount === 1 ? "invoice" : "invoices"}
-            </Text>
-          )}
+          <button
+            type="button"
+            onClick={() => setFilterModalVisible(true)}
+            className={cn(
+              "h-12 w-12 flex items-center justify-center rounded-lg border cursor-pointer",
+              filtersActive
+                ? "bg-secondary border-border"
+                : "bg-card border-border",
+            )}
+          >
+            <Funnel
+              size={20}
+              className={
+                filtersActive ? "text-foreground" : "text-muted-foreground"
+              }
+            />
+          </button>
+        </div>
 
+        {chips.length > 0 && (
+          <div className="flex flex-row flex-wrap gap-2">
+            {chips.map((chip) => (
+              <button
+                type="button"
+                key={chip.key}
+                onClick={() => removeChip(chip.key)}
+                className="flex flex-row items-center gap-1.5 rounded-full bg-secondary border border-border pl-3 pr-2 py-1.5 cursor-pointer"
+              >
+                <Text variant="body-sm">{chip.label}</Text>
+                <X size={14} className="text-muted-foreground" />
+              </button>
+            ))}
+          </div>
+        )}
+
+        <PillTabs
+          items={ORDERING_OPTIONS}
+          activeKey={ordering ?? ORDERING_OPTIONS[0].key}
+          onSelect={(key) => setOrdering(key as GetInvoicesParams["ordering"])}
+          layout="segmented"
+        />
+
+        {!invoices.isLoading && allInvoices.length > 0 && (
+          <Text variant="caption">
+            {totalCount} {totalCount === 1 ? "invoice" : "invoices"}
+          </Text>
+        )}
+      </div>
+
+      <Container variant="desktop" scroll>
+        <div className="flex flex-1 flex-col gap-3 px-6 pt-0 pb-6">
           {invoices.isLoading ? (
             <div>
               <SkeletonRow />
