@@ -266,7 +266,17 @@ export function InvoiceListContent() {
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-background">
+    // min-h-0 + overflow-hidden alongside flex-1: a flex child defaults
+    // to min-height:auto, which means it refuses to shrink below its own
+    // content's natural height — even inside AppShell's already
+    // height-constrained (h-screen/overflow-hidden) chain. min-h-0 lets
+    // it shrink to the space AppShell actually gives it; overflow-hidden
+    // (matching the same flex-1+overflow-hidden pairing AppShell.tsx uses
+    // at every level of its own chain) clips this div to exactly that
+    // space, so Container's flex-1 + overflow-y-auto below has a real,
+    // bounded box to scroll within instead of pushing past this wrapper
+    // and forcing the whole page (body) to scroll.
+    <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
       <ScreenHeader containerVariant="desktop">
         <div className="flex flex-row items-center justify-between">
           <Text variant="heading">Invoices</Text>
