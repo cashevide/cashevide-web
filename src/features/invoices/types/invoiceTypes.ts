@@ -8,6 +8,7 @@ import type {
   PaymentRecordRequest,
   PaymentRecordsError,
 } from "./paymentTypes";
+import type { PaginatedResponse } from "../../../types/paginationTypes";
 
 // Generic DRF field-error shape — same pattern as other typed files.
 type FieldErrors<T extends string> = Partial<Record<T, string[]>>;
@@ -71,12 +72,7 @@ export type Invoice = {
 
 // -------------------- list --------------------
 // GET /invoices/
-export type InvoicesListResponse = {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: Invoice[];
-};
+export type InvoicesListResponse = PaginatedResponse<Invoice>;
 
 // -------------------- create --------------------
 // POST /invoices/
