@@ -35,7 +35,7 @@ function SummaryRow({
       className={cn(
         "flex flex-col items-start justify-center",
         "w-[calc(50%-8px)]",
-        "bg-background/40 border border-border/50 rounded-md",
+        "bg-input border border-border rounded-md",
         "px-4 py-3 gap-1",
       )}
     >
@@ -69,7 +69,7 @@ export function DashboardSummaryCard({
   ];
 
   return (
-    <div className="flex-1 flex flex-col bg-card border border-border rounded-lg p-5 gap-2">
+    <div className="flex-1 flex flex-col bg-secondary border border-border rounded-lg p-5 gap-2">
       <Text variant="body-sm" className="font-semibold mb-1">
         Revenue Breakdown
       </Text>

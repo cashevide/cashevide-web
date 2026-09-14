@@ -237,11 +237,11 @@ export function AppShell() {
   const isDesktop = width >= DESKTOP_BREAKPOINT;
 
   return (
-    <div className="h-screen flex flex-col bg-background">
-      <div className="flex-1 flex flex-row">
+    <div className="h-screen flex flex-col bg-background overflow-hidden">
+      <div className="flex-1 flex flex-row overflow-hidden">
         {isDesktop ? <DesktopSidebar /> : null}
 
-        <div className="flex-1 min-w-0 flex flex-col">
+        <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
           <Outlet />
         </div>
       </div>

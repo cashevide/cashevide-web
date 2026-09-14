@@ -48,7 +48,12 @@ export function CreditPointsDialog({
       }
     >
       <div className="flex flex-col items-center gap-3 text-center">
-        <img src="/images/credit-coin.svg" alt="" width={96} height={96} />
+        <img
+          src="/images/credit-coins/credit-coin.svg"
+          alt=""
+          width={96}
+          height={96}
+        />
 
         <Text variant="subheading">
           {points.toLocaleString()} Credit Points

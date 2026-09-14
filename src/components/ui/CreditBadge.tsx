@@ -28,7 +28,7 @@ export function CreditBadge({
   const content = (
     <>
       <img
-        src="/images/credit-coin.svg"
+        src="/images/credit-coins/credit-coin-dark.svg"
         alt=""
         width={coinSize}
         height={coinSize}
