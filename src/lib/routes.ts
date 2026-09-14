@@ -40,6 +40,8 @@ export const ROUTES = {
 
   invoices: {
     list: "/invoices",
+    create: "/invoices/create",
+    detail: (id: number) => `/invoices/${id}` as const,
 
     clients: {
       list: "/invoices/clients",
