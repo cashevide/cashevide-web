@@ -13,6 +13,7 @@ import { GoogleReferralRoute } from "./routes/signup/google/GoogleReferralRoute"
 import { GoogleUsernameRoute } from "./routes/signup/google/GoogleUsernameRoute";
 import { DashboardRoute } from "./routes/DashboardRoute";
 import { InvoicesRoute } from "./routes/InvoicesRoute";
+import { InvoiceCreateRoute } from "./routes/InvoiceCreateRoute";
 import { InvoiceDetailsRoute } from "./routes/InvoiceDetailsRoute";
 import { SettingsRoute } from "./routes/SettingsRoute";
 import { ProfileRoute } from "./routes/ProfileRoute";
@@ -112,6 +113,7 @@ export const router = createBrowserRouter([
         children: [
           { path: "/dashboard", element: <DashboardRoute /> },
           { path: "/invoices", element: <InvoicesRoute /> },
+          { path: "/invoices/create", element: <InvoiceCreateRoute /> },
           { path: "/invoices/:id", element: <InvoiceDetailsRoute /> },
           { path: "/settings", element: <SettingsRoute /> },
           { path: "/profile", element: <ProfileRoute /> },

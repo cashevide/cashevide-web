@@ -21,6 +21,20 @@ export const AUTH_ENDPOINTS = {
   deleteAccount: "/users/profile/delete/",
 } as const;
 
+export const CLIENT_ENDPOINTS = {
+  list: "/clients/",
+  create: "/clients/",
+  detail: (slug: string) => `/clients/${slug}/`,
+  usage: "/clients/usage/",
+} as const;
+
+export const PRODUCT_ENDPOINTS = {
+  list: "/products/",
+  create: "/products/",
+  detail: (slug: string) => `/products/${slug}/`,
+  usage: "/products/usage/",
+} as const;
+
 export const INVOICE_ENDPOINTS = {
   list: "/invoices/",
   create: "/invoices/",
