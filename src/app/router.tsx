@@ -16,6 +16,11 @@ import { InvoicesRoute } from "./routes/InvoicesRoute";
 import { InvoiceCreateRoute } from "./routes/InvoiceCreateRoute";
 import { InvoiceDetailsRoute } from "./routes/InvoiceDetailsRoute";
 import { InvoiceEditRoute } from "./routes/InvoiceEditRoute";
+import { InvoiceClientsRoute } from "./routes/InvoiceClientsRoute";
+import { ClientCreateRoute } from "./routes/ClientCreateRoute";
+import { ArchivedClientsRoute } from "./routes/ArchivedClientsRoute";
+import { ClientDetailsRoute } from "./routes/ClientDetailsRoute";
+import { ClientEditRoute } from "./routes/ClientEditRoute";
 import { SettingsRoute } from "./routes/SettingsRoute";
 import { ProfileRoute } from "./routes/ProfileRoute";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
@@ -117,6 +122,23 @@ export const router = createBrowserRouter([
           { path: "/invoices/create", element: <InvoiceCreateRoute /> },
           { path: "/invoices/:id", element: <InvoiceDetailsRoute /> },
           { path: "/invoices/:id/edit", element: <InvoiceEditRoute /> },
+          { path: "/invoices/clients", element: <InvoiceClientsRoute /> },
+          {
+            path: "/invoices/clients/create",
+            element: <ClientCreateRoute />,
+          },
+          {
+            path: "/invoices/clients/archived",
+            element: <ArchivedClientsRoute />,
+          },
+          {
+            path: "/invoices/clients/:slug",
+            element: <ClientDetailsRoute />,
+          },
+          {
+            path: "/invoices/clients/:slug/edit",
+            element: <ClientEditRoute />,
+          },
           { path: "/settings", element: <SettingsRoute /> },
           { path: "/profile", element: <ProfileRoute /> },
         ],

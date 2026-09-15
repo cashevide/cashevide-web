@@ -49,10 +49,18 @@ export const ROUTES = {
 
     clients: {
       list: "/invoices/clients",
+      create: "/invoices/clients/create",
+      archived: "/invoices/clients/archived",
+      detail: (slug: string) => `/invoices/clients/${slug}` as const,
+      edit: (slug: string) => `/invoices/clients/${slug}/edit` as const,
     },
 
     products: {
       list: "/invoices/products",
+      create: "/invoices/products/create",
+      archived: "/invoices/products/archived",
+      detail: (slug: string) => `/invoices/products/${slug}` as const,
+      edit: (slug: string) => `/invoices/products/${slug}/edit` as const,
     },
   },
 
