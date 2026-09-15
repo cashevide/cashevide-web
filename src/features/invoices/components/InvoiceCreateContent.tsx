@@ -332,7 +332,7 @@ export function InvoiceCreateContent() {
               <Button
                 variant="primary"
                 title="Complete Business Profile"
-                onClick={() => navigate(ROUTES.profile.home)}
+                onClick={() => navigate(ROUTES.profile.businessEdit)}
               />
             </div>
           </div>

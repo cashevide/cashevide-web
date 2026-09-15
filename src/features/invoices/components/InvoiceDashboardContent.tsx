@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 import { Container } from "../../../components/layout/Container";
 import { ScreenHeader } from "../../../components/layout/ScreenHeader";
@@ -9,6 +10,7 @@ import { CreditPointsDialog } from "../../../components/ui/CreditPointsDialog";
 import { CreditBadge } from "../../../components/ui/CreditBadge";
 import { MalayaliModePrompt } from "../../onboarding/components/MalayaliModePrompt";
 import { useOnboardingPromptStore } from "../../../stores/onboardingPromptStore";
+import { ROUTES } from "../../../lib/routes";
 import { DashboardCurrencyTabs } from "./DashboardCurrencyTabs";
 import { DashboardReceivedCard } from "./DashboardReceivedCard";
 import { DashboardBalanceDueCard } from "./DashboardBalanceDueCard";
@@ -112,6 +114,7 @@ function DashboardContent({
   onSelectCurrency: (currency: string) => void;
   preferredCurrency?: string | null;
 }) {
+  const navigate = useNavigate();
   const { revenue, balance_due } = data;
   const availableCurrencies = getAvailableCurrencies(
     [revenue.total, balance_due.total],
@@ -133,7 +136,11 @@ function DashboardContent({
           balances.
         </Text>
         <div className="mt-2">
-          <Button variant="primary" title="New Invoice" />
+          <Button
+            variant="primary"
+            title="New Invoice"
+            onClick={() => navigate(ROUTES.invoices.create)}
+          />
         </div>
       </div>
     );
