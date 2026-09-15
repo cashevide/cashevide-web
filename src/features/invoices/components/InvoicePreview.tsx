@@ -4,7 +4,7 @@ import type {
   InvoiceTemplate,
 } from "../types/invoiceTypes";
 import { ClassicInvoiceLayout } from "./invoice-preview/ClassicInvoiceLayout";
-import { StandardInvoiceLayout } from "./invoice-preview/StandardInvoiceLayout";
+import { CustomizableInvoiceLayout } from "./invoice-preview/CustomizableInvoiceLayout";
 
 // A subset of the full Invoice shape, loose enough to also describe a
 // draft that hasn't been saved yet (no id/invoice_number/status from
@@ -62,8 +62,8 @@ export function InvoicePreview({ invoice }: InvoicePreviewProps) {
   const template = invoice.template ?? "classic";
 
   switch (template) {
-    case "standard":
-      return <StandardInvoiceLayout invoice={invoice} />;
+    case "customizable":
+      return <CustomizableInvoiceLayout invoice={invoice} />;
     case "classic":
     default:
       return <ClassicInvoiceLayout invoice={invoice} />;

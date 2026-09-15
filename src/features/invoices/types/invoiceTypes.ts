@@ -16,10 +16,10 @@ type FieldErrors<T extends string> = Partial<Record<T, string[]>>;
 export type InvoiceStatus = "DRAFT" | "UNPAID" | "PARTIALLY_PAID" | "PAID";
 
 // Backend validates this strictly — any other value returns a 400 with
-// "'<value>' is not a valid template. Choose from: classic, standard."
+// "'<value>' is not a valid template. Choose from: classic, customizable."
 // Kept as a strict union (not a plain string) so invalid values are
 // caught at compile time across the whole app.
-export type InvoiceTemplate = "classic" | "standard";
+export type InvoiceTemplate = "classic" | "customizable";
 
 // Frozen copy of the business profile, taken once when the invoice is
 // first saved on the backend (Invoice.save()) and never overwritten
@@ -88,7 +88,7 @@ export type InvoicesListResponse = PaginatedResponse<Invoice>;
 // - `payments` is required too — send `[]` on create, since you can't
 //   record a payment before the invoice exists.
 // - `template` is optional — omitting it defaults to "classic" on the
-//   backend. Only "classic" | "standard" are accepted.
+//   backend. Only "classic" | "customizable" are accepted.
 // - Do NOT send status/invoice_number/subtotal/total_amount/amount_paid/
 //   balance_due/business_snapshot — they are read-only and will be
 //   ignored/rejected.
@@ -106,7 +106,7 @@ export type InvoicesListResponse = PaginatedResponse<Invoice>;
 // template == "classic" too, so in practice the template distinction
 // doesn't matter: 0 credit points blocks invoice creation outright.)
 // The create-invoice UI should surface this restriction up front — not
-// only after the user has picked "standard".
+// only after the user has picked "customizable".
 export type CreateInvoiceRequest = {
   client?: number | null;
   name?: string;

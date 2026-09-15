@@ -32,7 +32,7 @@ import type { InvoicePreviewData } from "../components/InvoicePreview";
 
 const TEMPLATE_OPTIONS: { label: string; value: InvoiceTemplate }[] = [
   { label: "Classic", value: "classic" },
-  { label: "Standard", value: "standard" },
+  { label: "Customizable", value: "customizable" },
 ];
 
 function isBusinessProfileComplete(profile: {

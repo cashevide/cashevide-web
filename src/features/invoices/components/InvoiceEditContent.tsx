@@ -44,7 +44,7 @@ const SECTION_TABS = [
 // is created."), so this screen never lets it be edited.
 const TEMPLATE_LABEL: Record<InvoiceTemplate, string> = {
   classic: "Classic",
-  standard: "Standard",
+  customizable: "Customizable",
 };
 
 function extractErrorMessage(error: CreateInvoiceError): string {

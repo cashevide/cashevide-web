@@ -5,7 +5,7 @@ import { invoicePreviewColors as colors } from "./invoicePreviewColors";
 
 import type { InvoicePreviewData } from "../InvoicePreview";
 
-type StandardInvoiceLayoutProps = {
+type CustomizableInvoiceLayoutProps = {
   invoice: InvoicePreviewData;
 };
 
@@ -22,7 +22,9 @@ function formatMoney(amount: string, currency: string): string {
 // of a left/right split, and a borderless spaced item list instead of a
 // bordered table. Same information, different presentation — this is a
 // first pass and can be revisited later.
-export function StandardInvoiceLayout({ invoice }: StandardInvoiceLayoutProps) {
+export function CustomizableInvoiceLayout({
+  invoice,
+}: CustomizableInvoiceLayoutProps) {
   const liveBusinessProfile = useBusinessProfile();
 
   // A saved invoice (has an id) carries a frozen business_snapshot
