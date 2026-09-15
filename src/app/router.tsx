@@ -29,6 +29,8 @@ import { ProductEditRoute } from "./routes/ProductEditRoute";
 import { SettingsRoute } from "./routes/SettingsRoute";
 import { ProfileRoute } from "./routes/ProfileRoute";
 import { ProfileEditRoute } from "./routes/ProfileEditRoute";
+import { BusinessProfileRoute } from "./routes/BusinessProfileRoute";
+import { BusinessProfileEditRoute } from "./routes/BusinessProfileEditRoute";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import { PublicOnlyRoute } from "./routes/PublicOnlyRoute";
 import { AppShell } from "../components/layout/AppShell";
@@ -168,6 +170,14 @@ export const router = createBrowserRouter([
           { path: "/settings", element: <SettingsRoute /> },
           { path: "/profile", element: <ProfileRoute /> },
           { path: "/profile/edit", element: <ProfileEditRoute /> },
+          {
+            path: "/profile/business",
+            element: <BusinessProfileRoute />,
+          },
+          {
+            path: "/profile/business/edit",
+            element: <BusinessProfileEditRoute />,
+          },
         ],
       },
     ],
