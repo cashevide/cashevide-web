@@ -16,6 +16,7 @@ import { DateField } from "../../../components/ui/DateField";
 import { PillTabs } from "../../../components/ui/PillTabs";
 import { Divider } from "../../../components/ui/Divider";
 import { Modal } from "../../../components/ui/Modal";
+import { InfoDialog } from "../../../components/ui/InfoDialog";
 import { ClientPickerModal } from "../components/ClientPickerModal";
 import { InvoiceItemFormRow } from "../components/InvoiceItemFormRow";
 import { InvoicePreview } from "../components/InvoicePreview";
@@ -140,6 +141,12 @@ export function InvoiceCreateContent() {
   // field is omitted, so an untouched form and a submitted-without-
   // changing-it form behave identically.
   const [template, setTemplate] = useState<InvoiceTemplate>("classic");
+  // "Customizable" has a PDF layout on the backend but isn't feature-
+  // complete on this screen yet — picking it shows this dialog instead
+  // of actually switching `template`, so the form always stays on a
+  // fully-supported template.
+  const [showCustomizableComingSoon, setShowCustomizableComingSoon] =
+    useState(false);
 
   const [currencyInitialized, setCurrencyInitialized] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -376,7 +383,13 @@ export function InvoiceCreateContent() {
                   label: option.label,
                 }))}
                 activeKey={template}
-                onSelect={(key) => setTemplate(key as InvoiceTemplate)}
+                onSelect={(key) => {
+                  if (key === "customizable") {
+                    setShowCustomizableComingSoon(true);
+                    return;
+                  }
+                  setTemplate(key as InvoiceTemplate);
+                }}
                 layout="segmented"
               />
             </div>
@@ -664,6 +677,13 @@ export function InvoiceCreateContent() {
             onClick={() => setErrorMessage(null)}
           />
         }
+      />
+
+      <InfoDialog
+        visible={showCustomizableComingSoon}
+        title="Coming Soon"
+        message="The Customizable template is still being built. It'll be available to select here soon."
+        onDismiss={() => setShowCustomizableComingSoon(false)}
       />
     </div>
   );
