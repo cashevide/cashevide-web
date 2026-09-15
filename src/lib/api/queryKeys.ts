@@ -17,4 +17,6 @@ export const QUERY_KEYS = {
   products: (params?: GetProductsParams) => ["products", params] as const,
   productDetail: (slug: string) => ["productDetail", slug] as const,
   productUsage: ["productUsage"] as const,
+
+  legalDocument: (docType: string) => ["legalDocument", docType] as const,
 } as const;

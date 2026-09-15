@@ -35,6 +35,11 @@ export const PRODUCT_ENDPOINTS = {
   usage: "/products/usage/",
 } as const;
 
+export const LEGAL_ENDPOINTS = {
+  document: (docType: string) => `/legal/${docType}/`,
+  accept: "/legal/accept/",
+} as const;
+
 export const INVOICE_ENDPOINTS = {
   list: "/invoices/",
   create: "/invoices/",

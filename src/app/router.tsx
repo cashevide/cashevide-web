@@ -34,6 +34,7 @@ import { BusinessProfileEditRoute } from "./routes/BusinessProfileEditRoute";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import { PublicOnlyRoute } from "./routes/PublicOnlyRoute";
 import { AppShell } from "../components/layout/AppShell";
+import { LegalDocumentRoute } from "./routes/LegalDocumentRoute";
 import { DesignSystemLayout } from "./routes/public/design-system/DesignSystemLayout";
 import { DesignSystemIndexRoute } from "./routes/public/design-system/DesignSystemIndexRoute";
 import { LogoRoute } from "./routes/public/design-system/LogoRoute";
@@ -83,6 +84,16 @@ export const router = createBrowserRouter([
         element: <GoogleUsernameRoute />,
       },
     ],
+  },
+  {
+    // NOT nested under PublicOnlyRoute — same reasoning as the
+    // design-system block below: Expo's PublicLayout explicitly
+    // excluded legal routes from the logged-in redirect, so a Terms/
+    // Privacy link stays reachable whether the visitor is signed in
+    // or not (e.g. a link shared before signup, or from the footer of
+    // a logged-out marketing page).
+    path: "/legal/:docType",
+    element: <LegalDocumentRoute />,
   },
   {
     // NOT nested under PublicOnlyRoute — Expo's PublicLayout explicitly
