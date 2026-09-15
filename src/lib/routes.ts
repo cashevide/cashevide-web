@@ -72,5 +72,6 @@ export const ROUTES = {
     home: "/profile",
     edit: "/profile/edit",
     business: "/profile/business",
+    businessEdit: "/profile/business/edit",
   },
 } as const;

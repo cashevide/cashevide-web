@@ -42,9 +42,7 @@ export function EditBusinessProfileContent() {
   // above we don't disable the Save button for it — the button always
   // stays pressable, and this message only appears after a press with
   // no logo present. Cleared as soon as the user picks a photo.
-  const [logoErrorMessage, setLogoErrorMessage] = useState<string | null>(
-    null,
-  );
+  const [logoErrorMessage, setLogoErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (businessProfile.data) {
