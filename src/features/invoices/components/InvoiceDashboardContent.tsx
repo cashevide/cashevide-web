@@ -7,6 +7,8 @@ import { Button } from "../../../components/ui/Button";
 import { Spinner } from "../../../components/ui/Spinner";
 import { CreditPointsDialog } from "../../../components/ui/CreditPointsDialog";
 import { CreditBadge } from "../../../components/ui/CreditBadge";
+import { MalayaliModePrompt } from "../../onboarding/components/MalayaliModePrompt";
+import { useOnboardingPromptStore } from "../../../stores/onboardingPromptStore";
 import { DashboardCurrencyTabs } from "./DashboardCurrencyTabs";
 import { DashboardReceivedCard } from "./DashboardReceivedCard";
 import { DashboardBalanceDueCard } from "./DashboardBalanceDueCard";
@@ -24,6 +26,9 @@ export function InvoiceDashboardContent() {
   const userProfile = useUserProfile();
   const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
   const [isCreditModalOpen, setIsCreditModalOpen] = useState(false);
+  const hasSeenMalayaliPrompt = useOnboardingPromptStore(
+    (state) => state.hasSeenMalayaliPrompt,
+  );
 
   // Refetch on mount only, matching Expo's useFocusEffect (which
   // refetched every time the screen regained focus) — React Router
@@ -81,6 +86,17 @@ export function InvoiceDashboardContent() {
         points={userProfile.data?.credit_points ?? 0}
         onDismiss={() => setIsCreditModalOpen(false)}
       />
+
+      {/* Shown once, on first visit to the dashboard after signup —
+          `hasSeenMalayaliPrompt` flips to true from inside the prompt
+          itself once the person completes any branch of the flow, so
+          this never reappears after that. Enabled here (unlike the
+          Expo source, which ships this hardcoded off via
+          MALAYALI_PROMPT_ENABLED = false) per explicit instruction to
+          turn it on for the web build. */}
+      {!hasSeenMalayaliPrompt && (
+        <MalayaliModePrompt visible onComplete={() => {}} />
+      )}
     </div>
   );
 }
