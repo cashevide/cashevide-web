@@ -51,12 +51,15 @@ export function InvoiceDetailsContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  // Edit and Record Payment open the edit screen, which doesn't exist
-  // yet — no handler to wire up, buttons stay disabled via
-  // InvoiceActionBar's editDisabled/recordPaymentDisabled props until
-  // that screen is built.
-  function handleEdit() {}
-  function handleRecordPayment() {}
+  // Edit and Record Payment both open the edit screen — Record Payment
+  // jumps straight to its Payments section via the ?section=payments
+  // query param, matching Expo's edit(invoiceId, "payments") route.
+  function handleEdit() {
+    navigate(ROUTES.invoices.edit(id));
+  }
+  function handleRecordPayment() {
+    navigate(ROUTES.invoices.edit(id, "payments"));
+  }
 
   function handleDownloadPdf() {
     downloadPdf.mutate(id, {
@@ -136,8 +139,6 @@ export function InvoiceDetailsContent() {
               onDelete={handleDelete}
               isDownloading={downloadPdf.isPending}
               isDeleting={deleteInvoice.isPending}
-              editDisabled
-              recordPaymentDisabled
             />
           </div>
         </div>

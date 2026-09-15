@@ -15,6 +15,7 @@ import { DashboardRoute } from "./routes/DashboardRoute";
 import { InvoicesRoute } from "./routes/InvoicesRoute";
 import { InvoiceCreateRoute } from "./routes/InvoiceCreateRoute";
 import { InvoiceDetailsRoute } from "./routes/InvoiceDetailsRoute";
+import { InvoiceEditRoute } from "./routes/InvoiceEditRoute";
 import { SettingsRoute } from "./routes/SettingsRoute";
 import { ProfileRoute } from "./routes/ProfileRoute";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
@@ -115,6 +116,7 @@ export const router = createBrowserRouter([
           { path: "/invoices", element: <InvoicesRoute /> },
           { path: "/invoices/create", element: <InvoiceCreateRoute /> },
           { path: "/invoices/:id", element: <InvoiceDetailsRoute /> },
+          { path: "/invoices/:id/edit", element: <InvoiceEditRoute /> },
           { path: "/settings", element: <SettingsRoute /> },
           { path: "/profile", element: <ProfileRoute /> },
         ],
