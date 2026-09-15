@@ -27,6 +27,11 @@ import { ArchivedProductsRoute } from "./routes/ArchivedProductsRoute";
 import { ProductDetailsRoute } from "./routes/ProductDetailsRoute";
 import { ProductEditRoute } from "./routes/ProductEditRoute";
 import { SettingsRoute } from "./routes/SettingsRoute";
+import { AccountSettingsRoute } from "./routes/AccountSettingsRoute";
+import { AppSettingsRoute } from "./routes/AppSettingsRoute";
+import { LegalSettingsRoute } from "./routes/LegalSettingsRoute";
+import { SecuritySettingsRoute } from "./routes/SecuritySettingsRoute";
+import { ChangePasswordRoute } from "./routes/ChangePasswordRoute";
 import { ProfileRoute } from "./routes/ProfileRoute";
 import { ProfileEditRoute } from "./routes/ProfileEditRoute";
 import { BusinessProfileRoute } from "./routes/BusinessProfileRoute";
@@ -179,6 +184,20 @@ export const router = createBrowserRouter([
             element: <ProductEditRoute />,
           },
           { path: "/settings", element: <SettingsRoute /> },
+          {
+            path: "/settings/account",
+            element: <AccountSettingsRoute />,
+          },
+          { path: "/settings/app", element: <AppSettingsRoute /> },
+          { path: "/settings/legal", element: <LegalSettingsRoute /> },
+          {
+            path: "/settings/security",
+            element: <SecuritySettingsRoute />,
+          },
+          {
+            path: "/settings/security/change-password",
+            element: <ChangePasswordRoute />,
+          },
           { path: "/profile", element: <ProfileRoute /> },
           { path: "/profile/edit", element: <ProfileEditRoute /> },
           {

@@ -66,6 +66,13 @@ export const ROUTES = {
 
   settings: {
     home: "/settings",
+    account: "/settings/account",
+    app: "/settings/app",
+    legal: "/settings/legal",
+    security: {
+      entry: "/settings/security",
+      changePassword: "/settings/security/change-password",
+    },
   },
 
   profile: {
