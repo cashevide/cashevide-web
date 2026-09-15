@@ -35,7 +35,7 @@ function SummaryRow({
       className={cn(
         "flex flex-col items-start justify-center",
         "w-[calc(50%-8px)]",
-        "bg-input border border-border rounded-md",
+        "bg-muted border border-border rounded-md",
         "px-4 py-3 gap-1",
       )}
     >
