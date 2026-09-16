@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { GoogleLogin, type CredentialResponse } from "@react-oauth/google";
 
 import { Button } from "./Button";
@@ -45,9 +46,58 @@ function GoogleLogo() {
 // rendered first in markup — the overlay div comes after it and is
 // stacked above) intercepts the click itself and it never reaches the
 // real, invisible Google button underneath.
+//
+// KNOWN LIBRARY LIMITATION (react-oauth/google#350): GoogleLogin's
+// width="100%" only applies on the very first render — Google's GSI
+// script then re-measures and collapses the real iframe/button down
+// to its own intrinsic (much narrower) width, regardless of the
+// width prop or the wrapping container's actual size. Because the
+// invisible real button no longer fills wrapWidthRef's box, only the
+// sliver of empty space it still occupies is genuinely clickable —
+// which happens to line up with where our visible icon sits, hence
+// "only the icon area is clickable".
+//
+// Fix: measure the real button's actual rendered width after Google
+// finishes shrinking it, then CSS-scale that narrow element back up
+// to fill the wrapper. transform: scale() (unlike resizing width)
+// stretches the whole interactive hit area along with the visuals,
+// so the enlarged invisible click target now spans the same area as
+// our visible full-width Button — while the pixels a click actually
+// lands on are still Google's own real button, keeping its native ID
+// token flow (popup, FedCM, etc.) intact.
 export function GoogleButton({ onCredential }: GoogleButtonProps) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const realBtnRef = useRef<HTMLDivElement>(null);
+  const [scaleX, setScaleX] = useState(1);
+
+  useEffect(() => {
+    const wrapEl = wrapRef.current;
+    const realBtnEl = realBtnRef.current;
+    if (!wrapEl || !realBtnEl) return;
+
+    // Recompute whenever either box's size changes — the wrapper
+    // resizes with the viewport/layout, and Google's real button
+    // resizes (usually once, from its initial 100% down to its
+    // intrinsic width) after its script finishes loading.
+    const recompute = () => {
+      const wrapWidth = wrapEl.offsetWidth;
+      const realBtnWidth = realBtnEl.offsetWidth;
+      if (wrapWidth > 0 && realBtnWidth > 0) {
+        setScaleX(wrapWidth / realBtnWidth);
+      }
+    };
+
+    recompute();
+
+    const observer = new ResizeObserver(recompute);
+    observer.observe(wrapEl);
+    observer.observe(realBtnEl);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="relative w-full">
+    <div ref={wrapRef} className="relative w-full">
       <div className="pointer-events-none">
         <Button
           variant="outline"
@@ -60,14 +110,23 @@ export function GoogleButton({ onCredential }: GoogleButtonProps) {
       </div>
 
       <div className="absolute inset-0 opacity-0 overflow-hidden">
-        <GoogleLogin
-          onSuccess={onCredential}
-          onError={() => {
-            console.error("Google sign-in failed");
-          }}
-          size="large"
-          width="100%"
-        />
+        <div
+          ref={realBtnRef}
+          // Scaling from the left edge keeps the stretched click
+          // target aligned with the wrapper's left edge (where it
+          // starts), rather than growing out from the center.
+          style={{ transform: `scaleX(${scaleX})`, transformOrigin: "left" }}
+          className="inline-block"
+        >
+          <GoogleLogin
+            onSuccess={onCredential}
+            onError={() => {
+              console.error("Google sign-in failed");
+            }}
+            size="large"
+            width="100%"
+          />
+        </div>
       </div>
     </div>
   );

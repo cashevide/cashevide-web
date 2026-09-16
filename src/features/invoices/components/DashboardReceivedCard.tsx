@@ -20,17 +20,17 @@ export function DashboardReceivedCard({
   const parts = formatDashboardAmountParts(amount, currency);
 
   return (
-    <div className="flex-none w-full flex flex-col bg-success/15 border border-success/30 rounded-lg p-5 gap-1">
+    <div className="flex-none w-full flex flex-col justify-between min-h-[120px] bg-success/15 border border-success/30 rounded-lg p-5 gap-1">
       <Text variant="overline" className="text-success-text">
         Total Received
       </Text>
 
       {isEmpty ? (
-        <Text variant="heading" className="text-success-text">
+        <Text variant="title" className="text-success-text">
           —
         </Text>
       ) : parts.isSymbol ? (
-        <Text variant="heading" className="text-success-text">
+        <Text variant="title" className="text-success-text">
           {parts.currency}
           {parts.value}
         </Text>
@@ -39,7 +39,7 @@ export function DashboardReceivedCard({
           <Text variant="body-sm" className="text-success-text">
             {parts.currency}
           </Text>
-          <Text variant="heading" className="text-success-text">
+          <Text variant="title" className="text-success-text">
             {parts.value}
           </Text>
         </div>

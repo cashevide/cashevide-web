@@ -20,17 +20,17 @@ export function DashboardBalanceDueCard({
   const parts = formatDashboardAmountParts(amount, currency);
 
   return (
-    <div className="flex-none w-full flex flex-col bg-destructive/15 border border-destructive/30 rounded-lg p-5 gap-1">
+    <div className="flex-none w-full flex flex-col justify-between min-h-[120px] bg-destructive/15 border border-destructive/30 rounded-lg p-5 gap-1">
       <Text variant="overline" className="text-destructive-text">
         Balance Due
       </Text>
 
       {isEmpty ? (
-        <Text variant="heading" className="text-destructive-text">
+        <Text variant="title" className="text-destructive-text">
           —
         </Text>
       ) : parts.isSymbol ? (
-        <Text variant="heading" className="text-destructive-text">
+        <Text variant="title" className="text-destructive-text">
           {parts.currency}
           {parts.value}
         </Text>
@@ -39,7 +39,7 @@ export function DashboardBalanceDueCard({
           <Text variant="body-sm" className="text-destructive-text">
             {parts.currency}
           </Text>
-          <Text variant="heading" className="text-destructive-text">
+          <Text variant="title" className="text-destructive-text">
             {parts.value}
           </Text>
         </div>
