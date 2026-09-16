@@ -4,6 +4,7 @@ import { UserPlus } from "lucide-react";
 import { Button } from "./Button";
 import { Modal } from "./Modal";
 import { Text } from "./Text";
+import { Toast } from "./Toast";
 import { ROUTES } from "../../lib/routes";
 
 interface CreditPointsDialogProps {
@@ -141,30 +142,13 @@ export function CreditPointsDialog({
         </div>
       </Modal>
 
-      {/* Standalone confirmation banner for the clipboard-copy fallback
-          path (desktop browsers without Web Share support, e.g. Chrome
-          on Linux or Firefox). The button's own text used to be the
-          only feedback, but that's easy to miss since it's inside the
-          dialog the person is about to close — this sits above the
-          modal (z-[60], Modal itself is z-50) so it stays visible even
-          as the dialog is dismissed. Self-contained here rather than a
-          shared app-wide toast system, since this is the only place
-          that currently needs one. */}
-      {justCopied ? (
-        <div className="fixed inset-x-0 top-6 z-[60] flex justify-center px-4">
-          <div className="rounded-full bg-foreground px-4 py-2 shadow-lg">
-            {/* Text's body-sm variant carries its own text-foreground
-                by default — passed here as className (not a separate
-                wrapper class) since Text applies VARIANT_CLASS before
-                className, so tailwind-merge lets this win and override
-                it, giving proper contrast against bg-foreground above
-                instead of the text blending into its own background. */}
-            <Text variant="body-sm" className="font-medium text-background">
-              Link Copied!
-            </Text>
-          </div>
-        </div>
-      ) : null}
+      {/* Confirms the clipboard-copy fallback path (desktop browsers
+          without Web Share support, e.g. Chrome on Linux or Firefox).
+          The button's own text used to be the only feedback, but
+          that's easy to miss since it's inside the dialog the person
+          is about to close — Toast sits above the modal instead, so
+          it stays visible even as the dialog is dismissed. */}
+      <Toast message="Link Copied!" visible={justCopied} />
     </>
   );
 }
