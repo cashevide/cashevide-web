@@ -68,51 +68,103 @@ export function CreditPointsDialog({
       }
     }
 
-    await navigator.clipboard.writeText(inviteLink);
+    // navigator.clipboard only exists in a secure context — HTTPS, or
+    // localhost during dev. A dev server reached over its network IP
+    // (e.g. http://192.168.x.x:5173, for testing on another device)
+    // is NOT secure, so navigator.clipboard is undefined there and
+    // calling .writeText() on it throws. document.execCommand("copy")
+    // is deprecated but still works in that case, so it's the
+    // fallback rather than leaving the button silently do nothing.
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(inviteLink);
+    } else {
+      const textarea = document.createElement("textarea");
+      textarea.value = inviteLink;
+      // Off-screen but still focusable/selectable — execCommand needs
+      // a real text selection to copy from.
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    }
+
     setJustCopied(true);
     setTimeout(() => setJustCopied(false), 2000);
   }
 
   return (
-    <Modal
-      visible={visible}
-      dismissible
-      onDismiss={onDismiss}
-      // Extra top/bottom padding beyond Modal's own p-6 default — this
-      // dialog's centered icon+text content reads better with more
-      // breathing room than Modal's other uses (title+description+
-      // form fields, which are already fairly dense).
-      className="py-10"
-      footer={
-        <Button
-          variant="brand"
-          title={justCopied ? "Link Copied!" : "Invite Friends"}
-          leftIcon={<UserPlus size={18} />}
-          onClick={handleInviteFriends}
-          fullWidth
-        />
-      }
-    >
-      <div className="flex flex-col items-center gap-3 text-center">
-        <img
-          src="/images/credit-coins/credit-coin.svg"
-          alt=""
-          width={96}
-          height={96}
-        />
+    <>
+      <Modal
+        visible={visible}
+        dismissible
+        onDismiss={onDismiss}
+        // Extra top/bottom padding beyond Modal's own p-6 default — this
+        // dialog's centered icon+text content reads better with more
+        // breathing room than Modal's other uses (title+description+
+        // form fields, which are already fairly dense).
+        className="py-10"
+        footer={
+          <Button
+            variant="brand"
+            title="Invite Friends"
+            leftIcon={<UserPlus size={18} />}
+            onClick={handleInviteFriends}
+            fullWidth
+          />
+        }
+      >
+        <div className="flex flex-col items-center gap-3 text-center">
+          <img
+            src="/images/credit-coins/credit-coin.svg"
+            alt=""
+            width={96}
+            height={96}
+          />
 
-        <Text variant="subheading">
-          {points.toLocaleString()} Credit Points
-        </Text>
+          <Text variant="subheading">
+            {points.toLocaleString()} Credit Points
+          </Text>
 
-        {/* Width constrained to force a natural 3-line wrap instead of
-            hardcoding line breaks manually — the text still reflows
-            correctly if the copy changes later. */}
-        <Text variant="body-sm" className="text-muted-foreground max-w-[220px]">
-          Invite your freelance friends and earn referral points to generate
-          customizable invoices.
-        </Text>
-      </div>
-    </Modal>
+          {/* Width constrained to force a natural 3-line wrap instead of
+              hardcoding line breaks manually — the text still reflows
+              correctly if the copy changes later. */}
+          <Text
+            variant="body-sm"
+            className="text-muted-foreground max-w-[220px]"
+          >
+            Invite your freelance friends and earn referral points to generate
+            customizable invoices.
+          </Text>
+        </div>
+      </Modal>
+
+      {/* Standalone confirmation banner for the clipboard-copy fallback
+          path (desktop browsers without Web Share support, e.g. Chrome
+          on Linux or Firefox). The button's own text used to be the
+          only feedback, but that's easy to miss since it's inside the
+          dialog the person is about to close — this sits above the
+          modal (z-[60], Modal itself is z-50) so it stays visible even
+          as the dialog is dismissed. Self-contained here rather than a
+          shared app-wide toast system, since this is the only place
+          that currently needs one. */}
+      {justCopied ? (
+        <div className="fixed inset-x-0 top-6 z-[60] flex justify-center px-4">
+          <div className="rounded-full bg-foreground px-4 py-2 shadow-lg">
+            {/* Text's body-sm variant carries its own text-foreground
+                by default — passed here as className (not a separate
+                wrapper class) since Text applies VARIANT_CLASS before
+                className, so tailwind-merge lets this win and override
+                it, giving proper contrast against bg-foreground above
+                instead of the text blending into its own background. */}
+            <Text variant="body-sm" className="font-medium text-background">
+              Link Copied!
+            </Text>
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }
