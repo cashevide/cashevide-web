@@ -47,7 +47,7 @@ function ProductRow({ product }: { product: Product }) {
     <button
       type="button"
       onClick={() => navigate(ROUTES.invoices.products.detail(product.slug))}
-      className="flex flex-col gap-1 bg-card border border-border rounded-lg p-4 text-left cursor-pointer transition-all duration-200 hover:bg-secondary/50 hover:border-border hover:shadow-md hover:-translate-y-0.5"
+      className="flex flex-col gap-1 bg-card border border-border rounded-lg p-4 text-left cursor-pointer transition-colors duration-200 hover:bg-card/80 hover:border-border/60"
     >
       <div className="flex flex-row items-center justify-between gap-2">
         <Text variant="body-lg" className="flex-1 font-semibold truncate">

@@ -137,7 +137,7 @@ function InvoiceRow({ invoice }: { invoice: Invoice }) {
     <button
       type="button"
       onClick={() => navigate(ROUTES.invoices.detail(invoice.id))}
-      className="flex flex-col gap-3 bg-card border border-border rounded-lg p-4 text-left cursor-pointer transition-all duration-200 hover:bg-secondary/50 hover:border-border hover:shadow-md hover:-translate-y-0.5"
+      className="flex flex-col gap-3 bg-card border border-border rounded-lg p-4 text-left cursor-pointer transition-colors duration-200 hover:bg-card/80 hover:border-border/60"
     >
       <div className="flex flex-row items-center gap-3 px-3">
         <Text variant="body-lg" className="flex-shrink truncate font-semibold">
