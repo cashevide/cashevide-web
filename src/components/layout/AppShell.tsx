@@ -289,7 +289,13 @@ export function AppShell() {
   const isDesktop = width >= DESKTOP_BREAKPOINT;
 
   return (
-    <div className="h-screen flex flex-col bg-background overflow-hidden">
+    // h-dvh (not h-screen) — see Container.tsx's min-h-dvh comment.
+    // h-screen is 100vh, sized as if the mobile address bar is
+    // hidden; with overflow-hidden here, that mismatch either clips
+    // real content (MobileTabBar) or leaves dead space depending on
+    // whether the address bar happens to be shown or hidden. h-dvh
+    // tracks the actual visible height instead.
+    <div className="h-dvh flex flex-col bg-background overflow-hidden">
       <div className="flex-1 flex flex-row overflow-hidden">
         {isDesktop ? <DesktopSidebar /> : null}
 

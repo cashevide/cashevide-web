@@ -69,11 +69,27 @@
   are 0-height (or content-sized) by default, so without this, any
   flex-1 container (e.g. Container.tsx) collapses to its content's
   natural height instead of filling the screen.
+
+  100% alone resolves against the layout viewport, which on mobile
+  browsers is sized as if the address bar is hidden — the largest
+  the page could ever be. On load, with the address bar visible,
+  that's taller than the actual visible area, so flex-1 content
+  (e.g. LoginContent) overflows and forces a page scroll that
+  shouldn't be there. 100dvh tracks the *current* visible height
+  instead, shrinking/growing live as the address bar shows or
+  hides, so the layout matches what's actually on screen. The 100%
+  line stays first as a fallback for browsers without dvh support;
+  dvh wins via cascade order wherever it's supported.
+
+  This doesn't affect the keyboard-open scroll: that's the browser
+  natively scrolling a focused input into view, unrelated to how
+  html/body/#root's own height is computed.
 */
 html,
 body,
 #root {
   height: 100%;
+  height: 100dvh;
 }
 
 /*

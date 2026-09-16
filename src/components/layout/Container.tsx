@@ -57,7 +57,14 @@ export function Container({
     );
   }
 
-  return (
-    <div className="flex flex-col min-h-screen bg-background">{content}</div>
-  );
+  // min-h-dvh (not min-h-screen) — min-h-screen is Tailwind's 100vh
+  // utility, which — like the html/body/#root height fix in
+  // index.css — resolves against the layout viewport (sized as if
+  // the mobile browser's address bar is hidden). On load, with the
+  // address bar visible, that's taller than what's actually on
+  // screen, so this div demands more height than the viewport gives
+  // it and the whole page scrolls (e.g. WelcomeContent). min-h-dvh
+  // tracks the current visible height instead, shrinking/growing
+  // live as the address bar shows or hides.
+  return <div className="flex flex-col min-h-dvh bg-background">{content}</div>;
 }
