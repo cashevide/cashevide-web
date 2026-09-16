@@ -54,19 +54,47 @@ interface TextProps extends ComponentPropsWithoutRef<"p"> {
   as?: ElementType;
   variant?: TextVariant;
   className?: string;
+  // Renders in Space Mono instead of Geist — for figures where
+  // Geist's digits read too plain to sit comfortably as the focal
+  // number on a card: invoice amounts, invoice numbers, dashboard
+  // stats. Not meant for prose that happens to contain a digit or
+  // two (a date inside a sentence, a count inline in a paragraph) —
+  // only for numbers that are themselves the content being displayed.
+  numeric?: boolean;
+  // Renders in Anek Malayalam instead of Geist — for Malayali Mode's
+  // Kerala-themed content spots (e.g. the dashboard promo card),
+  // where the text itself switches to Malayalam and Geist has no
+  // Malayalam glyphs. The caller decides when this applies (e.g.
+  // DashboardPromoCard passing `malayalam={isMalayaliMode}`) — this
+  // prop doesn't read the Malayali Mode store itself, since most
+  // Text usages have nothing to do with that feature.
+  malayalam?: boolean;
 }
 
 export function Text({
   as,
   className = "",
   variant = "body",
+  numeric = false,
+  malayalam = false,
   ...props
 }: TextProps) {
   const Tag = as ?? DEFAULT_TAG[variant];
 
+  // numeric wins if a caller somehow sets both — a figure should
+  // stay in Space Mono even inside Malayali Mode content (e.g. an
+  // amount quoted inside a Malayalam promo line), matching the
+  // earlier decision that numeric text doesn't switch fonts for
+  // Malayali Mode.
+  const fontClass = numeric
+    ? "font-numeric"
+    : malayalam
+      ? "font-malayalam"
+      : "font-sans";
+
   return (
     <Tag
-      className={cn("font-sans", VARIANT_CLASS[variant], className)}
+      className={cn(fontClass, VARIANT_CLASS[variant], className)}
       {...props}
     />
   );

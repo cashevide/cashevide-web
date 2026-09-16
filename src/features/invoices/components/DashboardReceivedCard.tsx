@@ -26,20 +26,20 @@ export function DashboardReceivedCard({
       </Text>
 
       {isEmpty ? (
-        <Text variant="title" className="text-success-text">
+        <Text variant="title" className="text-success-text" numeric>
           —
         </Text>
       ) : parts.isSymbol ? (
-        <Text variant="title" className="text-success-text">
+        <Text variant="title" className="text-success-text" numeric>
           {parts.currency}
           {parts.value}
         </Text>
       ) : (
         <div className="flex flex-row items-baseline gap-1.5">
-          <Text variant="body-sm" className="text-success-text">
+          <Text variant="body-sm" className="text-success-text" numeric>
             {parts.currency}
           </Text>
-          <Text variant="title" className="text-success-text">
+          <Text variant="title" className="text-success-text" numeric>
             {parts.value}
           </Text>
         </div>

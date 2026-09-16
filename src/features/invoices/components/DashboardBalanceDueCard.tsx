@@ -26,20 +26,20 @@ export function DashboardBalanceDueCard({
       </Text>
 
       {isEmpty ? (
-        <Text variant="title" className="text-destructive-text">
+        <Text variant="title" className="text-destructive-text" numeric>
           —
         </Text>
       ) : parts.isSymbol ? (
-        <Text variant="title" className="text-destructive-text">
+        <Text variant="title" className="text-destructive-text" numeric>
           {parts.currency}
           {parts.value}
         </Text>
       ) : (
         <div className="flex flex-row items-baseline gap-1.5">
-          <Text variant="body-sm" className="text-destructive-text">
+          <Text variant="body-sm" className="text-destructive-text" numeric>
             {parts.currency}
           </Text>
-          <Text variant="title" className="text-destructive-text">
+          <Text variant="title" className="text-destructive-text" numeric>
             {parts.value}
           </Text>
         </div>

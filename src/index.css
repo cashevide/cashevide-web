@@ -9,6 +9,59 @@
 }
 
 /*
+  Numeric-display font — for figures where Geist's digits read too
+  plain (amounts, invoice numbers, stats). Two static weights, each
+  with an italic style — Space Mono doesn't ship as a variable font,
+  so every weight/style combo needs its own @font-face + its own
+  actual file (unlike Geist/Anek Malayalam below, where one variable
+  file covers a whole weight range).
+*/
+@font-face {
+  font-family: "Space Mono";
+  src: url("/fonts/SpaceMono-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Space Mono";
+  src: url("/fonts/SpaceMono-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Space Mono";
+  src: url("/fonts/SpaceMono-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Space Mono";
+  src: url("/fonts/SpaceMono-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/*
+  Malayalam-script font, for Malayali Mode's Kerala-themed content
+  spots (e.g. the dashboard promo card) — Geist has no Malayalam
+  glyphs. One variable file covers the whole weight range (100–800),
+  same pattern as Geist above.
+*/
+@font-face {
+  font-family: "Anek Malayalam";
+  src: url("/fonts/AnekMalayalam-VariableFont_wdth,wght.ttf") format("truetype");
+  font-weight: 100 800;
+  font-display: swap;
+}
+
+/*
   React Native's root view is full-height by default, so Expo's
   `<View className="flex-1">` layouts worked without any extra setup.
   On web, `flex-1` (flex-grow: 1) only has something to grow *into* if
@@ -49,6 +102,8 @@ body {
 @theme {
   /* Font */
   --font-sans: "Geist", sans-serif;
+  --font-numeric: "Space Mono", monospace;
+  --font-malayalam: "Anek Malayalam", sans-serif;
 
   /* Font sizes (matches Expo's fontSize scale) */
   --text-xs: 12px;

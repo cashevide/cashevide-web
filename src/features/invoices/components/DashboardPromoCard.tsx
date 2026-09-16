@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { useContent } from "../../../content/useContent";
+import { useMalayaliModeStore } from "../../../stores/malayaliModeStore";
 import { Text } from "../../../components/ui/Text";
 import { Button } from "../../../components/ui/Button";
 
@@ -16,6 +17,7 @@ const SLIDE_ORDER: SlideId[] = ["share", "community"];
 
 export function DashboardPromoCard() {
   const t = useContent();
+  const isMalayaliMode = useMalayaliModeStore((state) => state.isMalayaliMode);
   const [slideIndex, setSlideIndex] = useState(0);
   const [justCopied, setJustCopied] = useState(false);
 
@@ -78,10 +80,18 @@ export function DashboardPromoCard() {
 
   return (
     <div className="flex flex-col items-center gap-2 rounded-lg border border-border bg-card p-5 text-center">
-      <Text variant="body-lg" className="font-semibold">
+      <Text
+        variant="body-lg"
+        className="font-semibold"
+        malayalam={isMalayaliMode}
+      >
         {slideContent.title}
       </Text>
-      <Text variant="body-sm" className="text-muted-foreground">
+      <Text
+        variant="body-sm"
+        className="text-muted-foreground"
+        malayalam={isMalayaliMode}
+      >
         {slideContent.body}
       </Text>
       <div className="mt-2">
@@ -89,6 +99,7 @@ export function DashboardPromoCard() {
           variant="primary"
           title={slideContent.button}
           onClick={slideContent.onAction}
+          malayalam={isMalayaliMode}
         />
       </div>
 

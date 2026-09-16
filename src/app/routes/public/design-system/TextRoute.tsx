@@ -15,6 +15,25 @@ const TYPOGRAPHY_VARIANTS = [
   { variant: "button", label: "Button" },
 ] as const;
 
+// Font props — independent of variant (size/weight). numeric switches
+// the digit-heavy Space Mono in for figures (amounts, invoice
+// numbers); malayalam switches in Anek Malayalam for Malayali Mode's
+// Kerala-themed content spots. Shown at "title" size here since
+// that's roughly where each is actually used (dashboard amounts,
+// promo card text) — the props themselves work at any variant.
+const FONT_VARIANTS = [
+  {
+    prop: "numeric" as const,
+    label: "Numeric (Space Mono)",
+    sample: "₹1,24,500.00",
+  },
+  {
+    prop: "malayalam" as const,
+    label: "Malayalam (Anek Malayalam)",
+    sample: "എല്ലാവരും app share ചെയ്യൂ",
+  },
+] as const;
+
 export function TextRoute() {
   return (
     <Container variant="desktop" scroll>
@@ -48,6 +67,48 @@ export function TextRoute() {
                 className="md:shrink-0 text-muted-foreground"
               >
                 {variant}
+              </Text>
+            </div>
+          ))}
+        </div>
+
+        <Text variant="title">Font Variants</Text>
+
+        {/* numeric and malayalam are boolean props on Text (and on
+            Button, which passes malayalam through to its own internal
+            Text) — they swap the font family only, independent of
+            variant. Callers decide when to apply them (Text itself
+            doesn't read app state), e.g.:
+              <Text variant="title" numeric>{amount}</Text>
+              <Text variant="body-lg" malayalam={isMalayaliMode}>{title}</Text> */}
+        <div className="flex flex-col gap-1">
+          {FONT_VARIANTS.map(({ prop, label, sample }) => (
+            <div
+              key={prop}
+              className="flex flex-col gap-2 md:flex-row md:items-center md:gap-8 border-b border-border py-4"
+            >
+              <Text
+                variant="caption"
+                className="md:w-56 md:shrink-0 text-muted-foreground"
+              >
+                {label}
+              </Text>
+
+              <div className="flex-1">
+                <Text
+                  variant="title"
+                  numeric={prop === "numeric"}
+                  malayalam={prop === "malayalam"}
+                >
+                  {sample}
+                </Text>
+              </div>
+
+              <Text
+                variant="overline"
+                className="md:shrink-0 text-muted-foreground"
+              >
+                {prop}
               </Text>
             </div>
           ))}

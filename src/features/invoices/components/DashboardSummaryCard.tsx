@@ -45,14 +45,18 @@ function Stat({
       {parts == null ? (
         <Text variant="caption">N/A</Text>
       ) : parts.isSymbol ? (
-        <Text variant="title">
+        <Text variant="title" numeric>
           {parts.currency}
           {parts.value}
         </Text>
       ) : (
         <div className="flex flex-row items-baseline gap-1.5">
-          <Text variant="body-sm">{parts.currency}</Text>
-          <Text variant="title">{parts.value}</Text>
+          <Text variant="body-sm" numeric>
+            {parts.currency}
+          </Text>
+          <Text variant="title" numeric>
+            {parts.value}
+          </Text>
         </div>
       )}
     </div>

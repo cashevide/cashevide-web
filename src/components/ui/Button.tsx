@@ -84,6 +84,12 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: ReactNode;
   fullWidth?: boolean;
   className?: string;
+  // Passed straight through to the internal Text — see Text.tsx's
+  // `malayalam` prop for what it does. Needed here because Button
+  // renders its own title through Text rather than letting the
+  // caller render Text directly (e.g. DashboardPromoCard's "Share
+  // ചെയ്യ്" / "Join ചെയ്യ്" button labels in Malayali Mode).
+  malayalam?: boolean;
 }
 
 export function Button({
@@ -98,6 +104,7 @@ export function Button({
   icon,
   fullWidth = false,
   className = "",
+  malayalam = false,
   "aria-label": ariaLabel,
   ...props
 }: ButtonProps) {
@@ -146,7 +153,11 @@ export function Button({
       )}
 
       {!isIconOnly && (
-        <Text variant="button" className={TEXT_CLASS[variant]}>
+        <Text
+          variant="button"
+          className={TEXT_CLASS[variant]}
+          malayalam={malayalam}
+        >
           {title}
         </Text>
       )}
