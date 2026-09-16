@@ -71,7 +71,7 @@ export function DonationAmountOptionsModal({
               key={option.id}
               type="button"
               onClick={() => onSelect(option)}
-              className="flex flex-row items-center gap-3 w-full rounded-lg border border-border bg-secondary/30 p-3 text-left cursor-pointer active:opacity-60"
+              className="flex flex-row items-center gap-3 w-full rounded-lg border border-border bg-card p-3 text-left cursor-pointer active:opacity-60"
             >
               {showAvatar && (
                 <Avatar

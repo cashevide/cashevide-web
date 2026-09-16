@@ -100,7 +100,7 @@ export function GoogleButton({ onCredential }: GoogleButtonProps) {
     <div ref={wrapRef} className="relative w-full">
       <div className="pointer-events-none">
         <Button
-          variant="outline"
+          variant="secondary"
           title="Continue with Google"
           leftIcon={<GoogleLogo />}
           fullWidth
