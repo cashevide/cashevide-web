@@ -1,7 +1,9 @@
 import { useState } from "react";
 
+import { Avatar } from "../../../components/ui/Avatar";
 import { Button } from "../../../components/ui/Button";
 import { Modal } from "../../../components/ui/Modal";
+import { Text } from "../../../components/ui/Text";
 import { useMalayaliModeStore } from "../../../stores/malayaliModeStore";
 import { useOnboardingPromptStore } from "../../../stores/onboardingPromptStore";
 
@@ -63,24 +65,56 @@ export function MalayaliModePrompt({
       <Modal
         visible={visible}
         dismissible={false}
-        title="Do you hear about Dashamoolam Dhamu or Vasu Annan before?"
+        className="text-center py-6"
+        description={
+          <div className="flex flex-col gap-2">
+            <div className="max-w-[260px] mx-auto">
+              <Text variant="body">
+                Have you heard of{" "}
+                <Text as="span" variant="body-lg" className="font-semibold">
+                  Dashamoolam Dhamu
+                </Text>{" "}
+                or{" "}
+                <Text as="span" variant="body-lg" className="font-semibold">
+                  Vasu Annan
+                </Text>{" "}
+                before?
+              </Text>
+            </div>
+          </div>
+        }
         footer={
-          <div className="flex flex-row justify-end gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              title="No"
-              onClick={() => handleKnowsDhamu(false)}
-            />
+          <div className="flex flex-col gap-2">
             <Button
               variant="primary"
               size="sm"
-              title="Yes"
+              fullWidth
+              title="Yes, of course"
               onClick={() => handleKnowsDhamu(true)}
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              fullWidth
+              title="Don't know"
+              onClick={() => handleKnowsDhamu(false)}
             />
           </div>
         }
-      />
+      >
+        <div className="flex flex-row justify-center gap-6 py-2">
+          <Avatar
+            imageUri="/images/memes/dashamoolam-dhamu.jpg"
+            name="Dashamoolam Dhamu"
+            size={112}
+          />
+          <Avatar
+            imageUri="/images/memes/vasu-annan.jpg"
+            name="Vasu Annan"
+            size={112}
+          />
+        </div>
+      </Modal>
     );
   }
 
@@ -89,7 +123,12 @@ export function MalayaliModePrompt({
       <Modal
         visible={visible}
         dismissible={false}
-        title="കുട്ടാ നീ മലയാളി ആണല്ലേ. മലയാളി മോഡ് ഉണ്ട്. ഓൺ ആക്കണോ?"
+        className="text-center"
+        description={
+          <Text variant="body-lg" className="font-semibold" malayalam>
+            കുട്ടാ നീ മലയാളി ആണല്ലേ. മലയാളി മോഡ് ഉണ്ട്. ഓൺ ആക്കണോ?
+          </Text>
+        }
         footer={
           <div className="flex flex-row justify-end gap-2">
             <Button
