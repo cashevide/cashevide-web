@@ -9,10 +9,13 @@ import { Button } from "../../../components/ui/Button";
 import { SearchInput } from "../../../components/ui/SearchInput";
 import { Spinner } from "../../../components/ui/Spinner";
 import { PillTabs } from "../../../components/ui/PillTabs";
+import { CreditBadge } from "../../../components/ui/CreditBadge";
+import { CreditPointsDialog } from "../../../components/ui/CreditPointsDialog";
 import { InvoiceSubTabs } from "./InvoiceSubTabs";
 import { InvoiceStatusBadge } from "./InvoiceStatusBadge";
 import { InvoiceFilterModal, type InvoiceFilters } from "./InvoiceFilterModal";
 import { useInvoices } from "../hooks/useInvoices";
+import { useUserProfile } from "../../profile/hooks/useUserProfile";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import { ROUTES } from "../../../lib/routes";
 import { cn } from "../../../utils/cn";
@@ -136,7 +139,7 @@ function InvoiceRow({ invoice }: { invoice: Invoice }) {
     <button
       type="button"
       onClick={() => navigate(ROUTES.invoices.detail(invoice.id))}
-      className="flex flex-col gap-3 bg-card border border-border rounded-lg p-4 text-left cursor-pointer hover:bg-secondary/50"
+      className="flex flex-col gap-3 bg-card border border-border rounded-lg p-4 text-left cursor-pointer transition-all duration-200 hover:bg-secondary/50 hover:border-border hover:shadow-md hover:-translate-y-0.5"
     >
       <div className="flex flex-row items-center gap-3 px-3">
         <Text variant="body-lg" className="flex-shrink truncate font-semibold">
@@ -156,11 +159,11 @@ function InvoiceRow({ invoice }: { invoice: Invoice }) {
       </div>
 
       {isDraft ? (
-        <Text variant="body-sm" className="text-muted-foreground">
+        <Text variant="body-sm" className="text-muted-foreground px-3">
           Not sent yet
         </Text>
       ) : (
-        <div className="flex flex-row items-center justify-between gap-2 bg-input border border-border/50 rounded-md py-2.5 px-3">
+        <div className="flex flex-row items-center justify-between gap-2 px-3">
           <div className="flex flex-col gap-0.5">
             <Text variant="caption">{amountLabel}</Text>
 
@@ -186,11 +189,13 @@ function InvoiceRow({ invoice }: { invoice: Invoice }) {
 
 export function InvoiceListContent() {
   const navigate = useNavigate();
+  const userProfile = useUserProfile();
   const [searchText, setSearchText] = useState("");
   const [ordering, setOrdering] =
     useState<GetInvoicesParams["ordering"]>("-created_at");
   const [filters, setFilters] = useState<InvoiceFilters>(EMPTY_FILTERS);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
+  const [isCreditModalOpen, setIsCreditModalOpen] = useState(false);
   // Sentinel element at the bottom of the list — when it scrolls into
   // view, fetch the next page. This is web's equivalent of Expo's
   // FlatList onEndReached (which has no direct DOM equivalent); an
@@ -281,14 +286,9 @@ export function InvoiceListContent() {
         <div className="flex flex-row items-center justify-between">
           <Text variant="heading">Invoices</Text>
 
-          <Button
-            variant="brand"
-            shape="md"
-            size="sm"
-            className="h-9 min-w-0 px-3 rounded-sm"
-            title="New Invoice"
-            leftIcon={<Plus size={14} />}
-            onClick={() => navigate(ROUTES.invoices.create)}
+          <CreditBadge
+            points={userProfile.data?.credit_points ?? 0}
+            onClick={() => setIsCreditModalOpen(true)}
           />
         </div>
       </ScreenHeader>
@@ -345,22 +345,41 @@ export function InvoiceListContent() {
           </div>
         )}
 
-        <PillTabs
-          items={ORDERING_OPTIONS}
-          activeKey={ordering ?? ORDERING_OPTIONS[0].key}
-          onSelect={(key) => setOrdering(key as GetInvoicesParams["ordering"])}
-          layout="segmented"
-        />
+        <div className="flex flex-row items-center justify-between gap-2">
+          <PillTabs
+            items={ORDERING_OPTIONS}
+            activeKey={ordering ?? ORDERING_OPTIONS[0].key}
+            onSelect={(key) =>
+              setOrdering(key as GetInvoicesParams["ordering"])
+            }
+            layout="segmented"
+          />
+
+          {/* Sized to match PillTabs' segmented track exactly: h-7
+              (28px) segment buttons sit inside p-1 (4px) padding, so
+              the track's own outer height is 28 + 4 + 4 = 36px — h-9.
+              rounded-md mirrors the track's own corner radius too, so
+              this button reads as sitting on the same row rather than
+              as a mismatched control dropped in beside it. */}
+          <Button
+            variant="brand"
+            shape="md"
+            className="h-9 min-w-0 shrink-0 px-3.5 rounded-md"
+            title="New Invoice"
+            leftIcon={<Plus size={14} />}
+            onClick={() => navigate(ROUTES.invoices.create)}
+          />
+        </div>
 
         {!invoices.isLoading && allInvoices.length > 0 && (
-          <Text variant="caption">
+          <Text variant="caption" className="pl-1">
             {totalCount} {totalCount === 1 ? "invoice" : "invoices"}
           </Text>
         )}
       </div>
 
       <Container variant="desktop" scroll>
-        <div className="flex flex-1 flex-col gap-3 px-6 pt-0 pb-6">
+        <div className="flex flex-1 flex-col gap-3 px-6 pt-6 pb-6">
           {invoices.isLoading ? (
             <div>
               <SkeletonRow />
@@ -408,6 +427,12 @@ export function InvoiceListContent() {
         initialFilters={filters}
         onApply={setFilters}
         onDismiss={() => setFilterModalVisible(false)}
+      />
+
+      <CreditPointsDialog
+        visible={isCreditModalOpen}
+        points={userProfile.data?.credit_points ?? 0}
+        onDismiss={() => setIsCreditModalOpen(false)}
       />
     </div>
   );

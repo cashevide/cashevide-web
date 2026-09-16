@@ -10,9 +10,12 @@ import { SearchInput } from "../../../components/ui/SearchInput";
 import { PillTabs } from "../../../components/ui/PillTabs";
 import { Spinner } from "../../../components/ui/Spinner";
 import { InfoDialog } from "../../../components/ui/InfoDialog";
+import { CreditBadge } from "../../../components/ui/CreditBadge";
+import { CreditPointsDialog } from "../../../components/ui/CreditPointsDialog";
 import { InvoiceSubTabs } from "../../invoices/components/InvoiceSubTabs";
 import { useProducts } from "../hooks/useProducts";
 import { useProductUsage } from "../hooks/useProductUsage";
+import { useUserProfile } from "../../profile/hooks/useUserProfile";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import { ROUTES } from "../../../lib/routes";
 
@@ -46,7 +49,7 @@ function ProductRow({ product }: { product: Product }) {
     <button
       type="button"
       onClick={() => navigate(ROUTES.invoices.products.detail(product.slug))}
-      className="flex flex-col gap-1 bg-card border border-border rounded-lg p-4 text-left cursor-pointer hover:bg-secondary/50"
+      className="flex flex-col gap-1 bg-card border border-border rounded-lg p-4 text-left cursor-pointer transition-all duration-200 hover:bg-secondary/50 hover:border-border hover:shadow-md hover:-translate-y-0.5"
     >
       <div className="flex flex-row items-center justify-between gap-2">
         <Text variant="body-lg" className="flex-1 font-semibold truncate">
@@ -68,10 +71,12 @@ function ProductRow({ product }: { product: Product }) {
 
 export function InvoiceProductsContent() {
   const navigate = useNavigate();
+  const userProfile = useUserProfile();
   const [searchText, setSearchText] = useState("");
   const [ordering, setOrdering] =
     useState<GetProductsParams["ordering"]>("-created_at");
   const [showLimitDialog, setShowLimitDialog] = useState(false);
+  const [isCreditModalOpen, setIsCreditModalOpen] = useState(false);
   // Sentinel for scroll-triggered infinite loading — see
   // InvoiceListContent.tsx for why this replaces FlatList's
   // onEndReached on the web (IntersectionObserver instead).
@@ -139,14 +144,9 @@ export function InvoiceProductsContent() {
         <div className="flex flex-row items-center justify-between">
           <Text variant="heading">Products</Text>
 
-          <Button
-            variant="brand"
-            shape="md"
-            size="sm"
-            className="h-9 min-w-0 px-3 rounded-sm"
-            title="New Product"
-            leftIcon={<Plus size={14} />}
-            onClick={handleAddProductPress}
+          <CreditBadge
+            points={userProfile.data?.credit_points ?? 0}
+            onClick={() => setIsCreditModalOpen(true)}
           />
         </div>
       </ScreenHeader>
@@ -164,16 +164,31 @@ export function InvoiceProductsContent() {
           placeholder="Search by title"
         />
 
-        <PillTabs
-          items={ORDERING_OPTIONS}
-          activeKey={ordering ?? ORDERING_OPTIONS[0].key}
-          onSelect={(key) => setOrdering(key as GetProductsParams["ordering"])}
-          layout="segmented"
-        />
+        <div className="flex flex-row items-center justify-between gap-2">
+          <PillTabs
+            items={ORDERING_OPTIONS}
+            activeKey={ordering ?? ORDERING_OPTIONS[0].key}
+            onSelect={(key) =>
+              setOrdering(key as GetProductsParams["ordering"])
+            }
+            layout="segmented"
+          />
+
+          {/* Sized to match PillTabs' segmented track exactly — see
+              InvoiceListContent.tsx for the h-9/rounded-md math. */}
+          <Button
+            variant="brand"
+            shape="md"
+            className="h-9 min-w-0 shrink-0 px-3.5 rounded-md"
+            title="New Product"
+            leftIcon={<Plus size={14} />}
+            onClick={handleAddProductPress}
+          />
+        </div>
 
         <div className="flex flex-row items-center justify-between">
           {!products.isLoading && allProducts.length > 0 ? (
-            <Text variant="caption">
+            <Text variant="caption" className="pl-1">
               {totalCount} {totalCount === 1 ? "product" : "products"}
             </Text>
           ) : (
@@ -239,6 +254,12 @@ export function InvoiceProductsContent() {
         title="Product Limit Reached"
         message={`You cannot add more than ${productUsage.data?.max_allowed_product} products in your current plan.`}
         onDismiss={() => setShowLimitDialog(false)}
+      />
+
+      <CreditPointsDialog
+        visible={isCreditModalOpen}
+        points={userProfile.data?.credit_points ?? 0}
+        onDismiss={() => setIsCreditModalOpen(false)}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router";
 
 import { cn } from "../../utils/cn";
@@ -76,10 +76,7 @@ function DesktopTabButton({ tab, isActive, profile }: TabButtonProps) {
       to={tab.href}
       aria-label={tab.label}
       aria-current={isActive ? "page" : undefined}
-      className={cn(
-        "w-full flex flex-row items-center gap-3 rounded-lg px-3 py-2.5",
-        isActive && "bg-foreground/10",
-      )}
+      className="relative z-10 w-full flex flex-row items-center gap-3 rounded-lg px-3 py-2.5"
     >
       {isProfileTab ? (
         <Avatar
@@ -205,19 +202,74 @@ function DesktopSidebar() {
       }
     : undefined;
 
+  const activeTabName = APP_TABS.find((tab) =>
+    isTabActive(location.pathname, tab),
+  )?.name;
+
+  // Same sliding-highlight idea as PillTabs and the mobile tab bar,
+  // but vertical (translateY) instead of horizontal — sidebar items
+  // stack top-to-bottom and are all full-width, so only their
+  // vertical position/height varies (not left/width).
+  const trackRef = useRef<HTMLDivElement>(null);
+  const buttonRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const [highlightStyle, setHighlightStyle] = useState<{
+    offsetY: number;
+    height: number;
+  } | null>(null);
+
+  useLayoutEffect(() => {
+    const trackEl = trackRef.current;
+    const activeEl = activeTabName
+      ? buttonRefs.current.get(activeTabName)
+      : null;
+
+    if (!trackEl || !activeEl) {
+      setHighlightStyle(null);
+      return;
+    }
+
+    const trackRect = trackEl.getBoundingClientRect();
+    const activeRect = activeEl.getBoundingClientRect();
+
+    setHighlightStyle({
+      offsetY: activeRect.top - trackRect.top,
+      height: activeRect.height,
+    });
+  }, [activeTabName]);
+
   return (
     <div className="shrink-0 py-4 pl-4">
       <div
+        ref={trackRef}
         style={{ width: SIDEBAR_WIDTH }}
-        className="h-full flex flex-col gap-1 rounded-lg bg-secondary border border-border shadow-lg px-3 py-6"
+        className="relative h-full flex flex-col gap-1 rounded-lg bg-secondary border border-border shadow-lg px-3 py-6"
       >
-        {APP_TABS.map((tab) => (
-          <DesktopTabButton
-            key={tab.name}
-            tab={tab}
-            isActive={isTabActive(location.pathname, tab)}
-            profile={profile}
+        {highlightStyle && (
+          <div
+            aria-hidden="true"
+            className="absolute left-3 right-3 top-0 z-0 rounded-lg bg-foreground/10"
+            style={{
+              height: highlightStyle.height,
+              transform: `translateY(${highlightStyle.offsetY}px)`,
+              transition: "transform 220ms ease",
+            }}
           />
+        )}
+
+        {APP_TABS.map((tab) => (
+          <div
+            key={tab.name}
+            ref={(el) => {
+              if (el) buttonRefs.current.set(tab.name, el);
+              else buttonRefs.current.delete(tab.name);
+            }}
+          >
+            <DesktopTabButton
+              tab={tab}
+              isActive={isTabActive(location.pathname, tab)}
+              profile={profile}
+            />
+          </div>
         ))}
       </div>
     </div>

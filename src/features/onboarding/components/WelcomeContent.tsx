@@ -56,7 +56,7 @@ export function WelcomeContent() {
               <Text variant="caption" className="text-center">
                 By continuing, you agree to Cashevide's
               </Text>
-              <div className="flex flex-row gap-1">
+              <div className="flex flex-row items-baseline gap-1">
                 <button
                   type="button"
                   onClick={() => navigate(ROUTES.legal.terms)}

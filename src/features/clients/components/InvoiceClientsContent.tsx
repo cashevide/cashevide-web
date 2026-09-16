@@ -11,9 +11,12 @@ import { PillTabs } from "../../../components/ui/PillTabs";
 import { Spinner } from "../../../components/ui/Spinner";
 import { Avatar } from "../../../components/ui/Avatar";
 import { InfoDialog } from "../../../components/ui/InfoDialog";
+import { CreditBadge } from "../../../components/ui/CreditBadge";
+import { CreditPointsDialog } from "../../../components/ui/CreditPointsDialog";
 import { InvoiceSubTabs } from "../../invoices/components/InvoiceSubTabs";
 import { useClients } from "../hooks/useClients";
 import { useClientUsage } from "../hooks/useClientUsage";
+import { useUserProfile } from "../../profile/hooks/useUserProfile";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import { ROUTES } from "../../../lib/routes";
 
@@ -47,7 +50,7 @@ function ClientRow({ client }: { client: Client }) {
     <button
       type="button"
       onClick={() => navigate(ROUTES.invoices.clients.detail(client.slug))}
-      className="flex flex-row items-center gap-3 bg-card border border-border rounded-lg p-4 text-left cursor-pointer hover:bg-secondary/50"
+      className="flex flex-row items-center gap-3 bg-card border border-border rounded-lg p-4 text-left cursor-pointer transition-all duration-200 hover:bg-secondary/50 hover:border-border hover:shadow-md hover:-translate-y-0.5"
     >
       <Avatar name={client.name} size={40} />
 
@@ -65,10 +68,12 @@ function ClientRow({ client }: { client: Client }) {
 
 export function InvoiceClientsContent() {
   const navigate = useNavigate();
+  const userProfile = useUserProfile();
   const [searchText, setSearchText] = useState("");
   const [ordering, setOrdering] =
     useState<GetClientsParams["ordering"]>("-created_at");
   const [showLimitDialog, setShowLimitDialog] = useState(false);
+  const [isCreditModalOpen, setIsCreditModalOpen] = useState(false);
   // Sentinel for scroll-triggered infinite loading — see
   // InvoiceListContent.tsx for why this replaces FlatList's
   // onEndReached on the web (IntersectionObserver instead).
@@ -136,14 +141,9 @@ export function InvoiceClientsContent() {
         <div className="flex flex-row items-center justify-between">
           <Text variant="heading">Clients</Text>
 
-          <Button
-            variant="brand"
-            shape="md"
-            size="sm"
-            className="h-9 min-w-0 px-3 rounded-sm"
-            title="New Client"
-            leftIcon={<Plus size={14} />}
-            onClick={handleAddClientPress}
+          <CreditBadge
+            points={userProfile.data?.credit_points ?? 0}
+            onClick={() => setIsCreditModalOpen(true)}
           />
         </div>
       </ScreenHeader>
@@ -161,16 +161,29 @@ export function InvoiceClientsContent() {
           placeholder="Search by name, email or phone"
         />
 
-        <PillTabs
-          items={ORDERING_OPTIONS}
-          activeKey={ordering ?? ORDERING_OPTIONS[0].key}
-          onSelect={(key) => setOrdering(key as GetClientsParams["ordering"])}
-          layout="segmented"
-        />
+        <div className="flex flex-row items-center justify-between gap-2">
+          <PillTabs
+            items={ORDERING_OPTIONS}
+            activeKey={ordering ?? ORDERING_OPTIONS[0].key}
+            onSelect={(key) => setOrdering(key as GetClientsParams["ordering"])}
+            layout="segmented"
+          />
+
+          {/* Sized to match PillTabs' segmented track exactly — see
+              InvoiceListContent.tsx for the h-9/rounded-md math. */}
+          <Button
+            variant="brand"
+            shape="md"
+            className="h-9 min-w-0 shrink-0 px-3.5 rounded-md"
+            title="New Client"
+            leftIcon={<Plus size={14} />}
+            onClick={handleAddClientPress}
+          />
+        </div>
 
         <div className="flex flex-row items-center justify-between">
           {!clients.isLoading && allClients.length > 0 ? (
-            <Text variant="caption">
+            <Text variant="caption" className="pl-1">
               {totalCount} {totalCount === 1 ? "client" : "clients"}
             </Text>
           ) : (
@@ -236,6 +249,12 @@ export function InvoiceClientsContent() {
         title="Client Limit Reached"
         message={`You cannot add more than ${clientUsage.data?.max_allowed_client} clients in your current plan.`}
         onDismiss={() => setShowLimitDialog(false)}
+      />
+
+      <CreditPointsDialog
+        visible={isCreditModalOpen}
+        points={userProfile.data?.credit_points ?? 0}
+        onDismiss={() => setIsCreditModalOpen(false)}
       />
     </div>
   );

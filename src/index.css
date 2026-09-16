@@ -23,6 +23,25 @@ body,
   height: 100%;
 }
 
+/*
+  Tailwind v4's Preflight intentionally dropped the `cursor: pointer`
+  default on <button> that v3 had (buttons now use the browser's
+  native `cursor: default`, per the v4 upgrade guide). Every button
+  in this app is meant to read as clickable, so this restores the
+  v3 behavior globally rather than adding `cursor-pointer` to each
+  button individually.
+
+  `:not(:disabled)` keeps disabled buttons on the default cursor —
+  they're not clickable, so a pointer cursor there would be
+  misleading (and would fight any disabled:opacity-* styling that
+  already signals "not clickable").
+*/
+@layer base {
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
 body {
   background-color: var(--color-background);
 }
