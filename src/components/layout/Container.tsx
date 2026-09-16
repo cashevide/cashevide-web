@@ -28,6 +28,18 @@ export function Container({
       className={cn(
         "flex flex-1 flex-col w-full mx-auto",
         VARIANT_CLASS[variant],
+        // Reserves room for AppShell's floating (position: fixed)
+        // mobile tab bar, which — being fixed — takes no space in
+        // the flex layout and simply overlays whatever scrolls
+        // underneath it. Without this, the last bit of scrolled
+        // content (e.g. Dashboard's promo card) ends up permanently
+        // hidden behind the bar. --mobile-tab-bar-space is set by
+        // AppShell (0 on desktop, where the bar isn't rendered); the
+        // ,0px fallback covers every other use of scroll — public/
+        // auth pages outside AppShell entirely — where the var is
+        // never set at all. Only applied when scroll is on: the
+        // non-scroll variant has no scrollable "end" to protect.
+        scroll && "pb-[var(--mobile-tab-bar-space,0px)]",
         className,
       )}
       {...props}

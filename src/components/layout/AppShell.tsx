@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import { Link, Outlet, useLocation } from "react-router";
 
 import { cn } from "../../utils/cn";
@@ -13,6 +14,19 @@ const SIDEBAR_WIDTH = 200;
 const MOBILE_TAB_SIZE = 44;
 const MOBILE_BAR_WIDTH_FRACTION = 0.62;
 const MOBILE_BAR_INNER_PADDING = 6;
+const MOBILE_BAR_BOTTOM_OFFSET = 12;
+
+// Total vertical footprint of the mobile tab bar: its own height (pill
+// content + top/bottom inner padding) plus how far it floats up from
+// the screen edge. MobileTabBar is `position: fixed`, so it takes up
+// no space in AppShell's flex layout — Outlet gets the full height and
+// the bar simply overlays whatever's underneath it. Any scrollable
+// page content needs this much bottom padding, or its last bit of
+// content ends up permanently hidden behind the bar. Exposed as a CSS
+// var (see AppShell below) so Container.tsx's scroll variant, and
+// anything else consuming it, don't need to know these px numbers.
+const MOBILE_TAB_BAR_SPACE =
+  MOBILE_TAB_SIZE + MOBILE_BAR_INNER_PADDING * 2 + MOBILE_BAR_BOTTOM_OFFSET;
 
 // Exact match for a tab's own root ("/settings"), or prefix match for
 // any page nested under it ("/settings/account") — otherwise
@@ -150,7 +164,7 @@ function MobileTabBar() {
   return (
     <div
       className="fixed inset-x-0 flex justify-center"
-      style={{ bottom: 12, pointerEvents: "none" }}
+      style={{ bottom: MOBILE_BAR_BOTTOM_OFFSET, pointerEvents: "none" }}
     >
       <div
         style={{ width: barWidth, pointerEvents: "auto" }}
@@ -295,7 +309,21 @@ export function AppShell() {
     // real content (MobileTabBar) or leaves dead space depending on
     // whether the address bar happens to be shown or hidden. h-dvh
     // tracks the actual visible height instead.
-    <div className="h-dvh flex flex-col bg-background overflow-hidden">
+    //
+    // --mobile-tab-bar-space: exposes MOBILE_TAB_BAR_SPACE (see
+    // above) as a CSS var so any scrollable descendant can reserve
+    // room for the floating tab bar without hardcoding its pixel
+    // values. 0 on desktop, where MobileTabBar isn't rendered at all.
+    <div
+      className="h-dvh flex flex-col bg-background overflow-hidden"
+      style={
+        {
+          "--mobile-tab-bar-space": isDesktop
+            ? "0px"
+            : `${MOBILE_TAB_BAR_SPACE}px`,
+        } as CSSProperties
+      }
+    >
       <div className="flex-1 flex flex-row overflow-hidden">
         {isDesktop ? <DesktopSidebar /> : null}
 

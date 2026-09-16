@@ -40,7 +40,16 @@ export function InvoiceDashboardContent() {
   }, []);
 
   return (
-    <div className="flex-1 flex flex-col bg-background">
+    // min-h-0 + overflow-hidden alongside flex-1 — same fix as
+    // InvoiceListContent.tsx (see its comment for the full reasoning):
+    // a flex child defaults to min-height:auto, so without min-h-0 it
+    // refuses to shrink below its own content's natural height even
+    // inside AppShell's height-constrained (h-dvh/overflow-hidden)
+    // chain. That left this div's content pushing past its real
+    // space and getting clipped by AppShell's overflow-hidden instead
+    // of Container's flex-1 + overflow-y-auto below getting a real,
+    // bounded box to scroll within.
+    <div className="flex-1 min-h-0 flex flex-col overflow-hidden bg-background">
       {/* Deliberate deviation from Expo, which used a Logo here (this
           screen's own special case). Since Dashboard is now its own
           top-level tab, a plain "Dashboard" title matches the standard
