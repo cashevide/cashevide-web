@@ -9,6 +9,7 @@ import { Spinner } from "../../../components/ui/Spinner";
 import { CreditPointsDialog } from "../../../components/ui/CreditPointsDialog";
 import { CreditBadge } from "../../../components/ui/CreditBadge";
 import { MalayaliModePrompt } from "../../onboarding/components/MalayaliModePrompt";
+import { DashboardPromoCard } from "./DashboardPromoCard";
 import { useOnboardingPromptStore } from "../../../stores/onboardingPromptStore";
 import { ROUTES } from "../../../lib/routes";
 import { DashboardCurrencyTabs } from "./DashboardCurrencyTabs";
@@ -79,6 +80,20 @@ export function InvoiceDashboardContent() {
               onSelectCurrency={setSelectedCurrency}
               preferredCurrency={businessProfile.data?.currency}
             />
+          )}
+
+          {/* Rotating promo card — shown in both modes, content/tone
+              differs (professional in normal mode, meme-style in
+              Malayali Mode; see DashboardPromoCard.tsx). Deliberately
+              NOT part of the gap-6 flow above — mt-12 (double the
+              normal 24px rhythm) reads as a clearly separate,
+              secondary section rather than another dashboard detail,
+              so it doesn't compete with the actual revenue/balance
+              numbers for attention. */}
+          {!dashboard.isLoading && !dashboard.isError && (
+            <div className="mt-12">
+              <DashboardPromoCard />
+            </div>
           )}
         </div>
       </Container>

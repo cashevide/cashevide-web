@@ -1,5 +1,4 @@
 import { Text } from "../../../components/ui/Text";
-import { cn } from "../../../utils/cn";
 import { formatDashboardAmount } from "../utils/invoiceDashboardUtils";
 
 import type { CurrencyAmountMap } from "../types/invoiceDashboardTypes";
@@ -13,11 +12,15 @@ type DashboardSummaryCardProps = {
   currency: string;
 };
 
-// Expo's version rendered this as a plain list row on native (label
-// left, amount right, hairline divider) and a standalone grid cell on
-// web (stacked label-over-amount, mini stat-card look) — since this
-// project is web-only, only the grid-cell rendering is kept.
-function SummaryRow({
+// The featured stat (This Month) gets its own larger card spanning
+// the full width of the top row — the most immediately relevant
+// number, so it reads first. The other four sit below as an even
+// row of equal-sized cards. Together the two rows read as one
+// square-ish block rather than an odd number of mismatched tiles:
+// 5 cards can't divide evenly into a clean grid on their own (a
+// plain 2-per-row wrap always leaves one card alone on its own row),
+// so grouping them as 1-large + 4-small sidesteps that entirely.
+function FeaturedStat({
   label,
   bucket,
   currency,
@@ -31,21 +34,40 @@ function SummaryRow({
     amount != null ? formatDashboardAmount(amount, currency) : "—";
 
   return (
-    <div
-      className={cn(
-        "flex flex-col items-start justify-center",
-        "w-[calc(50%-8px)]",
-        "bg-muted border border-border rounded-md",
-        "px-4 py-3 gap-1",
-      )}
-    >
+    <div className="flex flex-col items-start justify-center bg-card border border-border rounded-lg px-5 py-4 gap-1">
       <Text
         variant="body-sm"
         className="text-muted-foreground text-xs uppercase tracking-widest font-bold"
       >
         {label}
       </Text>
-      <Text variant="body-sm" className="font-semibold text-lg text-left">
+      <Text variant="heading">{formattedAmount}</Text>
+    </div>
+  );
+}
+
+function SmallStat({
+  label,
+  bucket,
+  currency,
+}: {
+  label: string;
+  bucket: CurrencyAmountMap;
+  currency: string;
+}) {
+  const amount = bucket[currency];
+  const formattedAmount =
+    amount != null ? formatDashboardAmount(amount, currency) : "—";
+
+  return (
+    <div className="flex flex-col items-start justify-center bg-card border border-border rounded-lg px-3 py-3 gap-0.5">
+      <Text
+        variant="caption"
+        className="text-muted-foreground text-[10px] uppercase tracking-widest font-bold"
+      >
+        {label}
+      </Text>
+      <Text variant="body-sm" className="font-semibold">
         {formattedAmount}
       </Text>
     </div>
@@ -60,8 +82,7 @@ export function DashboardSummaryCard({
   lastYear,
   currency,
 }: DashboardSummaryCardProps) {
-  const rows = [
-    { label: "This Month", bucket: thisMonth },
+  const smallStats = [
     { label: "Last Month", bucket: lastMonth },
     { label: "Last 3 Months", bucket: lastThreeMonths },
     { label: "This Year", bucket: thisYear },
@@ -69,17 +90,15 @@ export function DashboardSummaryCard({
   ];
 
   return (
-    <div className="flex-1 flex flex-col bg-secondary border border-border rounded-lg p-5 gap-2">
-      <Text variant="body-sm" className="font-semibold mb-1">
-        Revenue Breakdown
-      </Text>
+    <div className="flex flex-col gap-2">
+      <FeaturedStat label="This Month" bucket={thisMonth} currency={currency} />
 
-      <div className="flex flex-row flex-wrap gap-2">
-        {rows.map((row) => (
-          <SummaryRow
-            key={row.label}
-            label={row.label}
-            bucket={row.bucket}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        {smallStats.map((stat) => (
+          <SmallStat
+            key={stat.label}
+            label={stat.label}
+            bucket={stat.bucket}
             currency={currency}
           />
         ))}
