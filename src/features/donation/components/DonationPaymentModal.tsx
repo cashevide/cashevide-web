@@ -18,6 +18,11 @@ type DonationPaymentModalProps = {
   staticQrImageUri?: string;
   onSent: () => void;
   onCancel: () => void;
+  // See DonationAmountOptionsModal — when true, ignores the global
+  // Malayali Mode toggle so this modal always shows plain/
+  // professional copy. Used by SupportFlow; omit (or pass false)
+  // for the normal store-driven behavior used by DonationFlow.
+  forceNormalMode?: boolean;
 };
 
 // Modal 3 of the donation flow — the actual payment step.
@@ -34,9 +39,13 @@ export function DonationPaymentModal({
   staticQrImageUri,
   onSent,
   onCancel,
+  forceNormalMode = false,
 }: DonationPaymentModalProps) {
-  const t = useContent();
-  const isMalayaliMode = useMalayaliModeStore((state) => state.isMalayaliMode);
+  const t = useContent(forceNormalMode);
+  const isMalayaliModeFromStore = useMalayaliModeStore(
+    (state) => state.isMalayaliMode,
+  );
+  const isMalayaliMode = forceNormalMode ? false : isMalayaliModeFromStore;
   const isMobile = useMediaQuery("(max-width: 767px)");
 
   const upiLink = buildUpiLink(amount);

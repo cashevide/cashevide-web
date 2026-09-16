@@ -10,6 +10,11 @@ type DonationCustomAmountModalProps = {
   visible: boolean;
   onDismiss: () => void;
   onContinue: (amount: number) => void;
+  // See DonationAmountOptionsModal — when true, ignores the global
+  // Malayali Mode toggle so this modal always shows plain/
+  // professional copy. Used by SupportFlow; omit (or pass false)
+  // for the normal store-driven behavior used by DonationFlow.
+  forceNormalMode?: boolean;
 };
 
 // Shown between Modal 2 (picking "custom") and Modal 3 (payment) —
@@ -21,9 +26,13 @@ export function DonationCustomAmountModal({
   visible,
   onDismiss,
   onContinue,
+  forceNormalMode = false,
 }: DonationCustomAmountModalProps) {
-  const t = useContent();
-  const isMalayaliMode = useMalayaliModeStore((state) => state.isMalayaliMode);
+  const t = useContent(forceNormalMode);
+  const isMalayaliModeFromStore = useMalayaliModeStore(
+    (state) => state.isMalayaliMode,
+  );
+  const isMalayaliMode = forceNormalMode ? false : isMalayaliModeFromStore;
   const [amountInput, setAmountInput] = useState("");
 
   const parsedAmount = parseInt(amountInput, 10);

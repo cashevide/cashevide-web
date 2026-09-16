@@ -12,6 +12,14 @@ type DonationAmountOptionsModalProps = {
   visible: boolean;
   onDismiss: () => void;
   onSelect: (option: DonationOption) => void;
+  // When true, ignores the global Malayali Mode toggle for this modal
+  // — plain "Small/Standard/Generous" labels, no food avatars — even
+  // if the user has Malayali Mode on elsewhere in the app. Used by
+  // SupportFlow (the Settings-triggered "Buy Me a Coffee" entry
+  // point), which always wants a plain/professional presentation.
+  // Omit (or pass false) for the normal store-driven behavior, as
+  // used by the invoice-paid DonationFlow.
+  forceNormalMode?: boolean;
 };
 
 // Maps each option's stable id to its label key — kept here rather
@@ -34,9 +42,13 @@ export function DonationAmountOptionsModal({
   visible,
   onDismiss,
   onSelect,
+  forceNormalMode = false,
 }: DonationAmountOptionsModalProps) {
-  const t = useContent();
-  const isMalayaliMode = useMalayaliModeStore((state) => state.isMalayaliMode);
+  const t = useContent(forceNormalMode);
+  const isMalayaliModeFromStore = useMalayaliModeStore(
+    (state) => state.isMalayaliMode,
+  );
+  const isMalayaliMode = forceNormalMode ? false : isMalayaliModeFromStore;
 
   return (
     <Modal
