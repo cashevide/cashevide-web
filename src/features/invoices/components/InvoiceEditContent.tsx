@@ -355,11 +355,29 @@ export function InvoiceEditContent() {
       payments,
     };
 
+    // Captured before the mutation fires — used in onSuccess below to
+    // detect a transition *into* PAID, not just "invoice is PAID now"
+    // (which would also be true on a second edit to an already-paid
+    // invoice). Only a genuine transition should trigger the donation
+    // prompt on the detail page.
+    const previousStatus = invoiceDetails.data?.status;
+
     updateInvoice.mutate(
       { id, payload },
       {
-        onSuccess: () => {
-          navigate(ROUTES.invoices.detail(id), { replace: true });
+        onSuccess: (data) => {
+          const justMarkedPaid =
+            previousStatus !== "PAID" && data.status === "PAID";
+
+          // The donation prompt itself lives on the invoice detail
+          // page (InvoiceDetailsContent), not here — this just flags
+          // the transition via router state so that page knows to
+          // open it once it lands. Keeps this save screen free of
+          // any donation UI/logic.
+          navigate(ROUTES.invoices.detail(id), {
+            replace: true,
+            state: justMarkedPaid ? { justMarkedPaid: true } : undefined,
+          });
         },
         onError: (error) => {
           const responseData = (

@@ -19,4 +19,35 @@ export type ContentKey =
   | "dashboard.promoCard.share.button"
   | "dashboard.promoCard.community.title"
   | "dashboard.promoCard.community.body"
-  | "dashboard.promoCard.community.button";
+  | "dashboard.promoCard.community.button"
+
+  // Donation flow — shown right after an invoice is marked PAID.
+  // Modal 1: initial prompt. Content differs by mode (playful/personal
+  // in Malayali Mode, professional in normal mode) — see
+  // DonationPromptModal.tsx.
+  | "donation.prompt.title"
+  | "donation.prompt.body"
+  | "donation.prompt.declineButton"
+  | "donation.prompt.acceptButton"
+
+  // Modal 2: amount picker. Item labels only exist in Malayali Mode
+  // (normal mode shows plain amounts with no food framing) — see
+  // DonationAmountOptionsModal.tsx.
+  | "donation.options.title"
+  | "donation.options.chaya.label"
+  | "donation.options.chayaParippuvada.label"
+  | "donation.options.shawarma.label"
+  | "donation.options.custom.label"
+
+  // Custom-amount entry step, shown before Modal 3 when "custom" is
+  // picked in Modal 2.
+  | "donation.customAmount.title"
+  | "donation.customAmount.placeholder"
+  | "donation.customAmount.continueButton"
+
+  // Modal 3: the actual payment step (deep link on mobile, QR on
+  // desktop) — see DonationPaymentModal.tsx.
+  | "donation.payment.title.mobile"
+  | "donation.payment.title.desktop"
+  | "donation.payment.sentButton"
+  | "donation.payment.cancelButton";

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 
 import { Container } from "../../../components/layout/Container";
 import { ScreenHeader } from "../../../components/layout/ScreenHeader";
@@ -13,6 +13,7 @@ import { useInvoiceDetails } from "../hooks/useInvoiceDetails";
 import { useDeleteInvoice } from "../hooks/useDeleteInvoice";
 import { useDownloadInvoicePdf } from "../hooks/useDownloadInvoicePdf";
 import { ROUTES } from "../../../lib/routes";
+import { DonationFlow } from "../../donation/components/DonationFlow";
 
 // Shared shell (header + Container) for the invalid/loading/not-found
 // states — keeps the header visible even when the main content can't
@@ -32,9 +33,19 @@ function DetailsShell({ children }: { children: React.ReactNode }) {
 
 export function InvoiceDetailsContent() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id: idParam } = useParams<{ id: string }>();
   const id = Number(idParam);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Set by InvoiceEditContent's navigate() when the save just moved
+  // this invoice's status into PAID — router state rather than a URL
+  // param/query string, since it's a one-shot signal for this landing,
+  // not something that should stay part of the shareable URL.
+  const locationState = location.state as { justMarkedPaid?: boolean } | null;
+  const [donationFlowOpen, setDonationFlowOpen] = useState(
+    locationState?.justMarkedPaid === true,
+  );
 
   const invoiceDetails = useInvoiceDetails(id, { enabled: !Number.isNaN(id) });
   const deleteInvoice = useDeleteInvoice();
@@ -158,6 +169,21 @@ export function InvoiceDetailsContent() {
             onClick={() => setErrorMessage(null)}
           />
         }
+      />
+
+      <DonationFlow
+        open={donationFlowOpen}
+        onDone={() => {
+          setDonationFlowOpen(false);
+          // Clears the router state so a refresh or a later visit
+          // (e.g. browser back/forward landing here again) doesn't
+          // reopen the prompt — this was a one-shot "just paid" signal
+          // for this specific landing on the page, not a durable flag.
+          navigate(ROUTES.invoices.detail(id), {
+            replace: true,
+            state: null,
+          });
+        }}
       />
     </div>
   );
