@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { Mail } from "lucide-react";
 
 import { Container } from "../../../components/layout/Container";
@@ -13,8 +13,24 @@ import { ROUTES } from "../../../lib/routes";
 
 export function WelcomeContent() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const { handleGoogleCredential, isPending } = useGoogleAuth();
+
+  // Referral deep links (e.g. shared from the Invite Friends dialog)
+  // land here first, since this is the very first signup screen —
+  // Google sign-in reads ?referral= itself inside useGoogleAuth, but
+  // "Continue with Email" is a plain navigate() with no query string
+  // of its own, so it needs the code forwarded explicitly here.
+  const referralCode = searchParams.get("referral");
+
+  function handleContinueWithEmail() {
+    navigate(
+      referralCode
+        ? `${ROUTES.signup.referral}?referral=${encodeURIComponent(referralCode)}`
+        : ROUTES.signup.referral,
+    );
+  }
 
   if (isPending) {
     return (
@@ -46,7 +62,7 @@ export function WelcomeContent() {
               variant="primary"
               title="Continue with Email"
               leftIcon={<Mail size={20} />}
-              onClick={() => navigate(ROUTES.signup.referral)}
+              onClick={handleContinueWithEmail}
               fullWidth
             />
           </div>

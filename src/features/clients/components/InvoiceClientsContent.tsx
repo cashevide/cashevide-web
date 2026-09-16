@@ -11,12 +11,10 @@ import { PillTabs } from "../../../components/ui/PillTabs";
 import { Spinner } from "../../../components/ui/Spinner";
 import { Avatar } from "../../../components/ui/Avatar";
 import { InfoDialog } from "../../../components/ui/InfoDialog";
-import { CreditBadge } from "../../../components/ui/CreditBadge";
-import { CreditPointsDialog } from "../../../components/ui/CreditPointsDialog";
+import { CreditPointsWidget } from "../../../components/ui/CreditPointsWidget";
 import { InvoiceSubTabs } from "../../invoices/components/InvoiceSubTabs";
 import { useClients } from "../hooks/useClients";
 import { useClientUsage } from "../hooks/useClientUsage";
-import { useUserProfile } from "../../profile/hooks/useUserProfile";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import { ROUTES } from "../../../lib/routes";
 
@@ -68,12 +66,10 @@ function ClientRow({ client }: { client: Client }) {
 
 export function InvoiceClientsContent() {
   const navigate = useNavigate();
-  const userProfile = useUserProfile();
   const [searchText, setSearchText] = useState("");
   const [ordering, setOrdering] =
     useState<GetClientsParams["ordering"]>("-created_at");
   const [showLimitDialog, setShowLimitDialog] = useState(false);
-  const [isCreditModalOpen, setIsCreditModalOpen] = useState(false);
   // Sentinel for scroll-triggered infinite loading — see
   // InvoiceListContent.tsx for why this replaces FlatList's
   // onEndReached on the web (IntersectionObserver instead).
@@ -141,10 +137,7 @@ export function InvoiceClientsContent() {
         <div className="flex flex-row items-center justify-between">
           <Text variant="heading">Clients</Text>
 
-          <CreditBadge
-            points={userProfile.data?.credit_points ?? 0}
-            onClick={() => setIsCreditModalOpen(true)}
-          />
+          <CreditPointsWidget />
         </div>
       </ScreenHeader>
 
@@ -249,12 +242,6 @@ export function InvoiceClientsContent() {
         title="Client Limit Reached"
         message={`You cannot add more than ${clientUsage.data?.max_allowed_client} clients in your current plan.`}
         onDismiss={() => setShowLimitDialog(false)}
-      />
-
-      <CreditPointsDialog
-        visible={isCreditModalOpen}
-        points={userProfile.data?.credit_points ?? 0}
-        onDismiss={() => setIsCreditModalOpen(false)}
       />
     </div>
   );

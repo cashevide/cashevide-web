@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router";
 
 import { Container } from "../../../components/layout/Container";
 import { Text } from "../../../components/ui/Text";
@@ -13,9 +13,24 @@ import { ROUTES } from "../../../lib/routes";
 
 export function GoogleReferralContent() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const [referralCode, setReferralCode] = useState("");
+  // Deep-link support: useGoogleAuth forwards ?referral= from the
+  // Welcome screen on to this route once Google auth resolves to
+  // "prompt_referral", so the code is still pre-fillable here even
+  // though it arrived via a redirect rather than a direct link click.
+  // Mirrors ReferralCodeContent's handling for the email signup flow.
+  const [referralCode, setReferralCode] = useState(
+    () => searchParams.get("referral")?.trim().toUpperCase() ?? "",
+  );
   const [requestModalVisible, setRequestModalVisible] = useState(false);
+
+  // Guards against re-firing the auto-navigate once the user has
+  // already been moved forward — without this, coming back to this
+  // screen (e.g. via the browser back button) with the same ?referral=
+  // URL still in the address bar would immediately bounce them
+  // forward again the moment validation resolves.
+  const hasAutoNavigatedRef = useRef(false);
 
   const setReferralCodeInput = useGoogleAuthStore(
     (state) => state.setReferralCodeInput,
@@ -27,6 +42,24 @@ export function GoogleReferralContent() {
     setReferralCodeInput(referralCode.trim());
     navigate(ROUTES.signup.google.username);
   }
+
+  // Only auto-advances when the code came from the URL, not when the
+  // user is mid-typing their own code — otherwise finishing a valid
+  // code by hand would yank them to the next screen before they get a
+  // chance to notice the success message or use "Get one" instead.
+  const cameFromDeepLink = searchParams.has("referral");
+
+  useEffect(() => {
+    if (
+      cameFromDeepLink &&
+      !hasAutoNavigatedRef.current &&
+      referralCheck.data?.is_valid === true
+    ) {
+      hasAutoNavigatedRef.current = true;
+      handleContinue();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cameFromDeepLink, referralCheck.data?.is_valid]);
 
   const canContinue = referralCheck.data?.is_valid === true;
 

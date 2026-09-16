@@ -6,8 +6,7 @@ import { ScreenHeader } from "../../../components/layout/ScreenHeader";
 import { Text } from "../../../components/ui/Text";
 import { Button } from "../../../components/ui/Button";
 import { Spinner } from "../../../components/ui/Spinner";
-import { CreditPointsDialog } from "../../../components/ui/CreditPointsDialog";
-import { CreditBadge } from "../../../components/ui/CreditBadge";
+import { CreditPointsWidget } from "../../../components/ui/CreditPointsWidget";
 import { MalayaliModePrompt } from "../../onboarding/components/MalayaliModePrompt";
 import { DashboardPromoCard } from "./DashboardPromoCard";
 import { useOnboardingPromptStore } from "../../../stores/onboardingPromptStore";
@@ -18,7 +17,6 @@ import { DashboardBalanceDueCard } from "./DashboardBalanceDueCard";
 import { DashboardSummaryCard } from "./DashboardSummaryCard";
 import { useInvoiceDashboard } from "../hooks/useInvoiceDashboard";
 import { useBusinessProfile } from "../../business-profile/hooks/useBusinessProfile";
-import { useUserProfile } from "../../profile/hooks/useUserProfile";
 import { getAvailableCurrencies } from "../utils/invoiceDashboardUtils";
 
 import type { InvoiceDashboardResponse } from "../types/invoiceDashboardTypes";
@@ -26,9 +24,7 @@ import type { InvoiceDashboardResponse } from "../types/invoiceDashboardTypes";
 export function InvoiceDashboardContent() {
   const dashboard = useInvoiceDashboard();
   const businessProfile = useBusinessProfile();
-  const userProfile = useUserProfile();
   const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
-  const [isCreditModalOpen, setIsCreditModalOpen] = useState(false);
   const hasSeenMalayaliPrompt = useOnboardingPromptStore(
     (state) => state.hasSeenMalayaliPrompt,
   );
@@ -54,10 +50,7 @@ export function InvoiceDashboardContent() {
         <div className="flex flex-row items-center justify-between">
           <Text variant="heading">Dashboard</Text>
 
-          <CreditBadge
-            points={userProfile.data?.credit_points ?? 0}
-            onClick={() => setIsCreditModalOpen(true)}
-          />
+          <CreditPointsWidget />
         </div>
       </ScreenHeader>
 
@@ -97,12 +90,6 @@ export function InvoiceDashboardContent() {
           )}
         </div>
       </Container>
-
-      <CreditPointsDialog
-        visible={isCreditModalOpen}
-        points={userProfile.data?.credit_points ?? 0}
-        onDismiss={() => setIsCreditModalOpen(false)}
-      />
 
       {/* Shown once, on first visit to the dashboard after signup —
           `hasSeenMalayaliPrompt` flips to true from inside the prompt

@@ -1,14 +1,22 @@
+import { useState } from "react";
 import { UserPlus } from "lucide-react";
 
 import { Button } from "./Button";
 import { Modal } from "./Modal";
 import { Text } from "./Text";
+import { ROUTES } from "../../lib/routes";
 
 interface CreditPointsDialogProps {
   visible: boolean;
   points: number;
   onDismiss: () => void;
-  onInviteFriends?: () => void;
+  // The signed-in user's own referral code (UserProfile.referral_code)
+  // — when present, "Invite Friends" shares/copies a link that
+  // auto-applies this code on the recipient's signup flow
+  // (WelcomeContent forwards ?referral= through to whichever signup
+  // path they pick). Left undefined while the profile is still
+  // loading, in which case the button just closes the dialog.
+  referralCode?: string;
 }
 
 // Reusable "credit points" info dialog — pairs with CreditBadge as the
@@ -25,8 +33,46 @@ export function CreditPointsDialog({
   visible,
   points,
   onDismiss,
-  onInviteFriends,
+  referralCode,
 }: CreditPointsDialogProps) {
+  const [justCopied, setJustCopied] = useState(false);
+
+  async function handleInviteFriends() {
+    if (!referralCode) {
+      onDismiss();
+      return;
+    }
+
+    const inviteLink = `${window.location.origin}${ROUTES.welcome}?referral=${encodeURIComponent(referralCode)}`;
+
+    // Web Share API — supported on mobile browsers and Safari/Edge on
+    // desktop, but not desktop Chrome-on-Linux or desktop Firefox, so
+    // this always needs the clipboard fallback below rather than being
+    // treated as universally available. `"share" in navigator` is the
+    // feature-detection check (rather than always calling it and
+    // catching the failure), since calling an undefined method throws
+    // a TypeError, not the "not supported" rejection this catch block
+    // is written for.
+    if ("share" in navigator) {
+      try {
+        await navigator.share({
+          title: "Join me on Cashevide",
+          text: "Sign up on Cashevide with my referral link and we both earn credit points.",
+          url: inviteLink,
+        });
+        return;
+      } catch {
+        // User cancelled the share sheet, or the browser rejected the
+        // call — fall through to clipboard copy either way rather
+        // than leaving the button appearing to do nothing.
+      }
+    }
+
+    await navigator.clipboard.writeText(inviteLink);
+    setJustCopied(true);
+    setTimeout(() => setJustCopied(false), 2000);
+  }
+
   return (
     <Modal
       visible={visible}
@@ -40,9 +86,9 @@ export function CreditPointsDialog({
       footer={
         <Button
           variant="brand"
-          title="Invite Friends"
+          title={justCopied ? "Link Copied!" : "Invite Friends"}
           leftIcon={<UserPlus size={18} />}
-          onClick={onInviteFriends ?? onDismiss}
+          onClick={handleInviteFriends}
           fullWidth
         />
       }

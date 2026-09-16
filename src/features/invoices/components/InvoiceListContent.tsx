@@ -9,13 +9,11 @@ import { Button } from "../../../components/ui/Button";
 import { SearchInput } from "../../../components/ui/SearchInput";
 import { Spinner } from "../../../components/ui/Spinner";
 import { PillTabs } from "../../../components/ui/PillTabs";
-import { CreditBadge } from "../../../components/ui/CreditBadge";
-import { CreditPointsDialog } from "../../../components/ui/CreditPointsDialog";
+import { CreditPointsWidget } from "../../../components/ui/CreditPointsWidget";
 import { InvoiceSubTabs } from "./InvoiceSubTabs";
 import { InvoiceStatusBadge } from "./InvoiceStatusBadge";
 import { InvoiceFilterModal, type InvoiceFilters } from "./InvoiceFilterModal";
 import { useInvoices } from "../hooks/useInvoices";
-import { useUserProfile } from "../../profile/hooks/useUserProfile";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import { ROUTES } from "../../../lib/routes";
 import { cn } from "../../../utils/cn";
@@ -189,13 +187,11 @@ function InvoiceRow({ invoice }: { invoice: Invoice }) {
 
 export function InvoiceListContent() {
   const navigate = useNavigate();
-  const userProfile = useUserProfile();
   const [searchText, setSearchText] = useState("");
   const [ordering, setOrdering] =
     useState<GetInvoicesParams["ordering"]>("-created_at");
   const [filters, setFilters] = useState<InvoiceFilters>(EMPTY_FILTERS);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
-  const [isCreditModalOpen, setIsCreditModalOpen] = useState(false);
   // Sentinel element at the bottom of the list — when it scrolls into
   // view, fetch the next page. This is web's equivalent of Expo's
   // FlatList onEndReached (which has no direct DOM equivalent); an
@@ -286,10 +282,7 @@ export function InvoiceListContent() {
         <div className="flex flex-row items-center justify-between">
           <Text variant="heading">Invoices</Text>
 
-          <CreditBadge
-            points={userProfile.data?.credit_points ?? 0}
-            onClick={() => setIsCreditModalOpen(true)}
-          />
+          <CreditPointsWidget />
         </div>
       </ScreenHeader>
 
@@ -427,12 +420,6 @@ export function InvoiceListContent() {
         initialFilters={filters}
         onApply={setFilters}
         onDismiss={() => setFilterModalVisible(false)}
-      />
-
-      <CreditPointsDialog
-        visible={isCreditModalOpen}
-        points={userProfile.data?.credit_points ?? 0}
-        onDismiss={() => setIsCreditModalOpen(false)}
       />
     </div>
   );

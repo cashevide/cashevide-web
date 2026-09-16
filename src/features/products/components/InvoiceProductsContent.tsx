@@ -10,12 +10,10 @@ import { SearchInput } from "../../../components/ui/SearchInput";
 import { PillTabs } from "../../../components/ui/PillTabs";
 import { Spinner } from "../../../components/ui/Spinner";
 import { InfoDialog } from "../../../components/ui/InfoDialog";
-import { CreditBadge } from "../../../components/ui/CreditBadge";
-import { CreditPointsDialog } from "../../../components/ui/CreditPointsDialog";
+import { CreditPointsWidget } from "../../../components/ui/CreditPointsWidget";
 import { InvoiceSubTabs } from "../../invoices/components/InvoiceSubTabs";
 import { useProducts } from "../hooks/useProducts";
 import { useProductUsage } from "../hooks/useProductUsage";
-import { useUserProfile } from "../../profile/hooks/useUserProfile";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
 import { ROUTES } from "../../../lib/routes";
 
@@ -71,12 +69,10 @@ function ProductRow({ product }: { product: Product }) {
 
 export function InvoiceProductsContent() {
   const navigate = useNavigate();
-  const userProfile = useUserProfile();
   const [searchText, setSearchText] = useState("");
   const [ordering, setOrdering] =
     useState<GetProductsParams["ordering"]>("-created_at");
   const [showLimitDialog, setShowLimitDialog] = useState(false);
-  const [isCreditModalOpen, setIsCreditModalOpen] = useState(false);
   // Sentinel for scroll-triggered infinite loading — see
   // InvoiceListContent.tsx for why this replaces FlatList's
   // onEndReached on the web (IntersectionObserver instead).
@@ -144,10 +140,7 @@ export function InvoiceProductsContent() {
         <div className="flex flex-row items-center justify-between">
           <Text variant="heading">Products</Text>
 
-          <CreditBadge
-            points={userProfile.data?.credit_points ?? 0}
-            onClick={() => setIsCreditModalOpen(true)}
-          />
+          <CreditPointsWidget />
         </div>
       </ScreenHeader>
 
@@ -254,12 +247,6 @@ export function InvoiceProductsContent() {
         title="Product Limit Reached"
         message={`You cannot add more than ${productUsage.data?.max_allowed_product} products in your current plan.`}
         onDismiss={() => setShowLimitDialog(false)}
-      />
-
-      <CreditPointsDialog
-        visible={isCreditModalOpen}
-        points={userProfile.data?.credit_points ?? 0}
-        onDismiss={() => setIsCreditModalOpen(false)}
       />
     </div>
   );
