@@ -9,6 +9,45 @@
 }
 
 /*
+  Used only by ClassicInvoiceLayout, to match the backend's classic.html
+  PDF template exactly (invoices/templates/invoices/classic.html) — that
+  template only declares these two weights (SemiBold/600 for the "Bill
+  To" client name, Bold/700 for company name, phone numbers, table
+  headers, totals bar), so only these two are loaded here. Do not widen
+  this to a variable font or add other weights without checking the
+  backend template first — the whole point of this replica is matching
+  its exact @font-face rules, not "close enough" Poppins.
+*/
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/*
+  Used only by ClassicInvoiceLayout's big "Invoice" title — matches
+  classic.html's `.invoice-title` font-family exactly. Single weight
+  (400/Regular), same as the backend template.
+*/
+@font-face {
+  font-family: "Orange Avenue DEMO";
+  src: url("/fonts/OrangeAvenueDEMO-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/*
   Numeric-display font — for figures where Geist's digits read too
   plain (amounts, invoice numbers, stats). Two static weights, each
   with an italic style — Space Mono doesn't ship as a variable font,

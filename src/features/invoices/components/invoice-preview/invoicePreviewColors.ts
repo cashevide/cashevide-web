@@ -33,3 +33,22 @@ export const invoicePreviewColors = {
   statusSuccessBg: "#09ba3826", // --color-success + 15% alpha
   statusSuccessText: "#1a8938", // --color-success-text
 } as const;
+
+// classic.html (the backend PDF template) hardcodes its own status-badge
+// colors, separate from the app's theme tokens above — .status-draft /
+// .status-unpaid / .status-partially_paid / .status-paid in that
+// template's <style> block. ClassicInvoiceLayout is a pixel-and-text
+// replica of that PDF, so its badge must use THESE exact values, not
+// the generic ones. CustomizableInvoiceLayout has no such backend
+// template opinion, so it keeps using the generic statusXxxBg/Text
+// colors above — do not point it at this palette.
+export const classicStatusColors = {
+  draftBg: "#f3f4f6",
+  draftText: "#4b5563",
+  unpaidBg: "#fef3c7",
+  unpaidText: "#b45309",
+  partiallyPaidBg: "#dbeafe",
+  partiallyPaidText: "#1d4ed8",
+  paidBg: "#dcfce7",
+  paidText: "#15803d",
+} as const;

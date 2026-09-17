@@ -36,6 +36,7 @@ export type InvoicePreviewData = {
     id: number | string;
     title: string;
     quantity: string;
+    unit_type: "QTY" | "HRS" | "DAYS";
     unit_price: string;
     total: string;
   }[];

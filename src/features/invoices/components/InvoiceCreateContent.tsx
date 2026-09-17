@@ -192,6 +192,7 @@ export function InvoiceCreateContent() {
         id: item.id ?? `draft-${index}`,
         title: item.title ?? "",
         quantity: item.quantity ?? "",
+        unit_type: item.unit_type ?? "QTY",
         unit_price: item.unit_price ?? "",
         total: calculateItemTotal(item).toFixed(2),
       })),
