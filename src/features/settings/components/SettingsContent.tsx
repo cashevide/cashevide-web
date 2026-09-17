@@ -42,8 +42,8 @@ function SettingsRow({ icon: Icon, label, onClick }: SettingsMenuItem) {
       onClick={onClick}
       className="w-full flex flex-row items-center gap-3 py-3 px-4 cursor-pointer hover:bg-secondary/30"
     >
-      <div className="h-9 w-9 flex items-center justify-center rounded-full bg-secondary">
-        <Icon size={18} className="text-muted-foreground" />
+      <div className="h-9 w-9 flex items-center justify-center rounded-full bg-card">
+        <Icon size={20} className="text-foreground" />
       </div>
 
       <Text variant="body" className="flex-1 text-left">

@@ -44,8 +44,8 @@ export function InfoListRow({
         !isLast && "border-b border-border/50",
       )}
     >
-      <div className="h-9 w-9 flex items-center justify-center rounded-full bg-secondary">
-        <Icon size={18} className="text-muted-foreground" />
+      <div className="h-9 w-9 flex items-center justify-center rounded-full bg-card">
+        <Icon size={20} className="text-foreground" />
       </div>
 
       <Text variant="body-sm" className="text-muted-foreground w-28">

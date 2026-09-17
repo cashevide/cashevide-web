@@ -1,5 +1,12 @@
 import { useNavigate } from "react-router";
-import { MapPin, Phone, Mail, Globe, IndianRupee, IdCard } from "lucide-react";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Globe,
+  CircleDollarSign,
+  IdCard,
+} from "lucide-react";
 
 import { ProfileSubTabs } from "../../profile/components/ProfileSubTabs";
 import { useBusinessProfile } from "../hooks/useBusinessProfile";
@@ -116,7 +123,7 @@ export function BusinessProfileContent() {
                     isLast={lastFieldKey === "website"}
                   />
                   <InfoListRow
-                    icon={IndianRupee}
+                    icon={CircleDollarSign}
                     label="Currency"
                     value={businessProfile.data.currency}
                     isLast={lastFieldKey === "currency"}
