@@ -63,7 +63,7 @@ export function InvoiceItemFormRow({
           onClick={() => setProductPickerVisible(true)}
           className="cursor-pointer"
         >
-          <Text variant="body-sm" className="text-link">
+          <Text variant="body-sm" className="text-link pl-1">
             {item.product ? "Product selected — change" : "Select from catalog"}
           </Text>
         </button>

@@ -1,8 +1,19 @@
 import { useEffect, useState } from "react";
 
-import { DonationAmountOptionsModal } from "./DonationAmountOptionsModal";
-import { DonationCustomAmountModal } from "./DonationCustomAmountModal";
-import { DonationPaymentModal } from "./DonationPaymentModal";
+import { Modal } from "../../../components/ui/Modal";
+import {
+  DonationAmountOptionsModal,
+  useDonationAmountOptionsTitle,
+} from "./DonationAmountOptionsModal";
+import {
+  DonationCustomAmountModal,
+  useDonationCustomAmountTitle,
+} from "./DonationCustomAmountModal";
+import {
+  DonationPaymentModal,
+  DONATION_PAYMENT_MODAL_CLASS,
+  useDonationPaymentTitle,
+} from "./DonationPaymentModal";
 
 import type { DonationOption } from "../types/donationTypes";
 
@@ -49,6 +60,12 @@ type SupportFlowProps = {
 // flow via onDone. The payment step is the one exception: its
 // secondary action goes back to "options" instead of ending the flow
 // (see handleBackFromPayment) — same behavior as DonationFlow.
+//
+// Like DonationFlow, this renders ONE shared <Modal> for the whole
+// flow rather than one per step — see DonationFlow.tsx's comment for
+// why (avoids overlapping backdrops during step changes, which used
+// to cause a visible flash and, worse, dismiss clicks landing on the
+// wrong step's backdrop).
 export function SupportFlow({ open, onDone }: SupportFlowProps) {
   const [step, setStep] = useState<SupportStep>("closed");
   const [payment, setPayment] = useState<PaymentState | null>(null);
@@ -90,43 +107,74 @@ export function SupportFlow({ open, onDone }: SupportFlowProps) {
     setStep("payment");
   }
 
-  function handleFinishPayment() {
-    setStep("closed");
-    setPayment(null);
-    onDone();
-  }
-
   // Takes the user back to the amount-picker step instead of ending
-  // the flow — unlike handleFinishPayment, this doesn't call onDone()
-  // since the flow is still open, just one step back.
+  // the flow — unlike the dismiss handlers above, this doesn't call
+  // onDone() since the flow is still open, just one step back.
   function handleBackFromPayment() {
     setPayment(null);
     setStep("options");
   }
 
+  // See DonationFlow.tsx for why all step hooks run unconditionally
+  // on every render (Rules of Hooks) rather than only for the current
+  // step.
+  const optionsTitle = useDonationAmountOptionsTitle();
+  const customAmountTitle = useDonationCustomAmountTitle();
+  const paymentTitle = useDonationPaymentTitle();
+
+  const title =
+    step === "options"
+      ? optionsTitle
+      : step === "customAmount"
+        ? customAmountTitle
+        : step === "payment"
+          ? paymentTitle
+          : undefined;
+
+  const modalClassName =
+    step === "options"
+      ? "text-center"
+      : step === "customAmount"
+        ? "items-center text-center"
+        : step === "payment"
+          ? DONATION_PAYMENT_MODAL_CLASS
+          : "";
+
+  // See DonationFlow.tsx — backdrop dismiss means different things
+  // per step; "payment" steps back to "options" instead of ending the
+  // flow (matches its own Back button).
+  const handleModalDismiss =
+    step === "options"
+      ? handleDismissOptions
+      : step === "customAmount"
+        ? handleDismissCustomAmount
+        : step === "payment"
+          ? handleBackFromPayment
+          : undefined;
+
   return (
-    <>
-      <DonationAmountOptionsModal
-        visible={step === "options"}
-        onDismiss={handleDismissOptions}
-        onSelect={handleSelectOption}
-      />
+    <Modal
+      visible={step !== "closed"}
+      dismissible
+      onDismiss={handleModalDismiss}
+      title={title}
+      className={modalClassName}
+    >
+      {step === "options" && (
+        <DonationAmountOptionsModal onSelect={handleSelectOption} />
+      )}
 
-      <DonationCustomAmountModal
-        visible={step === "customAmount"}
-        onDismiss={handleDismissCustomAmount}
-        onContinue={handleContinueCustomAmount}
-      />
+      {step === "customAmount" && (
+        <DonationCustomAmountModal onContinue={handleContinueCustomAmount} />
+      )}
 
-      {payment && (
+      {step === "payment" && payment && (
         <DonationPaymentModal
-          visible={step === "payment"}
           amount={payment.amount}
           staticQrImageUri={payment.staticQrImageUri}
-          onSent={handleFinishPayment}
           onBack={handleBackFromPayment}
         />
       )}
-    </>
+    </Modal>
   );
 }

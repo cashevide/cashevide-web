@@ -14,6 +14,7 @@ import { InvoiceSubTabs } from "../../invoices/components/InvoiceSubTabs";
 import { useProducts } from "../hooks/useProducts";
 import { useProductUsage } from "../hooks/useProductUsage";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
+import { useMediaQuery } from "../../../hooks/useMediaQuery";
 import { ROUTES } from "../../../lib/routes";
 
 import type { GetProductsParams } from "../api/productsApi";
@@ -68,6 +69,7 @@ function ProductRow({ product }: { product: Product }) {
 
 export function InvoiceProductsContent() {
   const navigate = useNavigate();
+  const isDesktopLayout = useMediaQuery("(min-width: 768px)");
   const [searchText, setSearchText] = useState("");
   const [ordering, setOrdering] =
     useState<GetProductsParams["ordering"]>("-created_at");
@@ -135,65 +137,129 @@ export function InvoiceProductsContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader title="Products" />
+      {isDesktopLayout ? (
+        <ScreenHeader title="Products" />
+      ) : (
+        <ScreenHeader showCreditPoints={false}>
+          <div className="flex flex-row items-center justify-between">
+            <Text variant="body-lg" className="font-semibold text-2xl">
+              Products
+            </Text>
 
-      {/* Fixed block: sub-tabs, search, sort tabs, archived link — see
-          InvoiceListContent.tsx for why this sits outside Container's
-          scroll area. */}
-      <div className="w-full mx-auto max-w-desktop px-6 pt-6 pb-4 flex flex-col gap-4">
-        <InvoiceSubTabs />
+            <Button
+              variant="brand"
+              shape="md"
+              className="h-9 min-w-0 shrink-0 px-3.5 rounded-md"
+              title="New Product"
+              leftIcon={<Plus size={14} />}
+              onClick={handleAddProductPress}
+            />
+          </div>
+        </ScreenHeader>
+      )}
 
-        <SearchInput
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          onClear={() => setSearchText("")}
-          placeholder="Search by title"
-        />
+      {/* Sub-tabs, search, sort tabs, archived link. On desktop this
+          stays OUTSIDE Container's scroll area (fixed chrome) —
+          unchanged from before. On mobile it's rendered INSIDE
+          Container instead (below), so it scrolls away with the list. */}
+      {isDesktopLayout && (
+        <div className="w-full mx-auto max-w-desktop px-6 pt-6 pb-4 flex flex-col gap-4">
+          <InvoiceSubTabs />
 
-        <div className="flex flex-row items-center justify-between gap-2">
-          <PillTabs
-            items={ORDERING_OPTIONS}
-            activeKey={ordering ?? ORDERING_OPTIONS[0].key}
-            onSelect={(key) =>
-              setOrdering(key as GetProductsParams["ordering"])
-            }
-            layout="segmented"
+          <SearchInput
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            onClear={() => setSearchText("")}
+            placeholder="Search by title"
           />
 
-          {/* Sized to match PillTabs' segmented track exactly — see
-              InvoiceListContent.tsx for the h-9/rounded-md math. */}
-          <Button
-            variant="brand"
-            shape="md"
-            className="h-9 min-w-0 shrink-0 px-3.5 rounded-md"
-            title="New Product"
-            leftIcon={<Plus size={14} />}
-            onClick={handleAddProductPress}
-          />
-        </div>
+          <div className="flex flex-row items-center justify-between gap-2">
+            <PillTabs
+              items={ORDERING_OPTIONS}
+              activeKey={ordering ?? ORDERING_OPTIONS[0].key}
+              onSelect={(key) =>
+                setOrdering(key as GetProductsParams["ordering"])
+              }
+              layout="segmented"
+            />
 
-        <div className="flex flex-row items-center justify-between">
-          {!products.isLoading && allProducts.length > 0 ? (
-            <Text variant="caption" className="pl-1">
-              {totalCount} {totalCount === 1 ? "product" : "products"}
-            </Text>
-          ) : (
-            <div />
-          )}
+            {/* Sized to match PillTabs' segmented track exactly — see
+                InvoiceListContent.tsx for the h-9/rounded-md math. */}
+            <Button
+              variant="brand"
+              shape="md"
+              className="h-9 min-w-0 shrink-0 px-3.5 rounded-md"
+              title="New Product"
+              leftIcon={<Plus size={14} />}
+              onClick={handleAddProductPress}
+            />
+          </div>
 
-          <button
-            type="button"
-            onClick={() => navigate(ROUTES.invoices.products.archived)}
-            className="cursor-pointer"
-          >
-            <Text variant="body-sm" className="text-link">
-              Archived
-            </Text>
-          </button>
+          <div className="flex flex-row items-center justify-between">
+            {!products.isLoading && allProducts.length > 0 ? (
+              <Text variant="caption" className="pl-1">
+                {totalCount} {totalCount === 1 ? "product" : "products"}
+              </Text>
+            ) : (
+              <div />
+            )}
+
+            <button
+              type="button"
+              onClick={() => navigate(ROUTES.invoices.products.archived)}
+              className="cursor-pointer"
+            >
+              <Text variant="body-sm" className="text-link">
+                Archived
+              </Text>
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       <Container variant="desktop" scroll>
+        {!isDesktopLayout && (
+          <div className="flex flex-col gap-4 px-6 pt-6 pb-4">
+            <InvoiceSubTabs />
+
+            <SearchInput
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              onClear={() => setSearchText("")}
+              placeholder="Search by title"
+            />
+
+            <PillTabs
+              items={ORDERING_OPTIONS}
+              activeKey={ordering ?? ORDERING_OPTIONS[0].key}
+              onSelect={(key) =>
+                setOrdering(key as GetProductsParams["ordering"])
+              }
+              layout="segmented"
+            />
+
+            <div className="flex flex-row items-center justify-between">
+              {!products.isLoading && allProducts.length > 0 ? (
+                <Text variant="caption" className="pl-1">
+                  {totalCount} {totalCount === 1 ? "product" : "products"}
+                </Text>
+              ) : (
+                <div />
+              )}
+
+              <button
+                type="button"
+                onClick={() => navigate(ROUTES.invoices.products.archived)}
+                className="cursor-pointer"
+              >
+                <Text variant="body-sm" className="text-link">
+                  Archived
+                </Text>
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="flex flex-1 flex-col gap-3 px-6 py-6">
           {products.isLoading ? (
             <div>

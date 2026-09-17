@@ -55,5 +55,4 @@ export type ContentKey =
   // the amount-picker step (Modal 2), not a flow-abandoning cancel.
   | "donation.payment.title.mobile"
   | "donation.payment.title.desktop"
-  | "donation.payment.sentButton"
   | "donation.payment.backButton";

@@ -14,6 +14,7 @@ import { InvoiceStatusBadge } from "./InvoiceStatusBadge";
 import { InvoiceFilterModal, type InvoiceFilters } from "./InvoiceFilterModal";
 import { useInvoices } from "../hooks/useInvoices";
 import { useDebouncedValue } from "../../../hooks/useDebouncedValue";
+import { useMediaQuery } from "../../../hooks/useMediaQuery";
 import { ROUTES } from "../../../lib/routes";
 import { cn } from "../../../utils/cn";
 
@@ -110,7 +111,13 @@ function SkeletonRow() {
   );
 }
 
-function InvoiceRow({ invoice }: { invoice: Invoice }) {
+function InvoiceRow({
+  invoice,
+  isDesktopLayout,
+}: {
+  invoice: Invoice;
+  isDesktopLayout: boolean;
+}) {
   const navigate = useNavigate();
   const itemCount = invoice.items.length;
   const overdue = invoice.status !== "PAID" && isOverdue(invoice.due_date);
@@ -139,18 +146,26 @@ function InvoiceRow({ invoice }: { invoice: Invoice }) {
       className="flex flex-col gap-3 bg-card border border-border rounded-lg p-4 text-left cursor-pointer transition-colors duration-200 hover:bg-card/80 hover:border-border/60"
     >
       <div className="flex flex-row items-center gap-3 px-3">
-        <Text variant="body-lg" className="flex-shrink truncate font-semibold">
+        <Text
+          variant="body-lg"
+          className={cn(
+            "truncate font-semibold",
+            isDesktopLayout ? "flex-shrink" : "flex-1",
+          )}
+        >
           {invoice.name || "Untitled Client"}
         </Text>
 
-        <Text
-          variant="body-sm"
-          className="flex-1 truncate text-muted-foreground"
-        >
-          {invoice.invoice_number}
-          {itemCount > 0 &&
-            ` · ${itemCount} ${itemCount === 1 ? "item" : "items"}`}
-        </Text>
+        {isDesktopLayout && (
+          <Text
+            variant="body-sm"
+            className="flex-1 truncate text-muted-foreground"
+          >
+            {invoice.invoice_number}
+            {itemCount > 0 &&
+              ` · ${itemCount} ${itemCount === 1 ? "item" : "items"}`}
+          </Text>
+        )}
 
         <InvoiceStatusBadge status={invoice.status} />
       </div>
@@ -186,6 +201,7 @@ function InvoiceRow({ invoice }: { invoice: Invoice }) {
 
 export function InvoiceListContent() {
   const navigate = useNavigate();
+  const isDesktopLayout = useMediaQuery("(min-width: 768px)");
   const [searchText, setSearchText] = useState("");
   const [ordering, setOrdering] =
     useState<GetInvoicesParams["ordering"]>("-created_at");
@@ -277,94 +293,182 @@ export function InvoiceListContent() {
     // bounded box to scroll within instead of pushing past this wrapper
     // and forcing the whole page (body) to scroll.
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader title="Invoices" />
+      {isDesktopLayout ? (
+        <ScreenHeader title="Invoices" />
+      ) : (
+        <ScreenHeader showCreditPoints={false}>
+          <div className="flex flex-row items-center justify-between">
+            <Text variant="body-lg" className="font-semibold text-2xl">
+              Invoices
+            </Text>
 
-      {/* Fixed block: sub-tabs, search/filter, active-filter chips, sort
-          tabs. Deliberately OUTSIDE Container's scroll area — only the
-          invoice cards below should scroll. Sits between ScreenHeader and
-          Container, same fixed-chrome role ScreenHeader plays; the list
-          section below is the only part that scrolls. */}
-      <div className="w-full mx-auto max-w-desktop px-6 pt-6 pb-4 flex flex-col gap-4">
-        <InvoiceSubTabs />
-
-        <div className="flex flex-row items-center gap-2">
-          <SearchInput
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            onClear={() => setSearchText("")}
-            placeholder="Search by invoice #, name, email or phone"
-            className="flex-1"
-          />
-
-          <button
-            type="button"
-            onClick={() => setFilterModalVisible(true)}
-            className={cn(
-              "h-12 w-12 flex items-center justify-center rounded-lg border cursor-pointer",
-              filtersActive
-                ? "bg-secondary border-border"
-                : "bg-card border-border",
-            )}
-          >
-            <Funnel
-              size={20}
-              className={
-                filtersActive ? "text-foreground" : "text-muted-foreground"
-              }
+            <Button
+              variant="brand"
+              shape="md"
+              className="h-9 min-w-0 shrink-0 px-3.5 rounded-md"
+              title="New Invoice"
+              leftIcon={<Plus size={14} />}
+              onClick={() => navigate(ROUTES.invoices.create)}
             />
-          </button>
-        </div>
+          </div>
+        </ScreenHeader>
+      )}
 
-        {chips.length > 0 && (
-          <div className="flex flex-row flex-wrap gap-2">
-            {chips.map((chip) => (
+      {/* Sub-tabs, search/filter, active-filter chips, sort tabs. On
+          desktop this stays OUTSIDE Container's scroll area (fixed
+          chrome, only the invoice cards below scroll) — unchanged
+          from before. On mobile it's rendered INSIDE Container instead
+          (below), so it scrolls away with the list, matching the
+          native app's behavior. */}
+      {isDesktopLayout && (
+        <div className="w-full mx-auto max-w-desktop px-6 pt-6 pb-4 flex flex-col gap-4">
+          <InvoiceSubTabs />
+
+          <div className="flex flex-row items-center gap-2">
+            <SearchInput
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              onClear={() => setSearchText("")}
+              placeholder="Search by invoice #, name, email or phone"
+              className="flex-1"
+            />
+
+            <button
+              type="button"
+              onClick={() => setFilterModalVisible(true)}
+              className={cn(
+                "h-12 w-12 flex items-center justify-center rounded-lg border cursor-pointer",
+                filtersActive
+                  ? "bg-secondary border-border"
+                  : "bg-card border-border",
+              )}
+            >
+              <Funnel
+                size={20}
+                className={
+                  filtersActive ? "text-foreground" : "text-muted-foreground"
+                }
+              />
+            </button>
+          </div>
+
+          {chips.length > 0 && (
+            <div className="flex flex-row flex-wrap gap-2">
+              {chips.map((chip) => (
+                <button
+                  type="button"
+                  key={chip.key}
+                  onClick={() => removeChip(chip.key)}
+                  className="flex flex-row items-center gap-1.5 rounded-full bg-secondary border border-border pl-3 pr-2 py-1.5 cursor-pointer"
+                >
+                  <Text variant="body-sm">{chip.label}</Text>
+                  <X size={14} className="text-muted-foreground" />
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className="flex flex-row items-center justify-between gap-2">
+            <PillTabs
+              items={ORDERING_OPTIONS}
+              activeKey={ordering ?? ORDERING_OPTIONS[0].key}
+              onSelect={(key) =>
+                setOrdering(key as GetInvoicesParams["ordering"])
+              }
+              layout="segmented"
+            />
+
+            {/* Sized to match PillTabs' segmented track exactly: h-7
+                (28px) segment buttons sit inside p-1 (4px) padding, so
+                the track's own outer height is 28 + 4 + 4 = 36px —
+                h-9. rounded-md mirrors the track's own corner radius
+                too, so this button reads as sitting on the same row
+                rather than as a mismatched control dropped in beside
+                it. */}
+            <Button
+              variant="brand"
+              shape="md"
+              className="h-9 min-w-0 shrink-0 px-3.5 rounded-md"
+              title="New Invoice"
+              leftIcon={<Plus size={14} />}
+              onClick={() => navigate(ROUTES.invoices.create)}
+            />
+          </div>
+
+          {!invoices.isLoading && allInvoices.length > 0 && (
+            <Text variant="caption" className="pl-1">
+              {totalCount} {totalCount === 1 ? "invoice" : "invoices"}
+            </Text>
+          )}
+        </div>
+      )}
+
+      <Container variant="desktop" scroll>
+        {!isDesktopLayout && (
+          <div className="flex flex-col gap-4 px-6 pt-6 pb-4">
+            <InvoiceSubTabs />
+
+            <div className="flex flex-row items-center gap-2">
+              <SearchInput
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                onClear={() => setSearchText("")}
+                placeholder="Search by invoice #, name, email or phone"
+                className="flex-1"
+              />
+
               <button
                 type="button"
-                key={chip.key}
-                onClick={() => removeChip(chip.key)}
-                className="flex flex-row items-center gap-1.5 rounded-full bg-secondary border border-border pl-3 pr-2 py-1.5 cursor-pointer"
+                onClick={() => setFilterModalVisible(true)}
+                className={cn(
+                  "h-12 w-12 flex items-center justify-center rounded-lg border cursor-pointer",
+                  filtersActive
+                    ? "bg-secondary border-border"
+                    : "bg-card border-border",
+                )}
               >
-                <Text variant="body-sm">{chip.label}</Text>
-                <X size={14} className="text-muted-foreground" />
+                <Funnel
+                  size={20}
+                  className={
+                    filtersActive ? "text-foreground" : "text-muted-foreground"
+                  }
+                />
               </button>
-            ))}
+            </div>
+
+            {chips.length > 0 && (
+              <div className="flex flex-row flex-wrap gap-2">
+                {chips.map((chip) => (
+                  <button
+                    type="button"
+                    key={chip.key}
+                    onClick={() => removeChip(chip.key)}
+                    className="flex flex-row items-center gap-1.5 rounded-full bg-secondary border border-border pl-3 pr-2 py-1.5 cursor-pointer"
+                  >
+                    <Text variant="body-sm">{chip.label}</Text>
+                    <X size={14} className="text-muted-foreground" />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <PillTabs
+              items={ORDERING_OPTIONS}
+              activeKey={ordering ?? ORDERING_OPTIONS[0].key}
+              onSelect={(key) =>
+                setOrdering(key as GetInvoicesParams["ordering"])
+              }
+              layout="segmented"
+            />
+
+            {!invoices.isLoading && allInvoices.length > 0 && (
+              <Text variant="caption" className="pl-1">
+                {totalCount} {totalCount === 1 ? "invoice" : "invoices"}
+              </Text>
+            )}
           </div>
         )}
 
-        <div className="flex flex-row items-center justify-between gap-2">
-          <PillTabs
-            items={ORDERING_OPTIONS}
-            activeKey={ordering ?? ORDERING_OPTIONS[0].key}
-            onSelect={(key) =>
-              setOrdering(key as GetInvoicesParams["ordering"])
-            }
-            layout="segmented"
-          />
-
-          {/* Sized to match PillTabs' segmented track exactly: h-7
-              (28px) segment buttons sit inside p-1 (4px) padding, so
-              the track's own outer height is 28 + 4 + 4 = 36px — h-9.
-              rounded-md mirrors the track's own corner radius too, so
-              this button reads as sitting on the same row rather than
-              as a mismatched control dropped in beside it. */}
-          <Button
-            variant="brand"
-            shape="md"
-            className="h-9 min-w-0 shrink-0 px-3.5 rounded-md"
-            title="New Invoice"
-            leftIcon={<Plus size={14} />}
-            onClick={() => navigate(ROUTES.invoices.create)}
-          />
-        </div>
-
-        {!invoices.isLoading && allInvoices.length > 0 && (
-          <Text variant="caption" className="pl-1">
-            {totalCount} {totalCount === 1 ? "invoice" : "invoices"}
-          </Text>
-        )}
-      </div>
-
-      <Container variant="desktop" scroll>
         <div className="flex flex-1 flex-col gap-3 px-6 pt-6 pb-6">
           {invoices.isLoading ? (
             <div>
@@ -392,7 +496,11 @@ export function InvoiceListContent() {
           ) : (
             <div className="flex flex-col gap-3">
               {allInvoices.map((invoice) => (
-                <InvoiceRow key={invoice.id} invoice={invoice} />
+                <InvoiceRow
+                  key={invoice.id}
+                  invoice={invoice}
+                  isDesktopLayout={isDesktopLayout}
+                />
               ))}
 
               {invoices.hasNextPage && (

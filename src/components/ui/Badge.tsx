@@ -53,7 +53,7 @@ export function Badge({
   return (
     <div
       className={cn(
-        "self-start rounded-full px-2 leading-none",
+        "self-start rounded-full px-2 py-0.5 leading-none",
         BG_CLASS[variant],
         className,
       )}

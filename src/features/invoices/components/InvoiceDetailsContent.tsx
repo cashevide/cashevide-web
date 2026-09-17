@@ -128,10 +128,6 @@ export function InvoiceDetailsContent() {
       <ScreenHeader showBackButton>
         <Text variant="body-lg" className="font-semibold text-2xl truncate">
           {invoice.name || "Untitled Client"}
-          <span className="text-muted-foreground">
-            {" - "}
-            {invoice.invoice_number}
-          </span>
         </Text>
       </ScreenHeader>
 

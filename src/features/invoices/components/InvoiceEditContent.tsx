@@ -461,10 +461,6 @@ export function InvoiceEditContent() {
         <div className="flex flex-row items-center justify-between">
           <Text variant="body-lg" className="font-semibold text-2xl truncate">
             {invoiceDetails.data.name || "Untitled Client"}
-            <span className="text-muted-foreground">
-              {" - "}
-              {invoiceDetails.data.invoice_number}
-            </span>
           </Text>
 
           {isDesktopLayout && (
@@ -512,7 +508,9 @@ export function InvoiceEditContent() {
               <>
                 {/* -------------------- Template (locked) -------------------- */}
                 <div className="flex flex-col gap-1 rounded-lg border border-border bg-card p-4">
-                  <Text variant="subheading">Template</Text>
+                  <Text variant="subheading" className="pl-1">
+                    Template
+                  </Text>
                   <div className="flex flex-row items-center justify-between rounded-lg border border-border bg-secondary/30 p-4">
                     <Text variant="body-sm">{TEMPLATE_LABEL[template]}</Text>
                     <Text variant="caption" className="text-muted-foreground">
@@ -523,7 +521,9 @@ export function InvoiceEditContent() {
 
                 {/* -------------------- Client -------------------- */}
                 <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">
-                  <Text variant="subheading">Client</Text>
+                  <Text variant="subheading" className="pl-1">
+                    Client
+                  </Text>
 
                   {selectedClientId != null ? (
                     <>
@@ -560,7 +560,7 @@ export function InvoiceEditContent() {
                         }
                         className="cursor-pointer self-start"
                       >
-                        <Text variant="body-sm" className="text-link">
+                        <Text variant="body-sm" className="text-link pl-1">
                           {isEditingClientDetails
                             ? "Hide details"
                             : "Edit details"}
@@ -603,7 +603,7 @@ export function InvoiceEditContent() {
                         onClick={() => setClientPickerVisible(true)}
                         className="cursor-pointer self-start"
                       >
-                        <Text variant="body-sm" className="text-link">
+                        <Text variant="body-sm" className="text-link pl-1">
                           Select from existing clients
                         </Text>
                       </button>
@@ -638,10 +638,15 @@ export function InvoiceEditContent() {
 
                 {/* -------------------- Invoice details -------------------- */}
                 <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">
-                  <Text variant="subheading">Invoice Details</Text>
+                  <Text variant="subheading" className="pl-1">
+                    Invoice Details
+                  </Text>
 
                   <div className="flex flex-col gap-1">
-                    <Text variant="body-sm" className="text-muted-foreground">
+                    <Text
+                      variant="body-sm"
+                      className="text-muted-foreground pl-1"
+                    >
                       Currency
                     </Text>
                     <CurrencyPicker value={currency} onChange={setCurrency} />
@@ -665,7 +670,9 @@ export function InvoiceEditContent() {
 
                 {/* -------------------- Items -------------------- */}
                 <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">
-                  <Text variant="subheading">Items</Text>
+                  <Text variant="subheading" className="pl-1">
+                    Items
+                  </Text>
 
                   <div className="flex flex-col gap-5">
                     {items.map((item, index) => (
@@ -692,7 +699,9 @@ export function InvoiceEditContent() {
                 <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">
                   {isDiscountVisible ? (
                     <>
-                      <Text variant="subheading">Discount</Text>
+                      <Text variant="subheading" className="pl-1">
+                        Discount
+                      </Text>
                       <Input
                         placeholder="Discount amount"
                         inputMode="decimal"
@@ -706,7 +715,7 @@ export function InvoiceEditContent() {
                       onClick={() => setIsDiscountVisible(true)}
                       className="cursor-pointer self-start"
                     >
-                      <Text variant="body-sm" className="text-link">
+                      <Text variant="body-sm" className="text-link pl-1">
                         + Add discount
                       </Text>
                     </button>
@@ -756,7 +765,9 @@ export function InvoiceEditContent() {
 
             {activeSection === "payments" && (
               <div className="flex flex-col gap-3">
-                <Text variant="subheading">Payments</Text>
+                <Text variant="subheading" className="pl-1">
+                  Payments
+                </Text>
 
                 <div className="flex flex-col gap-3">
                   {payments.map((payment, index) => (
@@ -837,28 +848,71 @@ export function InvoiceEditContent() {
               </div>
             </div>
           )}
+
+          {/* Mobile only — see the comment further down (by the
+              desktop pill) for why this sits INSIDE Container here
+              instead of as a fixed overlay: it needs to scroll away
+              with the rest of the form, only coming into view once
+              the user reaches the bottom, rather than floating fixed
+              above the page. */}
+          {!isDesktopLayout && (
+            <div
+              className="w-full px-6"
+              style={{
+                marginBottom: "var(--mobile-tab-bar-space, 0px)",
+              }}
+            >
+              <div className="relative w-full flex flex-row items-center gap-4 rounded-full border border-border pl-6 pr-4 py-3 overflow-hidden">
+                <div
+                  className={cn(
+                    "absolute inset-0 z-0",
+                    theme === "dark" ? "bg-background/60" : "bg-background/70",
+                  )}
+                  style={{ backdropFilter: "blur(16px)" }}
+                />
+
+                <div className="relative z-10 flex-1 flex flex-col gap-0.5">
+                  <Text variant="caption">Balance Due</Text>
+                  <Text variant="body-lg" className="font-semibold">
+                    {formatAmount(
+                      invoiceDetails.data?.balance_due ?? "0",
+                      currency,
+                    )}
+                  </Text>
+                </div>
+
+                <Button
+                  variant="primary"
+                  title="Save Changes"
+                  onClick={handleSubmit}
+                  isLoading={updateInvoice.isPending}
+                  className="relative z-10"
+                />
+              </div>
+            </div>
+          )}
         </div>
       </Container>
 
-      {/* -------------------- Bottom balance + submit -------------------- */}
-      {/* Desktop: a floating blurred pill, same recipe as AppShell's
+      {/* -------------------- Bottom balance + submit (desktop) -------------------- */}
+      {/* A floating blurred pill, same recipe as AppShell's
           MobileTabBar (blur layer + theme-aware translucent bg +
-          border), swapped from icon-only tabs to a Balance Due
-          readout + submit button. `fixed` (not `sticky`) and centered
-          independently of Container's own scroll, so it floats above
-          the page like the tab bar does — the `pb-32` already
-          reserved on the scrollable content above covers its
-          footprint.
-          Mobile: stays a plain full-width bar in normal flow, NOT
-          fixed — AppShell already renders its own fixed MobileTabBar
-          at the bottom on every page under 768px width, and a second
-          fixed bar here would float on top of / collide with it.
+          border). `fixed` (not `sticky`) and centered independently
+          of Container's own scroll, so it floats above the page like
+          the tab bar does — the `pb-32` already reserved on the
+          scrollable content above covers its footprint.
+          Mobile doesn't use this fixed-pill treatment: its equivalent
+          bar is rendered INSIDE Container above instead (see the
+          comment there), so it scrolls away with the rest of the form
+          and only comes into view at the bottom — the same visual
+          bar (rounded-full, blurred), just placed in the normal
+          document flow rather than pinned to the viewport.
           balance_due (not the live-edited total) — it's pinned to
           the originally loaded invoice for the same reason the
           draftPreview above doesn't recompute it: accurately
           deriving it from in-progress, unsaved edits would mean
           replicating the backend's payment-allocation logic here. */}
-      {isDesktopLayout ? (
+      {isDesktopLayout && (
         <div className="fixed inset-x-0 bottom-6 z-20 flex justify-center px-6 pointer-events-none">
           <div className="relative w-full max-w-desktop flex justify-center pointer-events-none">
             <div className="relative min-w-[420px] flex flex-row items-center gap-4 rounded-full border border-border pl-8 pr-4 py-3 overflow-hidden pointer-events-auto">
@@ -886,29 +940,6 @@ export function InvoiceEditContent() {
                 onClick={handleSubmit}
                 isLoading={updateInvoice.isPending}
                 className="relative z-10"
-              />
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="w-full border-t border-border bg-background">
-          <div className="w-full max-w-desktop mx-auto">
-            <div className="flex flex-row items-center gap-4 px-6 py-4">
-              <div className="flex-1 flex flex-col gap-0.5">
-                <Text variant="caption">Balance Due</Text>
-                <Text variant="body-lg" className="font-semibold">
-                  {formatAmount(
-                    invoiceDetails.data?.balance_due ?? "0",
-                    currency,
-                  )}
-                </Text>
-              </div>
-
-              <Button
-                variant="primary"
-                title="Save Changes"
-                onClick={handleSubmit}
-                isLoading={updateInvoice.isPending}
               />
             </div>
           </div>

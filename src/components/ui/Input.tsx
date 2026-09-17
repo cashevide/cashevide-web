@@ -62,7 +62,11 @@ export function Input({
 
   return (
     <div className={cn("w-full flex flex-col gap-2", className)}>
-      {label && <Text variant="body-sm">{label}</Text>}
+      {label && (
+        <Text variant="body-sm" className="pl-1">
+          {label}
+        </Text>
+      )}
 
       <div className="relative w-full flex items-center">
         {multiline ? (

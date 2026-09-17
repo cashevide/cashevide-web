@@ -209,7 +209,7 @@ export function DateField({
 
   return (
     <div className="flex-1 flex flex-col gap-1">
-      <Text variant="body-sm" className="text-muted-foreground">
+      <Text variant="body-sm" className="text-muted-foreground pl-1">
         {label}
       </Text>
 

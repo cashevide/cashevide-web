@@ -1,6 +1,5 @@
 import { useContent } from "../../../content/useContent";
 import { useMalayaliModeStore } from "../../../stores/malayaliModeStore";
-import { Modal } from "../../../components/ui/Modal";
 import { Text } from "../../../components/ui/Text";
 import { Avatar } from "../../../components/ui/Avatar";
 import { cn } from "../../../utils/cn";
@@ -10,8 +9,6 @@ import type { ContentKey } from "../../../content/keys";
 import type { DonationOption } from "../types/donationTypes";
 
 type DonationAmountOptionsModalProps = {
-  visible: boolean;
-  onDismiss: () => void;
   onSelect: (option: DonationOption) => void;
   // When true, ignores the global Malayali Mode toggle for this modal
   // — plain "Small/Standard/Generous" labels, no food avatars — even
@@ -33,6 +30,17 @@ const LABEL_KEY: Record<string, ContentKey> = {
   custom: "donation.options.custom.label",
 };
 
+// This step's Modal title — exported as a hook so the flow
+// (DonationFlow / SupportFlow) can compute it for the single shared
+// <Modal> it owns for the whole multi-step flow. Kept alongside the
+// component (rather than duplicated at the call site) so the two
+// can't drift apart. It's a hook (not a plain function) because it
+// calls useContent, which itself reads the Malayali Mode store.
+export function useDonationAmountOptionsTitle(forceNormalMode = false) {
+  const t = useContent(forceNormalMode);
+  return t("donation.options.title");
+}
+
 // Modal 2 of the donation flow — a card list of amounts to choose
 // from. Malayali Mode shows a food-item avatar on the left of each
 // fixed-amount row, one option per row (4 rows total). Normal mode
@@ -43,9 +51,11 @@ const LABEL_KEY: Record<string, ContentKey> = {
 // Picking "custom" doesn't pay anything yet — the caller (DonationFlow)
 // opens the amount-entry step next; picking a fixed amount goes
 // straight to DonationPaymentModal.
+//
+// Renders CONTENT ONLY — see DonationPromptModal.tsx for why (no
+// <Modal> wrapper of its own; DonationFlow owns one shared <Modal>
+// for the whole flow).
 export function DonationAmountOptionsModal({
-  visible,
-  onDismiss,
   onSelect,
   forceNormalMode = false,
 }: DonationAmountOptionsModalProps) {
@@ -129,22 +139,14 @@ export function DonationAmountOptionsModal({
     : [DONATION_OPTIONS.slice(0, 2), DONATION_OPTIONS.slice(2)];
 
   return (
-    <Modal
-      visible={visible}
-      dismissible
-      onDismiss={onDismiss}
-      title={t("donation.options.title")}
-      className="text-center"
-    >
-      <div className="flex flex-col gap-3 w-full mt-3">
-        {!isMalayaliMode && (
-          <div className="flex flex-row gap-3 w-full">
-            {firstRowOptions.map((option) => renderOption(option, true))}
-          </div>
-        )}
+    <div className="flex flex-col gap-3 w-full mt-3">
+      {!isMalayaliMode && (
+        <div className="flex flex-row gap-3 w-full">
+          {firstRowOptions.map((option) => renderOption(option, true))}
+        </div>
+      )}
 
-        {restOptions.map((option) => renderOption(option, false))}
-      </div>
-    </Modal>
+      {restOptions.map((option) => renderOption(option, false))}
+    </div>
   );
 }

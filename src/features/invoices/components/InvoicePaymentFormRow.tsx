@@ -20,7 +20,10 @@ export function InvoicePaymentFormRow({
   return (
     <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">
       <div className="flex flex-row items-center justify-between">
-        <Text variant="body-sm" className="font-semibold text-muted-foreground">
+        <Text
+          variant="body-sm"
+          className="font-semibold text-muted-foreground pl-1"
+        >
           {payment.id ? `Payment #${payment.id}` : "New Payment"}
         </Text>
         <button

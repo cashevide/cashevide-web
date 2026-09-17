@@ -82,6 +82,26 @@ export function Modal({
     };
   }, [shouldRender]);
 
+  // Escape dismisses the modal, same as clicking the backdrop —
+  // respects `dismissible` the same way. Bound on document (not the
+  // modal's own div) since the modal itself doesn't hold DOM focus by
+  // default, so a div-level listener would miss the keypress entirely
+  // unless something inside happened to be focused.
+  useEffect(() => {
+    if (!shouldRender || !dismissible) {
+      return;
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        onDismiss?.();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [shouldRender, dismissible, onDismiss]);
+
   if (!shouldRender) {
     return null;
   }
