@@ -136,22 +136,23 @@ export function InvoiceDetailsContent() {
       </ScreenHeader>
 
       <Container variant="desktop" scroll>
-        <div className="flex flex-col md:flex-row items-start gap-6 md:gap-8 px-6 py-6">
-          <div className="w-full md:flex-1">
-            <InvoicePreview invoice={invoice} />
-          </div>
+        {/* Capped to the same 700px document width InvoiceCreateContent
+            uses for its live preview column, and centered — otherwise
+            the action bar/preview stretch the full max-w-desktop
+            (1200px) page width, which looks wrong for a single
+            document-shaped invoice on wide screens. */}
+        <div className="w-full max-w-[700px] mx-auto flex flex-col gap-4 px-6 py-6">
+          <InvoiceActionBar
+            status={invoice.status}
+            onEdit={handleEdit}
+            onRecordPayment={handleRecordPayment}
+            onDownloadPdf={handleDownloadPdf}
+            onDelete={handleDelete}
+            isDownloading={downloadPdf.isPending}
+            isDeleting={deleteInvoice.isPending}
+          />
 
-          <div className="w-full md:w-[280px]">
-            <InvoiceActionBar
-              status={invoice.status}
-              onEdit={handleEdit}
-              onRecordPayment={handleRecordPayment}
-              onDownloadPdf={handleDownloadPdf}
-              onDelete={handleDelete}
-              isDownloading={downloadPdf.isPending}
-              isDeleting={deleteInvoice.isPending}
-            />
-          </div>
+          <InvoicePreview invoice={invoice} />
         </div>
       </Container>
 

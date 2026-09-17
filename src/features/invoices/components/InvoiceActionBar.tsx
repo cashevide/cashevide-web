@@ -3,6 +3,7 @@ import { Pencil, CreditCard, Download, Trash2 } from "lucide-react";
 
 import { Button } from "../../../components/ui/Button";
 import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
+import { cn } from "../../../utils/cn";
 
 import type { InvoiceStatus } from "../types/invoiceTypes";
 
@@ -41,54 +42,66 @@ export function InvoiceActionBar({
 
   const isPaid = status === "PAID";
 
-  // This button opens the payments section of the edit screen, which
-  // supports editing and removing existing payment records, not just
-  // adding new ones — so it stays visible and enabled on a PAID invoice
-  // too, for correcting a mistaken entry. Only the label changes once
-  // paid, since "Record Payment" reads like there's still an
-  // outstanding balance to collect, which isn't true anymore — "Manage
-  // Payments" doesn't imply that.
-  const recordPaymentLabel = isPaid ? "Manage Payments" : "Record Payment";
+  // Always "Record Payment" regardless of paid status — this button
+  // opens the payments section of the edit screen, which supports
+  // editing/removing existing payment records too, not just adding new
+  // ones, so it stays enabled on a PAID invoice for correcting a
+  // mistaken entry. The label itself doesn't change with status.
+  const recordPaymentLabel = "Record Payment";
 
-  // Mobile (below md): 2x2 grid, matching Expo's "rows" mode. Desktop
-  // (md+): every action full-width, one per row in a single column,
-  // matching Expo's "stack" mode used in the sidebar. This must be ONE
-  // grid across all 4 buttons, not two 2-button rows each switching
-  // independently — otherwise md:flex-row on each pair leaves two
-  // side-by-side rows instead of collapsing into one column of 4.
+  // Same compact size/shape as the "New Invoice" / "New Client" buttons
+  // (h-9, shape="md", px-3.5, rounded-md) so this row reads as the same
+  // family of controls instead of the old full-width sidebar buttons.
+  const compactButtonClass = "h-9 min-w-0 shrink-0 px-3.5 rounded-md";
+
+  // Single row above the preview, matching Expo's "row" mode instead of
+  // the old sidebar stack. Left group in task order: Record Payment
+  // (brand, primary action) → Edit (outline) → Delete (destructive).
+  // Download sits alone at the right edge via justify-between, kept
+  // separate since it's a read-only/export action rather than one that
+  // changes the invoice. overflow-x-auto is a safety net for narrow
+  // viewports where four labeled buttons don't all fit — it scrolls
+  // instead of wrapping awkwardly.
   return (
-    <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
-      <Button
-        variant="primary"
-        title="Edit"
-        leftIcon={<Pencil size={16} />}
-        onClick={onEdit}
-        disabled={editDisabled}
-        fullWidth
-      />
-      <Button
-        variant="secondary"
-        title={recordPaymentLabel}
-        leftIcon={<CreditCard size={16} />}
-        onClick={onRecordPayment}
-        disabled={recordPaymentDisabled}
-        fullWidth
-      />
+    <div className="flex flex-row items-center justify-between gap-2 overflow-x-auto">
+      <div className="flex flex-row items-center gap-2 shrink-0">
+        <Button
+          variant="brand"
+          shape="md"
+          className={compactButtonClass}
+          title={recordPaymentLabel}
+          leftIcon={<CreditCard size={14} />}
+          onClick={onRecordPayment}
+          disabled={recordPaymentDisabled}
+        />
+        <Button
+          variant="outline"
+          shape="md"
+          className={compactButtonClass}
+          title="Edit"
+          leftIcon={<Pencil size={14} />}
+          onClick={onEdit}
+          disabled={editDisabled}
+        />
+        <Button
+          variant="destructive"
+          shape="md"
+          className={compactButtonClass}
+          title={isDeleting ? "Deleting..." : "Delete Invoice"}
+          leftIcon={<Trash2 size={14} />}
+          onClick={() => setDeleteConfirmVisible(true)}
+          disabled={isDeleting}
+        />
+      </div>
+
       <Button
         variant="outline"
+        shape="md"
+        className={cn(compactButtonClass, "shrink-0")}
         title={isDownloading ? "Preparing PDF..." : "Download / Share PDF"}
-        leftIcon={<Download size={16} />}
+        leftIcon={<Download size={14} />}
         onClick={onDownloadPdf}
         disabled={isDownloading}
-        fullWidth
-      />
-      <Button
-        variant="destructive"
-        title={isDeleting ? "Deleting..." : "Delete Invoice"}
-        leftIcon={<Trash2 size={16} />}
-        onClick={() => setDeleteConfirmVisible(true)}
-        disabled={isDeleting}
-        fullWidth
       />
 
       <ConfirmDialog
