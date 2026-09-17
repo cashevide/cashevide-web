@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 
 import { useContent } from "../../../content/useContent";
-import { useMalayaliModeStore } from "../../../stores/malayaliModeStore";
 import { useMediaQuery } from "../../../hooks/useMediaQuery";
 import { Modal } from "../../../components/ui/Modal";
 import { Text } from "../../../components/ui/Text";
@@ -17,7 +16,11 @@ type DonationPaymentModalProps = {
   // amount, which generates its QR at runtime via useUpiQrCode instead.
   staticQrImageUri?: string;
   onSent: () => void;
-  onCancel: () => void;
+  // Takes the user back to the amount-picker step (Modal 2) — this is
+  // a "back" action, not a flow-abandoning "cancel"/dismiss. The
+  // caller (DonationFlow/SupportFlow) re-opens "options" rather than
+  // closing the whole flow.
+  onBack: () => void;
   // See DonationAmountOptionsModal — when true, ignores the global
   // Malayali Mode toggle so this modal always shows plain/
   // professional copy. Used by SupportFlow; omit (or pass false)
@@ -33,19 +36,17 @@ type DonationPaymentModalProps = {
 //   for a fixed amount, or a QR generated on the fly for a custom one.
 // Same breakpoint (768px) used everywhere else in the app (see
 // InvoiceEditContent, InvoiceListContent).
+// The secondary button (and the backdrop/dismiss) go back to the
+// amount-picker step rather than closing the whole flow — see onBack.
 export function DonationPaymentModal({
   visible,
   amount,
   staticQrImageUri,
   onSent,
-  onCancel,
+  onBack,
   forceNormalMode = false,
 }: DonationPaymentModalProps) {
   const t = useContent(forceNormalMode);
-  const isMalayaliModeFromStore = useMalayaliModeStore(
-    (state) => state.isMalayaliMode,
-  );
-  const isMalayaliMode = forceNormalMode ? false : isMalayaliModeFromStore;
   const isMobile = useMediaQuery("(max-width: 767px)");
 
   const upiLink = buildUpiLink(amount);
@@ -74,15 +75,15 @@ export function DonationPaymentModal({
     <Modal
       visible={visible}
       dismissible
-      onDismiss={onCancel}
+      onDismiss={onBack}
       title={
         isMobile
           ? t("donation.payment.title.mobile")
           : t("donation.payment.title.desktop")
       }
-      className="items-center"
+      className="items-center text-center"
     >
-      <div className="flex flex-col items-center gap-4 w-full">
+      <div className="flex flex-col items-center gap-4 w-full mt-3">
         <Text variant="subheading" numeric>
           ₹{amount}
         </Text>
@@ -106,16 +107,14 @@ export function DonationPaymentModal({
         <Button
           variant="primary"
           title={t("donation.payment.sentButton")}
-          malayalam={isMalayaliMode}
           fullWidth
           onClick={onSent}
         />
         <Button
           variant="ghost"
-          title={t("donation.payment.cancelButton")}
-          malayalam={isMalayaliMode}
+          title={t("donation.payment.backButton")}
           fullWidth
-          onClick={onCancel}
+          onClick={onBack}
         />
       </div>
     </Modal>

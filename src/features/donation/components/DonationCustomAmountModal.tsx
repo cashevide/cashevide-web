@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import { useContent } from "../../../content/useContent";
-import { useMalayaliModeStore } from "../../../stores/malayaliModeStore";
 import { Modal } from "../../../components/ui/Modal";
 import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";
@@ -29,10 +28,6 @@ export function DonationCustomAmountModal({
   forceNormalMode = false,
 }: DonationCustomAmountModalProps) {
   const t = useContent(forceNormalMode);
-  const isMalayaliModeFromStore = useMalayaliModeStore(
-    (state) => state.isMalayaliMode,
-  );
-  const isMalayaliMode = forceNormalMode ? false : isMalayaliModeFromStore;
   const [amountInput, setAmountInput] = useState("");
 
   const parsedAmount = parseInt(amountInput, 10);
@@ -57,9 +52,9 @@ export function DonationCustomAmountModal({
       dismissible
       onDismiss={handleDismiss}
       title={t("donation.customAmount.title")}
-      className="items-center"
+      className="items-center text-center"
     >
-      <div className="flex flex-col items-center gap-4 w-full">
+      <div className="flex flex-col items-center gap-4 w-full mt-3">
         <Input
           type="number"
           inputMode="numeric"
@@ -68,6 +63,11 @@ export function DonationCustomAmountModal({
           placeholder={t("donation.customAmount.placeholder")}
           value={amountInput}
           onChange={(e) => setAmountInput(e.target.value)}
+          // Hides the native up/down spinner arrows — with them
+          // visible people tend to just tap-tap-tap to ₹1 or ₹2
+          // instead of typing a real amount (see index.css for the
+          // actual rule; className here only reaches Input's outer
+          // wrapper, not the <input> itself).
           className="text-center"
           autoFocus
         />
@@ -75,7 +75,6 @@ export function DonationCustomAmountModal({
         <Button
           variant="primary"
           title={t("donation.customAmount.continueButton")}
-          malayalam={isMalayaliMode}
           fullWidth
           disabled={!isValidAmount}
           onClick={handleContinue}

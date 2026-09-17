@@ -111,6 +111,25 @@ body,
   }
 }
 
+/*
+  Hides the native number-input spinner (up/down arrows). This app
+  has exactly one type="number" field (the donation custom-amount
+  input — DonationCustomAmountModal) — with the spinner visible,
+  people tend to just tap-tap-tap it up to ₹1 or ₹2 instead of typing
+  a real amount, so it's removed everywhere a number input appears.
+  Chrome/Safari/Edge use the pseudo-elements; Firefox uses the
+  `appearance: textfield` line.
+*/
+input[type="number"] {
+  appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
 body {
   background-color: var(--color-background);
 }

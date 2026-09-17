@@ -15,24 +15,30 @@ export const malayali: Record<ContentKey, string> = {
   "dashboard.promoCard.thirdSlot.body": "",
   "dashboard.promoCard.thirdSlot.button": "Buy me a chaya",
 
-  "donation.prompt.title": "പൈസ കിട്ടി അല്ലേ! 🎉",
+  "donation.prompt.title": "Invoice marked as paid 🎉",
   "donation.prompt.body":
-    "നീ കുറേ നേടുന്നുണ്ടല്ലോ... ഒരു ചായക്കാശ് എങ്കിലും താടാ 😏",
-  "donation.prompt.declineButton": "പിന്നെ തരാം",
-  "donation.prompt.acceptButton": "പിന്നെന്താ തരാലോ",
+    "If Cashevide has been useful for your business, consider supporting its development with a small contribution.",
+  "donation.prompt.declineButton": "Maybe later",
+  "donation.prompt.acceptButton": "Sure, why not",
 
-  "donation.options.title": "എത്ര താടാ?",
+  "donation.options.title": "Choose an amount",
+  // Food names stay Malayalam — this is the one place Malayali Mode
+  // is actually about (chaya/parippuvada/shawarma framing for the
+  // fixed amounts). Every other string in this file is UI chrome
+  // (titles, buttons, placeholders), not the "mode", so it stays
+  // English — Malayali Mode is a vibe for the donation options, not
+  // an app language switch.
   "donation.options.chaya.label": "ചായ",
   "donation.options.chayaParippuvada.label": "ചായ + പരിപ്പുവട",
   "donation.options.shawarma.label": "ഷവർമ",
-  "donation.options.custom.label": "നിനക്ക് ഇഷ്ടമുള്ളത്",
+  "donation.options.custom.label": "Custom amount",
 
-  "donation.customAmount.title": "എത്ര രൂപ?",
-  "donation.customAmount.placeholder": "തുക",
-  "donation.customAmount.continueButton": "മുന്നോട്ട്",
+  "donation.customAmount.title": "Enter an amount",
+  "donation.customAmount.placeholder": "Amount",
+  "donation.customAmount.continueButton": "Continue",
 
-  "donation.payment.title.mobile": "UPI app open ആകുന്നു…",
-  "donation.payment.title.desktop": "QR scan ചെയ്ത് pay ചെയ്യ്",
-  "donation.payment.sentButton": "അയച്ചു",
-  "donation.payment.cancelButton": "വേണ്ട",
+  "donation.payment.title.mobile": "Opening your UPI app…",
+  "donation.payment.title.desktop": "Scan to pay",
+  "donation.payment.sentButton": "Sent",
+  "donation.payment.backButton": "Back",
 };

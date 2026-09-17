@@ -45,6 +45,10 @@ type SupportFlowProps = {
 // from the store handles that.
 //
 //   options -> [customAmount ->] payment
+// Dismissing/cancelling at "options" or "customAmount" ends the whole
+// flow via onDone. The payment step is the one exception: its
+// secondary action goes back to "options" instead of ending the flow
+// (see handleBackFromPayment) — same behavior as DonationFlow.
 export function SupportFlow({ open, onDone }: SupportFlowProps) {
   const [step, setStep] = useState<SupportStep>("closed");
   const [payment, setPayment] = useState<PaymentState | null>(null);
@@ -92,6 +96,14 @@ export function SupportFlow({ open, onDone }: SupportFlowProps) {
     onDone();
   }
 
+  // Takes the user back to the amount-picker step instead of ending
+  // the flow — unlike handleFinishPayment, this doesn't call onDone()
+  // since the flow is still open, just one step back.
+  function handleBackFromPayment() {
+    setPayment(null);
+    setStep("options");
+  }
+
   return (
     <>
       <DonationAmountOptionsModal
@@ -112,7 +124,7 @@ export function SupportFlow({ open, onDone }: SupportFlowProps) {
           amount={payment.amount}
           staticQrImageUri={payment.staticQrImageUri}
           onSent={handleFinishPayment}
-          onCancel={handleFinishPayment}
+          onBack={handleBackFromPayment}
         />
       )}
     </>

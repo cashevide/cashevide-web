@@ -8,6 +8,10 @@ type ModalProps = PropsWithChildren<{
   dismissible?: boolean;
   onDismiss?: () => void;
   title?: string;
+  // Renders the title in Anek Malayalam instead of Geist — pass this
+  // when `title` is Malayalam text (e.g. Malayali Mode copy), same
+  // reasoning as Text's own `malayalam` prop, which this forwards to.
+  titleMalayalam?: boolean;
   description?: ReactNode;
   footer?: ReactNode;
   className?: string;
@@ -18,6 +22,7 @@ export function Modal({
   dismissible = true,
   onDismiss,
   title,
+  titleMalayalam = false,
   description,
   footer,
   className = "",
@@ -68,7 +73,11 @@ export function Modal({
         <div className="shrink overflow-y-auto flex flex-col gap-2">
           {hasHeader ? (
             <div className="flex flex-col gap-2">
-              {title ? <Text variant="subheading">{title}</Text> : null}
+              {title ? (
+                <Text variant="subheading" malayalam={titleMalayalam}>
+                  {title}
+                </Text>
+              ) : null}
               {description ? (
                 typeof description === "string" ? (
                   <Text variant="body-sm">{description}</Text>

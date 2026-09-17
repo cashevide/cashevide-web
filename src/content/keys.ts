@@ -51,8 +51,9 @@ export type ContentKey =
   | "donation.customAmount.continueButton"
 
   // Modal 3: the actual payment step (deep link on mobile, QR on
-  // desktop) — see DonationPaymentModal.tsx.
+  // desktop) — see DonationPaymentModal.tsx. backButton returns to
+  // the amount-picker step (Modal 2), not a flow-abandoning cancel.
   | "donation.payment.title.mobile"
   | "donation.payment.title.desktop"
   | "donation.payment.sentButton"
-  | "donation.payment.cancelButton";
+  | "donation.payment.backButton";

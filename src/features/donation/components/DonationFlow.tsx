@@ -40,8 +40,11 @@ type DonationFlowProps = {
 //   prompt -> options -> [customAmount ->] payment -> (done)
 // Each step is its own modal component; this just tracks which one is
 // visible and the amount carried from "options"/"customAmount" into
-// "payment". Dismissing or cancelling at any step ends the whole flow
-// via onDone, same as finishing it — there's no partial/resume state.
+// "payment". Dismissing or cancelling at the prompt/options/
+// customAmount steps ends the whole flow via onDone, same as
+// finishing at payment — there's no partial/resume state there. The
+// payment step is the one exception: its secondary action goes back
+// to "options" instead of ending the flow (see handleBackFromPayment).
 export function DonationFlow({ open, onDone }: DonationFlowProps) {
   const [step, setStep] = useState<DonationStep>("closed");
   const [payment, setPayment] = useState<PaymentState | null>(null);
@@ -104,6 +107,14 @@ export function DonationFlow({ open, onDone }: DonationFlowProps) {
     onDone();
   }
 
+  // Takes the user back to the amount-picker step instead of ending
+  // the flow — unlike handleFinishPayment, this doesn't call onDone()
+  // since the flow is still open, just one step back.
+  function handleBackFromPayment() {
+    setPayment(null);
+    setStep("options");
+  }
+
   return (
     <>
       <DonationPromptModal
@@ -130,7 +141,7 @@ export function DonationFlow({ open, onDone }: DonationFlowProps) {
           amount={payment.amount}
           staticQrImageUri={payment.staticQrImageUri}
           onSent={handleFinishPayment}
-          onCancel={handleFinishPayment}
+          onBack={handleBackFromPayment}
         />
       )}
     </>

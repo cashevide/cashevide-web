@@ -44,5 +44,5 @@ export const en: Record<ContentKey, string> = {
   "donation.payment.title.mobile": "Opening your UPI app…",
   "donation.payment.title.desktop": "Scan to pay",
   "donation.payment.sentButton": "Sent",
-  "donation.payment.cancelButton": "Cancel",
+  "donation.payment.backButton": "Back",
 };
