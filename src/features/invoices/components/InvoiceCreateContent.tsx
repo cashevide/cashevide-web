@@ -5,11 +5,13 @@ import { useBusinessProfile } from "../../business-profile/hooks/useBusinessProf
 import { useCreateInvoice } from "../hooks/useCreateInvoice";
 import { ROUTES } from "../../../lib/routes";
 import { cn } from "../../../utils/cn";
+import { useThemeStore } from "../../../stores/themeStore";
 import { Container } from "../../../components/layout/Container";
 import { ScreenHeader } from "../../../components/layout/ScreenHeader";
 import { Text } from "../../../components/ui/Text";
 import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";
+import { Switch } from "../../../components/ui/Switch";
 import { Spinner } from "../../../components/ui/Spinner";
 import { CurrencyPicker } from "../../../components/ui/CurrencyPicker";
 import { DateField, toDateString } from "../../../components/ui/DateField";
@@ -100,6 +102,7 @@ function formatAmount(amount: number, currency: string): string {
 
 export function InvoiceCreateContent() {
   const navigate = useNavigate();
+  const theme = useThemeStore((state) => state.theme);
   const businessProfile = useBusinessProfile();
   const createInvoice = useCreateInvoice();
   // Same 768px breakpoint used across the app (see InvoiceListScreen) —
@@ -293,7 +296,11 @@ export function InvoiceCreateContent() {
   if (businessProfile.isLoading) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader title="New Invoice" showBackButton />
+        <ScreenHeader
+          title="New Invoice"
+          showBackButton
+          showCreditPoints={false}
+        />
         <Container variant="desktop">
           <div className="flex flex-1 items-center justify-center">
             <Spinner />
@@ -309,7 +316,11 @@ export function InvoiceCreateContent() {
   ) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader title="New Invoice" showBackButton />
+        <ScreenHeader
+          title="New Invoice"
+          showBackButton
+          showCreditPoints={false}
+        />
         <Container variant="desktop">
           <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6">
             <Text variant="subheading" className="text-center">
@@ -337,22 +348,23 @@ export function InvoiceCreateContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader showBackButton>
+      <ScreenHeader showBackButton showCreditPoints={false}>
         <div className="flex flex-row items-center justify-between">
           <Text variant="body-lg" className="font-semibold text-2xl truncate">
             New Invoice
           </Text>
 
           {isDesktopLayout && (
-            <button
-              type="button"
-              onClick={() => setIsPreviewVisible((prev) => !prev)}
-              className="cursor-pointer"
-            >
-              <Text variant="body-sm" className="text-link">
-                {isPreviewVisible ? "Hide Preview" : "Show Preview"}
+            <div className="flex flex-row items-center gap-2">
+              <Text variant="body-sm" className="text-muted-foreground">
+                Preview
               </Text>
-            </button>
+              <Switch
+                value={isPreviewVisible}
+                onValueChange={setIsPreviewVisible}
+                ariaLabel="Toggle invoice preview"
+              />
+            </div>
           )}
         </div>
       </ScreenHeader>
@@ -361,12 +373,21 @@ export function InvoiceCreateContent() {
         <div
           className={cn(
             "px-6 py-6 flex flex-col gap-8 pb-32",
-            isDesktopLayout && "flex-row items-start gap-8",
+            isDesktopLayout && "flex-row items-start",
           )}
         >
           {/* -------------------- Form column -------------------- */}
           <div
-            className={cn("flex flex-col gap-6", isDesktopLayout && "flex-1")}
+            className={cn(
+              "flex flex-col gap-6",
+              // min-w-0 alongside flex-1 — without it, a flex
+              // item's default min-width is its content's natural
+              // width, so this column (and the row it's in) can
+              // still be forced wider than the viewport by its own
+              // content even after the preview column next to it
+              // is made shrinkable.
+              isDesktopLayout && "flex-1 min-w-0",
+            )}
           >
             {/* -------------------- Template -------------------- */}
             <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">
@@ -614,44 +635,125 @@ export function InvoiceCreateContent() {
           </div>
 
           {/* -------------------- Live preview column (desktop only, toggleable) -------------------- */}
-          {isDesktopLayout && isPreviewVisible && (
-            // sticky (not a second Container/scroll) — the outer
-            // Container above is still the only element with page
-            // scroll, so a sticky column here rides along with it but
-            // pins to the viewport once its top edge is reached. Its
-            // own max-height + overflow-y-auto then scrolls the
-            // preview independently, capped to the visible viewport
-            // height (minus header/footer bars) rather than the
-            // page's full scrollable height, so a long invoice
-            // preview never drags the form column's scroll position
-            // with it.
-            <div className="w-[700px] shrink-0 sticky top-6 max-h-[calc(100dvh-11rem)] overflow-y-auto">
-              <InvoicePreview invoice={draftPreview} />
+          {isDesktopLayout && (
+            // Two nested layers, matching how a CSS accordion is
+            // usually collapsed:
+            //  - Outer (this one): the actual flex item. Animates
+            //    max-width from 0 to a large unconstrained value
+            //    (never the true rendered width, which is itself
+            //    dynamic — see the inner div's own comment) plus
+            //    opacity and its own left margin (standing in for the
+            //    row's gap-8, see the row div's comment) — so hiding
+            //    the preview smoothly shrinks the form column back to
+            //    full width instead of just vanishing.
+            //  - overflow-hidden so the inner 700px-wide content is
+            //    clipped rather than reflowing/wrapping while the
+            //    outer box is mid-collapse.
+            //  - Kept mounted at all times (isPreviewVisible no
+            //    longer gates rendering) — unmounting on toggle is
+            //    exactly what made it a hard cut instead of an
+            //    animation; ClassicInvoiceLayout's own ResizeObserver
+            //    also depends on staying mounted to keep tracking the
+            //    inner div's width as it animates.
+            <div
+              className={cn(
+                "shrink overflow-hidden transition-[max-width,opacity,margin-left] duration-300 ease-in-out",
+                isPreviewVisible
+                  ? "max-w-[700px] opacity-100 ml-8"
+                  : "max-w-0 opacity-0 ml-0 pointer-events-none",
+              )}
+            >
+              {/* sticky (not a second Container/scroll) — the outer
+                  Container above is still the only element with page
+                  scroll, so a sticky column here rides along with it
+                  but pins to the viewport once its top edge is
+                  reached. Its own max-height + overflow-y-auto then
+                  scrolls the preview independently, capped to the
+                  visible viewport height (minus header/footer bars)
+                  rather than the page's full scrollable height, so a
+                  long invoice preview never drags the form column's
+                  scroll position with it.
+                  w-[700px] fixed here (not the outer's max-w-[700px])
+                  — this inner div is what ClassicInvoiceLayout's
+                  ResizeObserver actually measures, and it needs a
+                  real, stable width to report while the OUTER box is
+                  what's animating narrower; the outer's overflow-
+                  hidden clips this down to the animated width. On a
+                  narrow desktop viewport (e.g. MacBook Air) where 700
+                  can't fit even fully expanded, the parent row's own
+                  min-w-0 + this div's shrink (below) still let it
+                  give way — matching the fix for that layout bug. */}
+              <div className="w-[700px] min-w-0 shrink sticky top-6 max-h-[calc(100dvh-11rem)] overflow-y-auto">
+                <InvoicePreview invoice={draftPreview} />
+              </div>
             </div>
           )}
         </div>
       </Container>
 
-      {/* -------------------- Sticky bottom summary + submit -------------------- */}
-      <div className="w-full border-t border-border bg-background">
-        <div className="w-full max-w-desktop mx-auto">
-          <div className="flex flex-row items-center gap-4 px-6 py-4">
-            <div className="flex-1 flex flex-col gap-0.5">
-              <Text variant="caption">Total</Text>
-              <Text variant="body-lg" className="font-semibold">
-                {formatAmount(total, currency)}
-              </Text>
-            </div>
+      {/* -------------------- Bottom summary + submit -------------------- */}
+      {/* Desktop: a floating blurred pill, same recipe as AppShell's
+          MobileTabBar (blur layer + theme-aware translucent bg +
+          border), swapped from icon-only tabs to a Total readout +
+          submit button. `fixed` (not `sticky`) and centered
+          independently of Container's own scroll, so it floats above
+          the page like the tab bar does — the `pb-32` already
+          reserved on the scrollable content above covers its
+          footprint.
+          Mobile: stays a plain full-width bar in normal flow, NOT
+          fixed — AppShell already renders its own fixed MobileTabBar
+          at the bottom on every page under 768px width, and a second
+          fixed bar here would float on top of / collide with it. */}
+      {isDesktopLayout ? (
+        <div className="fixed inset-x-0 bottom-6 z-20 flex justify-center px-6 pointer-events-none">
+          <div className="relative w-full max-w-desktop flex justify-center pointer-events-none">
+            <div className="relative min-w-[420px] flex flex-row items-center gap-4 rounded-full border border-border pl-8 pr-4 py-3 overflow-hidden pointer-events-auto">
+              <div
+                className={cn(
+                  "absolute inset-0 z-0",
+                  theme === "dark" ? "bg-background/60" : "bg-background/70",
+                )}
+                style={{ backdropFilter: "blur(16px)" }}
+              />
 
-            <Button
-              variant="primary"
-              title="Create Invoice"
-              onClick={handleSubmit}
-              isLoading={createInvoice.isPending}
-            />
+              <div className="relative z-10 flex-1 flex flex-col gap-0.5">
+                <Text variant="caption">Total</Text>
+                <Text variant="body-lg" className="font-semibold">
+                  {formatAmount(total, currency)}
+                </Text>
+              </div>
+
+              <Button
+                variant="primary"
+                title="Create Invoice"
+                onClick={handleSubmit}
+                isLoading={createInvoice.isPending}
+                className="relative z-10"
+              />
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="w-full border-t border-border bg-background">
+          <div className="w-full max-w-desktop mx-auto">
+            <div className="flex flex-row items-center gap-4 px-6 py-4">
+              <div className="flex-1 flex flex-col gap-0.5">
+                <Text variant="caption">Total</Text>
+                <Text variant="body-lg" className="font-semibold">
+                  {formatAmount(total, currency)}
+                </Text>
+              </div>
+
+              <Button
+                variant="primary"
+                title="Create Invoice"
+                onClick={handleSubmit}
+                isLoading={createInvoice.isPending}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       <ClientPickerModal
         visible={clientPickerVisible}
