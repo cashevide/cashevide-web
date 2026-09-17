@@ -53,7 +53,7 @@ export function Modal({
   return (
     <div
       onClick={handleBackdropClick}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-overlay/50 px-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-overlay/90 backdrop-blur-lg px-4"
     >
       <div
         // stopPropagation here keeps a click anywhere inside the modal
