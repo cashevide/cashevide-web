@@ -4,7 +4,6 @@ import { ChevronLeft } from "lucide-react";
 
 import { cn } from "../../utils/cn";
 import { Text } from "../ui/Text";
-import { Button } from "../ui/Button";
 import { CreditPointsWidget } from "../ui/CreditPointsWidget";
 
 type ScreenHeaderProps = PropsWithChildren<{
@@ -55,14 +54,14 @@ export function ScreenHeader({
       <div className={cn("w-full mx-auto", HEADER_WIDTH_CLASS)}>
         <div className="h-20 flex flex-row items-center gap-3 px-6">
           {showBackButton ? (
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-9 w-9"
-              icon={<ChevronLeft size={18} />}
+            <button
+              type="button"
               onClick={handleBackPress}
               aria-label="Go back"
-            />
+              className="flex items-center justify-center h-9 w-9 -ml-1 cursor-pointer text-foreground transition-opacity duration-150 hover:opacity-70 active:opacity-50"
+            >
+              <ChevronLeft size={26} />
+            </button>
           ) : null}
 
           {children ? (
