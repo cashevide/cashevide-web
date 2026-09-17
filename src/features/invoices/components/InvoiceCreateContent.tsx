@@ -394,7 +394,7 @@ export function InvoiceCreateContent() {
 
               {selectedClient ? (
                 <>
-                  <div className="flex flex-row items-center justify-between gap-3 rounded-lg bg-secondary/30 p-4">
+                  <div className="flex flex-row items-center justify-between gap-3 rounded-lg border border-border bg-secondary/30 p-4">
                     <div className="flex-1 flex flex-col gap-0.5 min-w-0">
                       <Text variant="body" className="font-semibold truncate">
                         {selectedClient.name}
@@ -582,7 +582,7 @@ export function InvoiceCreateContent() {
                   the same numbers, so it's dropped here to avoid
                   showing the same total twice. */}
               {!isDesktopLayout && (
-                <div className="flex flex-col gap-2 rounded-lg bg-secondary/30 p-4">
+                <div className="flex flex-col gap-2 rounded-lg border border-border bg-secondary/30 p-4">
                   <div className="flex flex-row items-center justify-between">
                     <Text variant="body-sm" className="text-muted-foreground">
                       Subtotal

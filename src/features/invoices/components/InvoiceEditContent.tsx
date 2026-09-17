@@ -486,7 +486,7 @@ export function InvoiceEditContent() {
                 {/* -------------------- Template (locked) -------------------- */}
                 <div className="flex flex-col gap-1 rounded-lg border border-border bg-card p-4">
                   <Text variant="subheading">Template</Text>
-                  <div className="flex flex-row items-center justify-between rounded-lg bg-secondary/30 p-4">
+                  <div className="flex flex-row items-center justify-between rounded-lg border border-border bg-secondary/30 p-4">
                     <Text variant="body-sm">{TEMPLATE_LABEL[template]}</Text>
                     <Text variant="caption" className="text-muted-foreground">
                       Locked after creation
@@ -500,7 +500,7 @@ export function InvoiceEditContent() {
 
                   {selectedClientId != null ? (
                     <>
-                      <div className="flex flex-row items-center justify-between gap-3 rounded-lg bg-secondary/30 p-4">
+                      <div className="flex flex-row items-center justify-between gap-3 rounded-lg border border-border bg-secondary/30 p-4">
                         <div className="flex-1 flex flex-col gap-0.5 min-w-0">
                           <Text
                             variant="body"
@@ -689,7 +689,7 @@ export function InvoiceEditContent() {
                       side-by-side preview for the running total, so this
                       summary card stays as the only place to see it. */}
                   {!isDesktopLayout && (
-                    <div className="flex flex-col gap-2 rounded-lg bg-secondary/30 p-4">
+                    <div className="flex flex-col gap-2 rounded-lg border border-border bg-secondary/30 p-4">
                       <div className="flex flex-row items-center justify-between">
                         <Text
                           variant="body-sm"
