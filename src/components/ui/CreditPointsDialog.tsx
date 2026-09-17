@@ -5,7 +5,7 @@ import { Button } from "./Button";
 import { Modal } from "./Modal";
 import { Text } from "./Text";
 import { Toast } from "./Toast";
-import { ROUTES } from "../../lib/routes";
+import { buildReferralLink } from "../../utils/referral";
 
 interface CreditPointsDialogProps {
   visible: boolean;
@@ -44,7 +44,7 @@ export function CreditPointsDialog({
       return;
     }
 
-    const inviteLink = `${window.location.origin}${ROUTES.welcome}?referral=${encodeURIComponent(referralCode)}`;
+    const inviteLink = buildReferralLink(referralCode);
 
     // Web Share API — supported on mobile browsers and Safari/Edge on
     // desktop, but not desktop Chrome-on-Linux or desktop Firefox, so

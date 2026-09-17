@@ -2,8 +2,11 @@ import { useState } from "react";
 
 import { useContent } from "../../../content/useContent";
 import { useMalayaliModeStore } from "../../../stores/malayaliModeStore";
+import { useUserProfile } from "../../profile/hooks/useUserProfile";
+import { buildReferralLink } from "../../../utils/referral";
 import { Text } from "../../../components/ui/Text";
 import { Button } from "../../../components/ui/Button";
+import { Toast } from "../../../components/ui/Toast";
 import { SupportFlow } from "../../donation/components/SupportFlow";
 
 // Public WhatsApp community invite link — same one shared from
@@ -36,30 +39,68 @@ const CARD_ICON_SRC: Record<CardId, string> = {
 export function DashboardPromoCard() {
   const t = useContent();
   const isMalayaliMode = useMalayaliModeStore((state) => state.isMalayaliMode);
+  // TanStack Query dedupes by query key, so this doesn't cost an extra
+  // request when CreditPointsWidget (or anything else) already has
+  // userProfile mounted on the same screen — see that widget's own
+  // comment for why the fetch lives at each call site rather than
+  // being threaded through props.
+  const userProfile = useUserProfile();
   const [justCopied, setJustCopied] = useState(false);
   const [isSupportFlowOpen, setIsSupportFlowOpen] = useState(false);
 
   async function handleShare() {
+    // Same referral-link builder CreditPointsDialog's invite flow
+    // uses — falls back to the bare origin if referral_code isn't
+    // loaded yet, so the button still shares something useful rather
+    // than waiting on the profile fetch.
+    const shareUrl = buildReferralLink(userProfile.data?.referral_code);
+
     const shareData = {
       title: "Cashevide",
       text: "Check out Cashevide — invoicing and payment tracking for freelancers.",
-      url: window.location.origin,
+      url: shareUrl,
     };
 
-    // navigator.share isn't available in every browser/context (e.g.
-    // desktop Chrome without HTTPS, or older browsers) — clipboard copy
-    // is the fallback so the button still does something useful there.
-    if (navigator.share) {
+    // "share" in navigator is the feature-detection check (rather than
+    // always calling it and catching the failure), since calling an
+    // undefined method throws a TypeError, not the "not supported"
+    // rejection this catch block is written for. Same pattern as
+    // CreditPointsDialog's handleInviteFriends.
+    if ("share" in navigator) {
       try {
         await navigator.share(shareData);
+        return;
       } catch {
-        // AbortError when the user cancels the native share sheet —
-        // not a real failure, nothing to do.
+        // AbortError when the user cancels the native share sheet, or
+        // the browser rejected the call — fall through to clipboard
+        // copy either way rather than leaving the button appear to do
+        // nothing.
       }
-      return;
     }
 
-    await navigator.clipboard.writeText(shareData.url);
+    // navigator.clipboard only exists in a secure context — HTTPS, or
+    // localhost during dev. A dev server reached over its network IP
+    // (e.g. http://192.168.x.x:5173, for testing on another device) is
+    // NOT secure, so navigator.clipboard is undefined there and calling
+    // .writeText() on it throws. document.execCommand("copy") is
+    // deprecated but still works in that case, so it's the fallback
+    // rather than leaving the button silently do nothing.
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(shareUrl);
+    } else {
+      const textarea = document.createElement("textarea");
+      textarea.value = shareUrl;
+      // Off-screen but still focusable/selectable — execCommand needs
+      // a real text selection to copy from.
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    }
+
     setJustCopied(true);
     setTimeout(() => setJustCopied(false), 2000);
   }
@@ -131,6 +172,13 @@ export function DashboardPromoCard() {
         open={isSupportFlowOpen}
         onDone={() => setIsSupportFlowOpen(false)}
       />
+
+      {/* Confirms the clipboard-copy fallback path (desktop browsers
+          without Web Share support, e.g. Chrome on Linux or Firefox).
+          Same pattern as CreditPointsDialog's invite flow — the
+          button's own "Copied!" label is easy to miss since it's one
+          of three small buttons in a row. */}
+      <Toast message="Link Copied!" visible={justCopied} />
     </>
   );
 }

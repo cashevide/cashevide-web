@@ -134,7 +134,8 @@ export function Button({
         !isLinkVariant && SIZE_CLASS[size],
         fullWidth && !isIconOnly && "w-full",
         BG_CLASS[variant],
-        "active:opacity-60",
+        "transition-opacity duration-150",
+        !isDisabled && "hover:opacity-80 active:opacity-60",
         isDisabled && "opacity-50 cursor-not-allowed",
         className,
       )}
