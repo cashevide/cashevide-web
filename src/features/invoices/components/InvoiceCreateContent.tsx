@@ -19,6 +19,8 @@ import { PillTabs } from "../../../components/ui/PillTabs";
 import { Divider } from "../../../components/ui/Divider";
 import { Modal } from "../../../components/ui/Modal";
 import { InfoDialog } from "../../../components/ui/InfoDialog";
+import { Avatar } from "../../../components/ui/Avatar";
+import { useMalayaliModeStore } from "../../../stores/malayaliModeStore";
 import { ClientPickerModal } from "../components/ClientPickerModal";
 import { InvoiceItemFormRow } from "../components/InvoiceItemFormRow";
 import { InvoicePreview } from "../components/InvoicePreview";
@@ -152,6 +154,7 @@ export function InvoiceCreateContent() {
   // fully-supported template.
   const [showCustomizableComingSoon, setShowCustomizableComingSoon] =
     useState(false);
+  const isMalayaliMode = useMalayaliModeStore((state) => state.isMalayaliMode);
 
   const [currencyInitialized, setCurrencyInitialized] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -777,12 +780,50 @@ export function InvoiceCreateContent() {
         }
       />
 
-      <InfoDialog
-        visible={showCustomizableComingSoon}
-        title="Coming Soon"
-        message="The Customizable template is still being built. It'll be available to select here soon."
-        onDismiss={() => setShowCustomizableComingSoon(false)}
-      />
+      {isMalayaliMode ? (
+        <Modal
+          visible={showCustomizableComingSoon}
+          dismissible
+          onDismiss={() => setShowCustomizableComingSoon(false)}
+          className="text-center"
+          footer={
+            <div className="flex flex-col gap-2">
+              <Button
+                variant="primary"
+                size="sm"
+                fullWidth
+                malayalam
+                title="ശരി ശരി.."
+                onClick={() => setShowCustomizableComingSoon(false)}
+              />
+            </div>
+          }
+        >
+          <div className="flex flex-col items-center gap-3">
+            <Avatar
+              imageUri="/images/memes/mamanod-onnum-thonnalle.jpg"
+              name="Mamanod Onnum Thonnalle"
+              size={112}
+            />
+            <div className="flex flex-col items-center gap-1">
+              <Text variant="body-lg" className="font-semibold" malayalam>
+                മാമനോട് ഒന്നും തോന്നല്ലേ...
+              </Text>
+              <Text variant="body-sm" className="text-muted-foreground">
+                The Customizable template is still being built. It&apos;ll be
+                available to select here soon.
+              </Text>
+            </div>
+          </div>
+        </Modal>
+      ) : (
+        <InfoDialog
+          visible={showCustomizableComingSoon}
+          title="Coming Soon"
+          message="The Customizable template is still being built. It'll be available to select here soon."
+          onDismiss={() => setShowCustomizableComingSoon(false)}
+        />
+      )}
     </div>
   );
 }
