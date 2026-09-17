@@ -40,9 +40,9 @@ type SupportFlowProps = {
 //     prompt so it doesn't appear the instant the invoice-paid
 //     redirect lands. That reasoning doesn't apply to a direct
 //     Settings tap — the modal opens immediately.
-//   - forceNormalMode is passed to every modal, so this flow always
-//     shows plain/professional copy and no food-item theming,
-//     regardless of the user's global Malayali Mode setting.
+// Like DonationFlow, it follows the user's global Malayali Mode
+// setting (no forceNormalMode) — the modals' own isMalayaliMode read
+// from the store handles that.
 //
 //   options -> [customAmount ->] payment
 export function SupportFlow({ open, onDone }: SupportFlowProps) {
@@ -98,14 +98,12 @@ export function SupportFlow({ open, onDone }: SupportFlowProps) {
         visible={step === "options"}
         onDismiss={handleDismissOptions}
         onSelect={handleSelectOption}
-        forceNormalMode
       />
 
       <DonationCustomAmountModal
         visible={step === "customAmount"}
         onDismiss={handleDismissCustomAmount}
         onContinue={handleContinueCustomAmount}
-        forceNormalMode
       />
 
       {payment && (
@@ -115,7 +113,6 @@ export function SupportFlow({ open, onDone }: SupportFlowProps) {
           staticQrImageUri={payment.staticQrImageUri}
           onSent={handleFinishPayment}
           onCancel={handleFinishPayment}
-          forceNormalMode
         />
       )}
     </>
