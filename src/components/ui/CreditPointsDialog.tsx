@@ -7,6 +7,13 @@ import { Text } from "./Text";
 import { Toast } from "./Toast";
 import { buildReferralLink } from "../../utils/referral";
 
+// Shared between the Web Share API call and the clipboard fallback below
+// — both need the same wording, so it's defined once here rather than
+// risking the two copies drifting apart.
+const INVITE_TITLE = "Join Cashevide";
+const INVITE_TEXT =
+  "Generate unlimited invoices for free and manage all your clients and catalog in one place.";
+
 interface CreditPointsDialogProps {
   visible: boolean;
   points: number;
@@ -57,8 +64,8 @@ export function CreditPointsDialog({
     if ("share" in navigator) {
       try {
         await navigator.share({
-          title: "Join me on Cashevide",
-          text: "Sign up on Cashevide with my referral link and we both earn credit points.",
+          title: INVITE_TITLE,
+          text: INVITE_TEXT,
           url: inviteLink,
         });
         return;
@@ -76,18 +83,30 @@ export function CreditPointsDialog({
     // calling .writeText() on it throws. document.execCommand("copy")
     // is deprecated but still works in that case, so it's the
     // fallback rather than leaving the button silently do nothing.
+    //
+    // Includes the same title/text as the Web Share call, not just the
+    // bare link — clipboard is the fallback path precisely because
+    // there's no native share sheet to carry that wording, so it has
+    // to be part of what gets copied or it's lost entirely.
+    const clipboardText = `${INVITE_TITLE}\n\n${INVITE_TEXT}\n\n${inviteLink}`;
+
     if (navigator.clipboard) {
-      await navigator.clipboard.writeText(inviteLink);
+      await navigator.clipboard.writeText(clipboardText);
     } else {
       const textarea = document.createElement("textarea");
-      textarea.value = inviteLink;
+      textarea.value = clipboardText;
       // Off-screen but still focusable/selectable — execCommand needs
       // a real text selection to copy from.
       textarea.style.position = "fixed";
       textarea.style.left = "-9999px";
       document.body.appendChild(textarea);
       textarea.focus();
-      textarea.select();
+      // .select() alone is unreliable for multiline content on some
+      // mobile browsers (notably Android Chrome) — it can end up
+      // selecting only part of the text. Setting the range explicitly
+      // guarantees the full clipboardText (title + text + link) gets
+      // selected before the copy command runs.
+      textarea.setSelectionRange(0, textarea.value.length);
       document.execCommand("copy");
       document.body.removeChild(textarea);
     }

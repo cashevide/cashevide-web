@@ -27,7 +27,7 @@ function WhatsAppIcon({ size = 18 }: { size?: number }) {
 }
 
 function buildMessage(link: string) {
-  return `Hello Noufal, this is my link for referral code verification: ${link}. Please verify and share the referral code.`;
+  return `Hello Noufal, this is my link for referral code verification:\n\n${link}\n\nPlease verify and share the referral code.`;
 }
 
 type ReferralRequestModalProps = {
