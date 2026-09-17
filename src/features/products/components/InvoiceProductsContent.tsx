@@ -10,7 +10,6 @@ import { SearchInput } from "../../../components/ui/SearchInput";
 import { PillTabs } from "../../../components/ui/PillTabs";
 import { Spinner } from "../../../components/ui/Spinner";
 import { InfoDialog } from "../../../components/ui/InfoDialog";
-import { CreditPointsWidget } from "../../../components/ui/CreditPointsWidget";
 import { InvoiceSubTabs } from "../../invoices/components/InvoiceSubTabs";
 import { useProducts } from "../hooks/useProducts";
 import { useProductUsage } from "../hooks/useProductUsage";
@@ -136,13 +135,7 @@ export function InvoiceProductsContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader>
-        <div className="flex flex-row items-center justify-between">
-          <Text variant="heading">Products</Text>
-
-          <CreditPointsWidget />
-        </div>
-      </ScreenHeader>
+      <ScreenHeader title="Products" />
 
       {/* Fixed block: sub-tabs, search, sort tabs, archived link — see
           InvoiceListContent.tsx for why this sits outside Container's

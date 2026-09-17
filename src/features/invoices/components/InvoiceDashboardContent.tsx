@@ -6,7 +6,6 @@ import { ScreenHeader } from "../../../components/layout/ScreenHeader";
 import { Text } from "../../../components/ui/Text";
 import { Button } from "../../../components/ui/Button";
 import { Spinner } from "../../../components/ui/Spinner";
-import { CreditPointsWidget } from "../../../components/ui/CreditPointsWidget";
 import { MalayaliModePrompt } from "../../onboarding/components/MalayaliModePrompt";
 import { DashboardPromoCard } from "./DashboardPromoCard";
 import { useOnboardingPromptStore } from "../../../stores/onboardingPromptStore";
@@ -55,13 +54,7 @@ export function InvoiceDashboardContent() {
           top-level tab, a plain "Dashboard" title matches the standard
           ScreenHeader pattern every other tab page uses (Profile,
           Settings, etc.) — the credit-points badge stays on the right. */}
-      <ScreenHeader>
-        <div className="flex flex-row items-center justify-between">
-          <Text variant="heading">Dashboard</Text>
-
-          <CreditPointsWidget />
-        </div>
-      </ScreenHeader>
+      <ScreenHeader title="Dashboard" />
 
       <Container variant="desktop" scroll>
         <div className="flex flex-col gap-6 px-6 py-6">

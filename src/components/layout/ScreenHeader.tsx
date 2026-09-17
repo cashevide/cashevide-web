@@ -5,18 +5,23 @@ import { ChevronLeft } from "lucide-react";
 import { cn } from "../../utils/cn";
 import { Text } from "../ui/Text";
 import { Button } from "../ui/Button";
+import { CreditPointsWidget } from "../ui/CreditPointsWidget";
 
 type ScreenHeaderProps = PropsWithChildren<{
   // Simple case — most screens just need a title. For anything more
-  // (a logo + credit-points button, a search field, tabs, etc.) pass
-  // `children` instead; when children is given, `title` is ignored
-  // and the caller is fully responsible for the row's content.
+  // (a search field, tabs, etc.) pass `children` instead; when
+  // children is given, `title` is ignored and the caller is fully
+  // responsible for the row's content.
   title?: string;
   showBackButton?: boolean;
   // Screens decide this themselves rather than the header guessing
   // from navigation state — a tab's own root page never wants one,
   // while a page pushed on top of it always does.
   onBackPress?: () => void;
+  // Renders the credit-points badge (and its dialog) pinned to the
+  // right of the header row. On by default on every screen; pass
+  // `false` to opt a specific screen out.
+  showCreditPoints?: boolean;
   className?: string;
 }>;
 
@@ -30,6 +35,7 @@ export function ScreenHeader({
   title,
   showBackButton = false,
   onBackPress,
+  showCreditPoints = true,
   className = "",
   children,
 }: ScreenHeaderProps) {
@@ -66,6 +72,8 @@ export function ScreenHeader({
               {title}
             </Text>
           ) : null}
+
+          {showCreditPoints ? <CreditPointsWidget /> : null}
         </div>
       </div>
     </div>

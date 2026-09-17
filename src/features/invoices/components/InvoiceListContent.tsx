@@ -9,7 +9,6 @@ import { Button } from "../../../components/ui/Button";
 import { SearchInput } from "../../../components/ui/SearchInput";
 import { Spinner } from "../../../components/ui/Spinner";
 import { PillTabs } from "../../../components/ui/PillTabs";
-import { CreditPointsWidget } from "../../../components/ui/CreditPointsWidget";
 import { InvoiceSubTabs } from "./InvoiceSubTabs";
 import { InvoiceStatusBadge } from "./InvoiceStatusBadge";
 import { InvoiceFilterModal, type InvoiceFilters } from "./InvoiceFilterModal";
@@ -278,13 +277,7 @@ export function InvoiceListContent() {
     // bounded box to scroll within instead of pushing past this wrapper
     // and forcing the whole page (body) to scroll.
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader>
-        <div className="flex flex-row items-center justify-between">
-          <Text variant="heading">Invoices</Text>
-
-          <CreditPointsWidget />
-        </div>
-      </ScreenHeader>
+      <ScreenHeader title="Invoices" />
 
       {/* Fixed block: sub-tabs, search/filter, active-filter chips, sort
           tabs. Deliberately OUTSIDE Container's scroll area — only the
