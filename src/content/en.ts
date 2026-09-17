@@ -4,19 +4,23 @@ import type { ContentKey } from "./keys";
 // TypeScript's Record<ContentKey, string> enforces that at compile
 // time, so a key can never ship with only a Malayali-mode value.
 export const en: Record<ContentKey, string> = {
-  "dashboard.promoCard.share.title": "Enjoying Cashevide?",
-  "dashboard.promoCard.share.body": "Share it with a friend who could use it.",
-  "dashboard.promoCard.share.button": "Share App",
+  // Display order (Donation, Community, Share) is set by CARD_ORDER
+  // in DashboardPromoCard.tsx, not by the order here — see keys.ts.
+  // Cards show only a heading + button now (no body text), so the
+  // .body keys below are unused placeholders — kept (rather than
+  // removed from ContentKey) so a body line can come back later
+  // without another type change. See DashboardPromoCard.tsx.
+  "dashboard.promoCard.share.title": "Invite Friends",
+  "dashboard.promoCard.share.body": "",
+  "dashboard.promoCard.share.button": "Invite Friends",
 
-  "dashboard.promoCard.community.title": "Join Our WhatsApp Community",
-  "dashboard.promoCard.community.body":
-    "Connect with other freelancers using Cashevide.",
+  "dashboard.promoCard.community.title": "Join Community",
+  "dashboard.promoCard.community.body": "",
   "dashboard.promoCard.community.button": "Join Now",
 
-  "dashboard.promoCard.thirdSlot.title": "Coming Soon",
-  "dashboard.promoCard.thirdSlot.body":
-    "We're working on something new for you.",
-  "dashboard.promoCard.thirdSlot.button": "Learn More",
+  "dashboard.promoCard.thirdSlot.title": "Support me",
+  "dashboard.promoCard.thirdSlot.body": "",
+  "dashboard.promoCard.thirdSlot.button": "Buy me a coffee",
 
   "donation.prompt.title": "Invoice marked as paid 🎉",
   "donation.prompt.body":

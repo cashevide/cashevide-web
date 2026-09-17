@@ -3,18 +3,17 @@ import type { ContentKey } from "./keys";
 // Malayali Mode strings — same keys as en.ts, TypeScript enforces
 // completeness (Record<ContentKey, string> rejects a missing key).
 export const malayali: Record<ContentKey, string> = {
-  "dashboard.promoCard.share.title": "എല്ലാവരും",
-  "dashboard.promoCard.share.body": "app share ചെയ്ത് സഹായിക്ക് മക്കളേ 🙏",
-  "dashboard.promoCard.share.button": "Share ചെയ്യ്",
+  "dashboard.promoCard.share.title": "Invite Friends",
+  "dashboard.promoCard.share.body": "",
+  "dashboard.promoCard.share.button": "Invite Friends",
 
-  "dashboard.promoCard.community.title": "വാ മക്കളേ",
-  "dashboard.promoCard.community.body":
-    "കൂട്ടത്തിൽ കൂടിക്കോ, തനിച്ച് നിക്കണ്ട 😎",
-  "dashboard.promoCard.community.button": "Join ചെയ്യ്",
+  "dashboard.promoCard.community.title": "Join Community",
+  "dashboard.promoCard.community.body": "",
+  "dashboard.promoCard.community.button": "Join Now",
 
-  "dashboard.promoCard.thirdSlot.title": "വരുന്നുണ്ട് മക്കളേ",
-  "dashboard.promoCard.thirdSlot.body": "എന്തോ ഒരു സാധനം ഉണ്ടാക്കുന്നുണ്ട് 😏",
-  "dashboard.promoCard.thirdSlot.button": "കാത്തിരിക്ക്",
+  "dashboard.promoCard.thirdSlot.title": "Support me",
+  "dashboard.promoCard.thirdSlot.body": "",
+  "dashboard.promoCard.thirdSlot.button": "Buy me a chaya",
 
   "donation.prompt.title": "പൈസ കിട്ടി അല്ലേ! 🎉",
   "donation.prompt.body":

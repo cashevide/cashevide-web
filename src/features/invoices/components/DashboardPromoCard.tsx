@@ -1,12 +1,10 @@
 import { useState } from "react";
-import type { ReactNode } from "react";
-import { Share2, Sparkles } from "lucide-react";
 
 import { useContent } from "../../../content/useContent";
 import { useMalayaliModeStore } from "../../../stores/malayaliModeStore";
 import { Text } from "../../../components/ui/Text";
 import { Button } from "../../../components/ui/Button";
-import { WhatsAppIcon } from "../../../components/ui/WhatsAppIcon";
+import { SupportFlow } from "../../donation/components/SupportFlow";
 
 // Public WhatsApp community invite link — same one shared from
 // Settings/wherever else this community is promoted. Update here if
@@ -15,26 +13,36 @@ const WHATSAPP_COMMUNITY_LINK =
   "https://chat.whatsapp.com/CnulzmDp7YlC0yipL7eFUA";
 
 // Three cards, always visible side-by-side (stacked on mobile) — no
-// rotation/carousel. Each card is (title key, body key, button key,
-// icon, action). Adding a fourth is: add its 3 content keys to
-// keys.ts + a value in both en.ts and malayali.ts, then add one entry
-// to CARD_ORDER below and its icon to CARD_ICON — the grid picks it
-// up automatically (Tailwind's md:grid-cols-3 stays correct for any
-// count; only the visual balance would need a look if this grows
-// past 3).
-type CardId = "share" | "community" | "thirdSlot";
+// rotation/carousel, in this fixed display order (Donation first).
+// Each card is icon + title + button only (no body text). "thirdSlot"
+// is the donation card's content-key/CardId name (see keys.ts) — kept
+// generic there since it started as an unused placeholder before
+// being wired to SupportFlow here.
+//
+// Icons are the custom Illustrator SVGs in public/icons/ — full-color
+// with their own background circle already baked in, so unlike an
+// icon-font glyph they're rendered directly at full size rather than
+// wrapped in a bg-secondary circle.
+type CardId = "thirdSlot" | "community" | "share";
 
-const CARD_ORDER: CardId[] = ["share", "community", "thirdSlot"];
+const CARD_ORDER: CardId[] = ["thirdSlot", "community", "share"];
+
+const CARD_ICON_SRC: Record<CardId, string> = {
+  thirdSlot: "/icons/promo-donation.svg",
+  community: "/icons/promo-community.svg",
+  share: "/icons/promo-share.svg",
+};
 
 export function DashboardPromoCard() {
   const t = useContent();
   const isMalayaliMode = useMalayaliModeStore((state) => state.isMalayaliMode);
   const [justCopied, setJustCopied] = useState(false);
+  const [isSupportFlowOpen, setIsSupportFlowOpen] = useState(false);
 
   async function handleShare() {
     const shareData = {
       title: "Cashevide",
-      text: t("dashboard.promoCard.share.body"),
+      text: "Check out Cashevide — invoicing and payment tracking for freelancers.",
       url: window.location.origin,
     };
 
@@ -60,83 +68,69 @@ export function DashboardPromoCard() {
     window.open(WHATSAPP_COMMUNITY_LINK, "_blank", "noopener,noreferrer");
   }
 
-  // Placeholder — no real destination/functionality yet for this
-  // slot. Wire it up to whatever this card ends up promoting once
-  // that exists.
-  function handleThirdSlotAction() {}
-
   const cardContent: Record<
     CardId,
-    {
-      title: string;
-      body: string;
-      button: string;
-      icon: ReactNode;
-      onAction: () => void;
-    }
+    { title: string; button: string; onAction: () => void }
   > = {
-    share: {
-      title: t("dashboard.promoCard.share.title"),
-      body: t("dashboard.promoCard.share.body"),
-      button: justCopied ? "Copied!" : t("dashboard.promoCard.share.button"),
-      icon: <Share2 size={28} className="text-foreground" />,
-      onAction: handleShare,
+    thirdSlot: {
+      title: t("dashboard.promoCard.thirdSlot.title"),
+      button: t("dashboard.promoCard.thirdSlot.button"),
+      onAction: () => setIsSupportFlowOpen(true),
     },
     community: {
       title: t("dashboard.promoCard.community.title"),
-      body: t("dashboard.promoCard.community.body"),
       button: t("dashboard.promoCard.community.button"),
-      icon: <WhatsAppIcon size={28} />,
       onAction: handleJoinCommunity,
     },
-    thirdSlot: {
-      title: t("dashboard.promoCard.thirdSlot.title"),
-      body: t("dashboard.promoCard.thirdSlot.body"),
-      button: t("dashboard.promoCard.thirdSlot.button"),
-      icon: <Sparkles size={28} className="text-foreground" />,
-      onAction: handleThirdSlotAction,
+    share: {
+      title: t("dashboard.promoCard.share.title"),
+      button: justCopied ? "Copied!" : t("dashboard.promoCard.share.button"),
+      onAction: handleShare,
     },
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {CARD_ORDER.map((cardId) => {
-        const card = cardContent[cardId];
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {CARD_ORDER.map((cardId) => {
+          const card = cardContent[cardId];
 
-        return (
-          <div
-            key={cardId}
-            className="flex flex-col items-center gap-2 rounded-lg border border-border bg-card p-5 text-center"
-          >
-            <div className="flex items-center justify-center h-12 w-12 rounded-full bg-secondary mb-1">
-              {card.icon}
-            </div>
-
-            <Text
-              variant="body-lg"
-              className="font-semibold"
-              malayalam={isMalayaliMode}
+          return (
+            <div
+              key={cardId}
+              className="flex flex-col items-center gap-2 rounded-lg border border-border bg-card p-5 text-center"
             >
-              {card.title}
-            </Text>
-            <Text
-              variant="body-sm"
-              className="text-muted-foreground"
-              malayalam={isMalayaliMode}
-            >
-              {card.body}
-            </Text>
-            <div className="mt-2">
-              <Button
-                variant="primary"
-                title={card.button}
-                onClick={card.onAction}
-                malayalam={isMalayaliMode}
+              <img
+                src={CARD_ICON_SRC[cardId]}
+                alt=""
+                className="h-14 w-14 mb-1"
               />
+
+              <Text
+                variant="body-lg"
+                className="font-semibold"
+                malayalam={isMalayaliMode}
+              >
+                {card.title}
+              </Text>
+              <div className="mt-2">
+                <Button
+                  variant="brand"
+                  size="sm"
+                  title={card.button}
+                  onClick={card.onAction}
+                  malayalam={isMalayaliMode}
+                />
+              </div>
             </div>
-          </div>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+
+      <SupportFlow
+        open={isSupportFlowOpen}
+        onDone={() => setIsSupportFlowOpen(false)}
+      />
+    </>
   );
 }

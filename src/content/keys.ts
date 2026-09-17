@@ -11,8 +11,11 @@
 // unrelated features from accidentally colliding on the same key.
 export type ContentKey =
   // Dashboard — three promo cards shown side-by-side (stacked on
-  // mobile). Content differs by mode (professional in normal mode,
-  // meme-style in Malayali Mode) — see DashboardPromoCard.tsx.
+  // mobile), rendered in the order Donation, Community, Share (see
+  // CARD_ORDER in DashboardPromoCard.tsx). "thirdSlot" is the
+  // donation card — named generically since it started as an unused
+  // placeholder before being wired to SupportFlow. Content differs by
+  // mode (professional in normal mode, meme-style in Malayali Mode).
   | "dashboard.promoCard.share.title"
   | "dashboard.promoCard.share.body"
   | "dashboard.promoCard.share.button"
