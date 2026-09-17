@@ -12,7 +12,7 @@ import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";
 import { Spinner } from "../../../components/ui/Spinner";
 import { CurrencyPicker } from "../../../components/ui/CurrencyPicker";
-import { DateField } from "../../../components/ui/DateField";
+import { DateField, toDateString } from "../../../components/ui/DateField";
 import { PillTabs } from "../../../components/ui/PillTabs";
 import { Divider } from "../../../components/ui/Divider";
 import { Modal } from "../../../components/ui/Modal";
@@ -129,7 +129,9 @@ export function InvoiceCreateContent() {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [currency, setCurrency] = useState("");
-  const [issueDate, setIssueDate] = useState<string | undefined>(undefined);
+  const [issueDate, setIssueDate] = useState<string | undefined>(() =>
+    toDateString(new Date()),
+  );
   const [dueDate, setDueDate] = useState<string | undefined>(undefined);
   const [discount, setDiscount] = useState("0");
   // Collapsed behind a link by default — most invoices don't need a
