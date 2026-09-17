@@ -13,7 +13,7 @@ import { Button } from "../../../components/ui/Button";
 import { Spinner } from "../../../components/ui/Spinner";
 import { PillTabs } from "../../../components/ui/PillTabs";
 import { CurrencyPicker } from "../../../components/ui/CurrencyPicker";
-import { DateField } from "../../../components/ui/DateField";
+import { DateField, toDateString } from "../../../components/ui/DateField";
 import { Divider } from "../../../components/ui/Divider";
 import { Modal } from "../../../components/ui/Modal";
 import { ClientPickerModal } from "../components/ClientPickerModal";
@@ -82,7 +82,7 @@ function createEmptyItem(): InvoiceItemRequest {
 function createEmptyPayment(): PaymentRecordRequest {
   return {
     amount: "",
-    payment_date: "",
+    payment_date: toDateString(new Date()),
     payment_method: "",
     note: "",
   };

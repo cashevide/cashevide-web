@@ -8,7 +8,7 @@ import { Modal } from "./Modal";
 // Formats a Date object as YYYY-MM-DD (the format the backend's date
 // fields expect) using local date parts — not toISOString(), which shifts
 // the date across timezone boundaries near midnight.
-function toDateString(date: Date): string {
+export function toDateString(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
