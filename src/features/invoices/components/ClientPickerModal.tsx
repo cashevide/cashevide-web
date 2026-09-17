@@ -74,7 +74,7 @@ export function ClientPickerModal({
                 type="button"
                 key={client.slug}
                 onClick={() => handleSelect(client)}
-                className="flex flex-row items-center gap-3 bg-card border border-border rounded-lg p-3 text-left cursor-pointer hover:bg-secondary/50"
+                className="flex flex-row items-center gap-3 bg-card border border-border rounded-lg p-3 text-left cursor-pointer transition-colors duration-200 hover:bg-card/80 hover:border-border/60"
               >
                 <Avatar name={client.name} size={36} />
 

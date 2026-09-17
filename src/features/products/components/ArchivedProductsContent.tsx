@@ -164,7 +164,7 @@ export function ArchivedProductsContent() {
                 return (
                   <div
                     key={product.slug}
-                    className="flex flex-row items-center gap-3 bg-card border border-border rounded-lg p-4"
+                    className="flex flex-row items-center gap-3 bg-card border border-border rounded-lg p-4 transition-colors duration-200 hover:bg-card/80 hover:border-border/60"
                   >
                     <button
                       type="button"
@@ -188,7 +188,7 @@ export function ArchivedProductsContent() {
                     </button>
 
                     <Button
-                      variant="outline"
+                      variant="primary"
                       size="sm"
                       title="Unarchive"
                       onClick={() => handleUnarchive(product.slug)}

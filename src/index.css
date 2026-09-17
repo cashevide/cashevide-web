@@ -261,6 +261,57 @@ body {
   --color-border: #e1e1dd;
   --color-input: #ebebe8;
   --color-ring: #5a5a57;
+
+  /* Modal open animation — backdrop fades in, dialog fades + scales up
+     together. Kept short (180ms) so it reads as responsive, not slow. */
+  --animate-overlay-in: overlay-in 180ms ease-out;
+  --animate-modal-in: modal-in 180ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Reverse of the above, played while the modal is closing (before
+     it's removed from the DOM). Slightly quicker than the entrance —
+     closing should feel snappier than opening. */
+  --animate-overlay-out: overlay-out 150ms ease-in forwards;
+  --animate-modal-out: modal-out 150ms cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes modal-out {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
 }
 
 .dark {

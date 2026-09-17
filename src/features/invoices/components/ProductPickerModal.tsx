@@ -73,7 +73,7 @@ export function ProductPickerModal({
                 type="button"
                 key={product.slug}
                 onClick={() => handleSelect(product)}
-                className="flex flex-col gap-0.5 bg-card border border-border rounded-lg p-3 text-left cursor-pointer hover:bg-secondary/50"
+                className="flex flex-col gap-0.5 bg-card border border-border rounded-lg p-3 text-left cursor-pointer transition-colors duration-200 hover:bg-card/80 hover:border-border/60"
               >
                 <Text variant="body-sm" className="font-semibold truncate">
                   {product.title}
