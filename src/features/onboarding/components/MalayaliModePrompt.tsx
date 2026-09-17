@@ -12,12 +12,9 @@ import { useOnboardingPromptStore } from "../../../stores/onboardingPromptStore"
 //   - answering "No" (doesn't know Dhamu/Vasu) goes straight to
 //     "closing-not-malayali" and mode stays OFF, no mode question asked.
 //   - answering "Yes" goes to "mode-question", and whichever answer is
-//     given there leads to "closing-journey" with mode set accordingly.
-type PromptStep =
-  | "dhamu-question"
-  | "mode-question"
-  | "closing-journey"
-  | "closing-not-malayali";
+//     given there sets the mode accordingly and closes the prompt
+//     immediately — no separate closing step.
+type PromptStep = "dhamu-question" | "mode-question" | "closing-not-malayali";
 
 type MalayaliModePromptProps = {
   visible: boolean;
@@ -57,7 +54,7 @@ export function MalayaliModePrompt({
 
   function handleModeAnswer(wantsMode: boolean) {
     setMalayaliMode(wantsMode);
-    setStep("closing-journey");
+    finish();
   }
 
   if (step === "dhamu-question") {
@@ -123,63 +120,59 @@ export function MalayaliModePrompt({
       <Modal
         visible={visible}
         dismissible={false}
-        className="text-center"
-        description={
-          <Text variant="body-lg" className="font-semibold" malayalam>
-            കുട്ടാ നീ മലയാളി ആണല്ലേ. മലയാളി മോഡ് ഉണ്ട്. ഓൺ ആക്കണോ?
-          </Text>
-        }
+        className="text-center py-6"
         footer={
-          <div className="flex flex-row justify-end gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              title="No"
-              onClick={() => handleModeAnswer(false)}
-            />
+          <div className="flex flex-col gap-2">
             <Button
               variant="primary"
               size="sm"
+              fullWidth
               title="Yes"
               onClick={() => handleModeAnswer(true)}
             />
-          </div>
-        }
-      />
-    );
-  }
-
-  if (step === "closing-not-malayali") {
-    return (
-      <Modal
-        visible={visible}
-        dismissible={false}
-        title="No problem, it was a simple test to know you and the developer from same place. Start your journey."
-        footer={
-          <div className="flex flex-row justify-end">
             <Button
-              variant="primary"
+              variant="outline"
               size="sm"
-              title="Start your journey"
-              onClick={finish}
+              fullWidth
+              title="No"
+              onClick={() => handleModeAnswer(false)}
             />
           </div>
         }
-      />
+      >
+        <div className="flex flex-row justify-center py-2">
+          <Avatar
+            imageUri="/images/memes/enke-pathalum-nee.jpg"
+            name="Enke Pathalum Nee"
+            size={112}
+          />
+        </div>
+        <div className="max-w-[340px] mx-auto">
+          <Text variant="body-lg" className="font-semibold" malayalam>
+            എങ്കെ പാത്താലും മലയാളി...
+            <br />
+            ആപ്പിൽ ഒരു മലയാളി mode ഉണ്ട്. on ആക്കണോ? (app language change
+            ആക്കുന്നതല്ല. Funny mode. off ആക്കണം എങ്കിൽ settings ഇൽ പോയി off
+            ആക്കാം)
+          </Text>
+        </div>
+      </Modal>
     );
   }
 
-  // step === "closing-journey"
+  // step === "closing-not-malayali"
   return (
     <Modal
       visible={visible}
       dismissible={false}
-      title="Start your journey"
+      className="text-center"
+      title="No problem, it was a simple test to know you and the developer from same place. Start your journey."
       footer={
-        <div className="flex flex-row justify-end">
+        <div className="flex flex-col gap-2">
           <Button
             variant="primary"
             size="sm"
+            fullWidth
             title="Start your journey"
             onClick={finish}
           />
