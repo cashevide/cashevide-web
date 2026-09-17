@@ -615,7 +615,17 @@ export function InvoiceCreateContent() {
 
           {/* -------------------- Live preview column (desktop only, toggleable) -------------------- */}
           {isDesktopLayout && isPreviewVisible && (
-            <div className="flex-1">
+            // sticky (not a second Container/scroll) — the outer
+            // Container above is still the only element with page
+            // scroll, so a sticky column here rides along with it but
+            // pins to the viewport once its top edge is reached. Its
+            // own max-height + overflow-y-auto then scrolls the
+            // preview independently, capped to the visible viewport
+            // height (minus header/footer bars) rather than the
+            // page's full scrollable height, so a long invoice
+            // preview never drags the form column's scroll position
+            // with it.
+            <div className="w-[700px] shrink-0 sticky top-6 max-h-[calc(100dvh-11rem)] overflow-y-auto">
               <InvoicePreview invoice={draftPreview} />
             </div>
           )}
