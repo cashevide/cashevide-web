@@ -366,10 +366,10 @@ export function InvoiceCreateContent() {
         >
           {/* -------------------- Form column -------------------- */}
           <div
-            className={cn("flex flex-col gap-10", isDesktopLayout && "flex-1")}
+            className={cn("flex flex-col gap-6", isDesktopLayout && "flex-1")}
           >
             {/* -------------------- Template -------------------- */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">
               <Text variant="subheading">Template</Text>
               <PillTabs
                 items={TEMPLATE_OPTIONS.map((option) => ({
@@ -388,10 +388,8 @@ export function InvoiceCreateContent() {
               />
             </div>
 
-            <Divider />
-
             {/* -------------------- Client -------------------- */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">
               <Text variant="subheading">Client</Text>
 
               {selectedClient ? (
@@ -504,10 +502,8 @@ export function InvoiceCreateContent() {
               )}
             </div>
 
-            <Divider />
-
             {/* -------------------- Invoice details -------------------- */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">
               <Text variant="subheading">Invoice Details</Text>
 
               <div className="flex flex-col gap-1">
@@ -531,10 +527,8 @@ export function InvoiceCreateContent() {
               </div>
             </div>
 
-            <Divider />
-
             {/* -------------------- Items -------------------- */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">
               <Text variant="subheading">Items</Text>
 
               <div className="flex flex-col gap-5">
@@ -558,10 +552,8 @@ export function InvoiceCreateContent() {
               />
             </div>
 
-            <Divider />
-
             {/* -------------------- Discount -------------------- */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4">
               {isDiscountVisible ? (
                 <>
                   <Text variant="subheading">Discount</Text>
