@@ -75,11 +75,7 @@ export function ClientFormContent() {
   if (isEditMode && clientDetails.isLoading) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader
-          title="Edit Client"
-          showBackButton
-          containerVariant="desktop"
-        />
+        <ScreenHeader title="Edit Client" showBackButton />
         <Container variant="narrow">
           <div className="flex flex-1 items-center justify-center">
             <Spinner />
@@ -94,7 +90,6 @@ export function ClientFormContent() {
       <ScreenHeader
         title={isEditMode ? "Edit Client" : "Add Client"}
         showBackButton
-        containerVariant="desktop"
       />
 
       <Container variant="narrow" scroll>

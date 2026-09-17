@@ -53,7 +53,7 @@ export function BusinessProfileContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader title="Business Profile" containerVariant="desktop" />
+      <ScreenHeader title="Business Profile" />
 
       <Container variant="desktop" scroll>
         <div className="w-full max-w-narrow mx-auto px-6 py-6 flex flex-col gap-6">

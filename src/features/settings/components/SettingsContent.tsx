@@ -130,7 +130,7 @@ export function SettingsContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader title="Settings" containerVariant="desktop" />
+      <ScreenHeader title="Settings" />
 
       <Container variant="desktop" scroll>
         <div className="w-full max-w-narrow mx-auto px-6 py-6 flex flex-col gap-6">

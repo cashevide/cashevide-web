@@ -17,11 +17,7 @@ export function AccountSettingsContent() {
   if (profileQuery.isLoading) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader
-          title="Account"
-          showBackButton
-          containerVariant="desktop"
-        />
+        <ScreenHeader title="Account" showBackButton />
         <Container variant="desktop">
           <div className="flex flex-1 items-center justify-center">
             <Spinner />
@@ -33,7 +29,7 @@ export function AccountSettingsContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader title="Account" showBackButton containerVariant="desktop" />
+      <ScreenHeader title="Account" showBackButton />
 
       <Container variant="desktop" scroll>
         <div className="w-full max-w-narrow mx-auto px-6 py-6 flex flex-col gap-6">

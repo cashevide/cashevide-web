@@ -106,11 +106,7 @@ export function ArchivedProductsContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader
-        title="Archived Products"
-        showBackButton
-        containerVariant="desktop"
-      />
+      <ScreenHeader title="Archived Products" showBackButton />
 
       <div className="w-full mx-auto max-w-desktop px-6 pt-6 pb-4 flex flex-col gap-4">
         <InvoiceSubTabs />
@@ -173,9 +169,7 @@ export function ArchivedProductsContent() {
                     <button
                       type="button"
                       onClick={() =>
-                        navigate(
-                          ROUTES.invoices.products.detail(product.slug),
-                        )
+                        navigate(ROUTES.invoices.products.detail(product.slug))
                       }
                       className="flex flex-1 flex-col gap-0.5 min-w-0 text-left cursor-pointer"
                     >

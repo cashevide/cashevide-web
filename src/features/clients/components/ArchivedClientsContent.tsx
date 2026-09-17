@@ -108,11 +108,7 @@ export function ArchivedClientsContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader
-        title="Archived Clients"
-        showBackButton
-        containerVariant="desktop"
-      />
+      <ScreenHeader title="Archived Clients" showBackButton />
 
       <div className="w-full mx-auto max-w-desktop px-6 pt-6 pb-4 flex flex-col gap-4">
         <InvoiceSubTabs />

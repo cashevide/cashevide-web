@@ -29,11 +29,7 @@ export function SecuritySettingsContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader
-        title="Security"
-        showBackButton
-        containerVariant="desktop"
-      />
+      <ScreenHeader title="Security" showBackButton />
 
       <Container variant="desktop" scroll>
         <div className="w-full max-w-narrow mx-auto px-6 py-6 flex flex-col gap-6">
@@ -43,9 +39,7 @@ export function SecuritySettingsContent() {
           <div className="rounded-lg border border-border bg-card overflow-hidden">
             <SecurityRow
               label="Change Password"
-              onClick={() =>
-                navigate(ROUTES.settings.security.changePassword)
-              }
+              onClick={() => navigate(ROUTES.settings.security.changePassword)}
             />
           </div>
         </div>

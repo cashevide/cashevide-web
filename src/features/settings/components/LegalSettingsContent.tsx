@@ -41,7 +41,7 @@ export function LegalSettingsContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader title="Legal" showBackButton containerVariant="narrow" />
+      <ScreenHeader title="Legal" showBackButton />
 
       <Container variant="narrow" scroll>
         <div className="w-full max-w-narrow mx-auto px-6 py-6 flex flex-col gap-6">

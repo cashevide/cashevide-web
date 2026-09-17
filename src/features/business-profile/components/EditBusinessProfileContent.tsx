@@ -124,11 +124,7 @@ export function EditBusinessProfileContent() {
   if (businessProfile.isLoading) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader
-          title="Edit Business Profile"
-          showBackButton
-          containerVariant="narrow"
-        />
+        <ScreenHeader title="Edit Business Profile" showBackButton />
         <Container variant="narrow">
           <div className="flex flex-1 items-center justify-center">
             <Spinner />
@@ -152,11 +148,7 @@ export function EditBusinessProfileContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader
-        title="Edit Business Profile"
-        showBackButton
-        containerVariant="narrow"
-      />
+      <ScreenHeader title="Edit Business Profile" showBackButton />
 
       <Container variant="narrow" scroll>
         <div className="flex flex-col gap-4 px-6 py-6">

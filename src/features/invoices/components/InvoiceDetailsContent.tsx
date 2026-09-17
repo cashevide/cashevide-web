@@ -21,7 +21,7 @@ import { DonationFlow } from "../../donation/components/DonationFlow";
 function DetailsShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader title="Invoice" showBackButton containerVariant="desktop" />
+      <ScreenHeader title="Invoice" showBackButton />
       <Container variant="desktop" scroll>
         <div className="flex flex-1 flex-col items-center justify-center gap-2 px-6 py-16">
           {children}
@@ -125,7 +125,7 @@ export function InvoiceDetailsContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader showBackButton containerVariant="desktop">
+      <ScreenHeader showBackButton>
         <Text variant="body-lg" className="font-semibold text-2xl truncate">
           {invoice.name || "Untitled Client"}
           <span className="text-muted-foreground">

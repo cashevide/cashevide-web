@@ -71,11 +71,7 @@ export function ProductDetailsContent() {
   if (productDetails.isLoading) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader
-          title="Product"
-          showBackButton
-          containerVariant="desktop"
-        />
+        <ScreenHeader title="Product" showBackButton />
         <Container variant="narrow">
           <div className="flex flex-1 items-center justify-center">
             <Spinner />
@@ -88,11 +84,7 @@ export function ProductDetailsContent() {
   if (productDetails.isError) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader
-          title="Product"
-          showBackButton
-          containerVariant="desktop"
-        />
+        <ScreenHeader title="Product" showBackButton />
         <Container variant="narrow">
           <div className="flex flex-1 flex-col items-center justify-center gap-3">
             <Text variant="body" className="text-muted-foreground">
@@ -130,11 +122,7 @@ export function ProductDetailsContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader
-        title="Product"
-        showBackButton
-        containerVariant="desktop"
-      />
+      <ScreenHeader title="Product" showBackButton />
 
       <Container variant="narrow" scroll>
         <div className="flex flex-col gap-6 px-6 py-6">
@@ -155,9 +143,7 @@ export function ProductDetailsContent() {
             <InfoListRow
               icon={IndianRupee}
               label="Unit Price"
-              value={
-                product?.unit_price ? `₹${product.unit_price}` : undefined
-              }
+              value={product?.unit_price ? `₹${product.unit_price}` : undefined}
               isLast={lastFieldKey === "unit_price"}
             />
           </div>

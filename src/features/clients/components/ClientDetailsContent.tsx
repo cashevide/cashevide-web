@@ -69,7 +69,7 @@ export function ClientDetailsContent() {
   if (clientDetails.isLoading) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader title="Client" showBackButton containerVariant="desktop" />
+        <ScreenHeader title="Client" showBackButton />
         <Container variant="narrow">
           <div className="flex flex-1 items-center justify-center">
             <Spinner />
@@ -82,7 +82,7 @@ export function ClientDetailsContent() {
   if (clientDetails.isError) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader title="Client" showBackButton containerVariant="desktop" />
+        <ScreenHeader title="Client" showBackButton />
         <Container variant="narrow">
           <div className="flex flex-1 flex-col items-center justify-center gap-3">
             <Text variant="body" className="text-muted-foreground">
@@ -123,7 +123,7 @@ export function ClientDetailsContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader title="Client" showBackButton containerVariant="desktop" />
+      <ScreenHeader title="Client" showBackButton />
 
       <Container variant="narrow" scroll>
         <div className="flex flex-col gap-6 px-6 py-6">

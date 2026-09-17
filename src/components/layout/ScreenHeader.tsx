@@ -6,14 +6,6 @@ import { cn } from "../../utils/cn";
 import { Text } from "../ui/Text";
 import { Button } from "../ui/Button";
 
-type ContainerVariant = "narrow" | "desktop" | "full";
-
-const VARIANT_CLASS: Record<ContainerVariant, string> = {
-  narrow: "max-w-narrow",
-  desktop: "max-w-desktop",
-  full: "w-full",
-};
-
 type ScreenHeaderProps = PropsWithChildren<{
   // Simple case — most screens just need a title. For anything more
   // (a logo + credit-points button, a search field, tabs, etc.) pass
@@ -25,19 +17,19 @@ type ScreenHeaderProps = PropsWithChildren<{
   // from navigation state — a tab's own root page never wants one,
   // while a page pushed on top of it always does.
   onBackPress?: () => void;
-  // Must match the Container `variant` used below this header on the
-  // same page (narrow/desktop/full) — keeps the header row's content
-  // aligned to the same max-width + centered column, instead of
-  // stretching edge-to-edge while the page content below sits centered.
-  containerVariant?: ContainerVariant;
   className?: string;
 }>;
+
+// The header row always sits at desktop width, regardless of how
+// narrow the page's own Container is below it — this is a deliberate,
+// fixed choice (not something each screen configures), so there's no
+// per-page value that needs to stay in sync with the Container below.
+const HEADER_WIDTH_CLASS = "max-w-desktop";
 
 export function ScreenHeader({
   title,
   showBackButton = false,
   onBackPress,
-  containerVariant = "full",
   className = "",
   children,
 }: ScreenHeaderProps) {
@@ -54,7 +46,7 @@ export function ScreenHeader({
 
   return (
     <div className={cn("w-full bg-background", className)}>
-      <div className={cn("w-full mx-auto", VARIANT_CLASS[containerVariant])}>
+      <div className={cn("w-full mx-auto", HEADER_WIDTH_CLASS)}>
         <div className="h-20 flex flex-row items-center gap-3 px-6">
           {showBackButton ? (
             <Button

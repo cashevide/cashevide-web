@@ -72,11 +72,7 @@ export function ProductFormContent() {
   if (isEditMode && productDetails.isLoading) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader
-          title="Edit Product"
-          showBackButton
-          containerVariant="desktop"
-        />
+        <ScreenHeader title="Edit Product" showBackButton />
         <Container variant="narrow">
           <div className="flex flex-1 items-center justify-center">
             <Spinner />
@@ -91,7 +87,6 @@ export function ProductFormContent() {
       <ScreenHeader
         title={isEditMode ? "Edit Product" : "Add Product"}
         showBackButton
-        containerVariant="desktop"
       />
 
       <Container variant="narrow" scroll>

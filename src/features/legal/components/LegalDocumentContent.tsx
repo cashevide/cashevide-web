@@ -41,11 +41,7 @@ export function LegalDocumentContent() {
   if (legalDocumentQuery.isLoading) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader
-          showBackButton
-          containerVariant="narrow"
-          onBackPress={handleBack}
-        />
+        <ScreenHeader showBackButton onBackPress={handleBack} />
         <Container variant="narrow">
           <div className="flex flex-1 items-center justify-center">
             <Spinner />
@@ -58,11 +54,7 @@ export function LegalDocumentContent() {
   if (legalDocumentQuery.isError) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader
-          showBackButton
-          containerVariant="narrow"
-          onBackPress={handleBack}
-        />
+        <ScreenHeader showBackButton onBackPress={handleBack} />
         <Container variant="narrow">
           <div className="flex flex-1 flex-col items-center justify-center px-6 gap-6">
             <Text variant="body" className="text-destructive text-center">
@@ -80,11 +72,7 @@ export function LegalDocumentContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader
-        showBackButton
-        containerVariant="narrow"
-        onBackPress={handleBack}
-      />
+      <ScreenHeader showBackButton onBackPress={handleBack} />
 
       <Container variant="narrow" scroll>
         <div className="px-6 py-6 flex flex-col gap-1">

@@ -397,11 +397,7 @@ export function InvoiceEditContent() {
   if (Number.isNaN(id)) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader
-          title="Invoice"
-          showBackButton
-          containerVariant="desktop"
-        />
+        <ScreenHeader title="Invoice" showBackButton />
         <Container variant="desktop">
           <div className="flex flex-1 items-center justify-center">
             <Text variant="body" className="text-muted-foreground">
@@ -416,11 +412,7 @@ export function InvoiceEditContent() {
   if (invoiceDetails.isLoading || !formInitialized) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader
-          title="Edit Invoice"
-          showBackButton
-          containerVariant="desktop"
-        />
+        <ScreenHeader title="Edit Invoice" showBackButton />
         <Container variant="desktop">
           <div className="flex flex-1 items-center justify-center">
             <Spinner />
@@ -433,11 +425,7 @@ export function InvoiceEditContent() {
   if (invoiceDetails.isError || !invoiceDetails.data) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader
-          title="Edit Invoice"
-          showBackButton
-          containerVariant="desktop"
-        />
+        <ScreenHeader title="Edit Invoice" showBackButton />
         <Container variant="desktop">
           <div className="flex flex-1 items-center justify-center">
             <Text variant="body" className="text-muted-foreground">
@@ -451,7 +439,7 @@ export function InvoiceEditContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader showBackButton containerVariant="desktop">
+      <ScreenHeader showBackButton>
         <div className="flex flex-row items-center justify-between">
           <Text variant="body-lg" className="font-semibold text-2xl truncate">
             {invoiceDetails.data.name || "Untitled Client"}

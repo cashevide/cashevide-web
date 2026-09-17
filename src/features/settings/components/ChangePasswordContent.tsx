@@ -36,11 +36,7 @@ export function ChangePasswordContent() {
   if (profileQuery.isLoading) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader
-          title="Change Password"
-          showBackButton
-          containerVariant="narrow"
-        />
+        <ScreenHeader title="Change Password" showBackButton />
         <div className="flex flex-1 items-center justify-center">
           <Spinner />
         </div>
@@ -50,11 +46,7 @@ export function ChangePasswordContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader
-        title="Change Password"
-        showBackButton
-        containerVariant="narrow"
-      />
+      <ScreenHeader title="Change Password" showBackButton />
 
       <Container variant="narrow" scroll>
         <div className="flex flex-1 flex-col justify-center px-6 py-10 gap-8">

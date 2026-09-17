@@ -55,7 +55,7 @@ export function InvoiceDashboardContent() {
           top-level tab, a plain "Dashboard" title matches the standard
           ScreenHeader pattern every other tab page uses (Profile,
           Settings, etc.) — the credit-points badge stays on the right. */}
-      <ScreenHeader containerVariant="desktop">
+      <ScreenHeader>
         <div className="flex flex-row items-center justify-between">
           <Text variant="heading">Dashboard</Text>
 

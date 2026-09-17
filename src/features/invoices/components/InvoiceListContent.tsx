@@ -278,7 +278,7 @@ export function InvoiceListContent() {
     // bounded box to scroll within instead of pushing past this wrapper
     // and forcing the whole page (body) to scroll.
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader containerVariant="desktop">
+      <ScreenHeader>
         <div className="flex flex-row items-center justify-between">
           <Text variant="heading">Invoices</Text>
 
