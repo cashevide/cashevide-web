@@ -10,16 +10,18 @@
 // strings (a whole screen's worth) easy to find and keeps two
 // unrelated features from accidentally colliding on the same key.
 export type ContentKey =
-  // Dashboard — rotating promo card, shown in both modes. Content
-  // differs by mode (professional in normal mode, meme-style in
-  // Malayali Mode); which slides exist and rotate is the same in
-  // both — see DashboardPromoCard.tsx.
+  // Dashboard — three promo cards shown side-by-side (stacked on
+  // mobile). Content differs by mode (professional in normal mode,
+  // meme-style in Malayali Mode) — see DashboardPromoCard.tsx.
   | "dashboard.promoCard.share.title"
   | "dashboard.promoCard.share.body"
   | "dashboard.promoCard.share.button"
   | "dashboard.promoCard.community.title"
   | "dashboard.promoCard.community.body"
   | "dashboard.promoCard.community.button"
+  | "dashboard.promoCard.thirdSlot.title"
+  | "dashboard.promoCard.thirdSlot.body"
+  | "dashboard.promoCard.thirdSlot.button"
 
   // Donation flow — shown right after an invoice is marked PAID.
   // Modal 1: initial prompt. Content differs by mode (playful/personal

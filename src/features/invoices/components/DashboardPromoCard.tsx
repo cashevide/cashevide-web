@@ -1,35 +1,35 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import type { ReactNode } from "react";
+import { Share2, Sparkles } from "lucide-react";
 
 import { useContent } from "../../../content/useContent";
 import { useMalayaliModeStore } from "../../../stores/malayaliModeStore";
 import { Text } from "../../../components/ui/Text";
 import { Button } from "../../../components/ui/Button";
+import { WhatsAppIcon } from "../../../components/ui/WhatsAppIcon";
 
-const ROTATE_INTERVAL_MS = 5000;
+// Public WhatsApp community invite link — same one shared from
+// Settings/wherever else this community is promoted. Update here if
+// the invite link ever changes; nothing else references it directly.
+const WHATSAPP_COMMUNITY_LINK =
+  "https://chat.whatsapp.com/CnulzmDp7YlC0yipL7eFUA";
 
-// Each slide is (title key, body key, button key, action). Adding a
-// new slide is: add its 3 keys to keys.ts + a value in both en.ts and
-// malayali.ts, then add one entry here — the rotation and dot
-// indicators pick it up automatically, nothing else to wire.
-type SlideId = "share" | "community";
+// Three cards, always visible side-by-side (stacked on mobile) — no
+// rotation/carousel. Each card is (title key, body key, button key,
+// icon, action). Adding a fourth is: add its 3 content keys to
+// keys.ts + a value in both en.ts and malayali.ts, then add one entry
+// to CARD_ORDER below and its icon to CARD_ICON — the grid picks it
+// up automatically (Tailwind's md:grid-cols-3 stays correct for any
+// count; only the visual balance would need a look if this grows
+// past 3).
+type CardId = "share" | "community" | "thirdSlot";
 
-const SLIDE_ORDER: SlideId[] = ["share", "community"];
+const CARD_ORDER: CardId[] = ["share", "community", "thirdSlot"];
 
 export function DashboardPromoCard() {
   const t = useContent();
   const isMalayaliMode = useMalayaliModeStore((state) => state.isMalayaliMode);
-  const [slideIndex, setSlideIndex] = useState(0);
   const [justCopied, setJustCopied] = useState(false);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setSlideIndex((prev) => (prev + 1) % SLIDE_ORDER.length);
-    }, ROTATE_INTERVAL_MS);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  const currentSlide = SLIDE_ORDER[slideIndex];
 
   async function handleShare() {
     const shareData = {
@@ -57,67 +57,86 @@ export function DashboardPromoCard() {
   }
 
   function handleJoinCommunity() {
-    // Placeholder — no real community link yet. Wire this up to the
-    // actual WhatsApp/Telegram/Discord invite URL once one exists.
+    window.open(WHATSAPP_COMMUNITY_LINK, "_blank", "noopener,noreferrer");
   }
 
-  const slideContent =
-    currentSlide === "share"
-      ? {
-          title: t("dashboard.promoCard.share.title"),
-          body: t("dashboard.promoCard.share.body"),
-          button: justCopied
-            ? "Copied!"
-            : t("dashboard.promoCard.share.button"),
-          onAction: handleShare,
-        }
-      : {
-          title: t("dashboard.promoCard.community.title"),
-          body: t("dashboard.promoCard.community.body"),
-          button: t("dashboard.promoCard.community.button"),
-          onAction: handleJoinCommunity,
-        };
+  // Placeholder — no real destination/functionality yet for this
+  // slot. Wire it up to whatever this card ends up promoting once
+  // that exists.
+  function handleThirdSlotAction() {}
+
+  const cardContent: Record<
+    CardId,
+    {
+      title: string;
+      body: string;
+      button: string;
+      icon: ReactNode;
+      onAction: () => void;
+    }
+  > = {
+    share: {
+      title: t("dashboard.promoCard.share.title"),
+      body: t("dashboard.promoCard.share.body"),
+      button: justCopied ? "Copied!" : t("dashboard.promoCard.share.button"),
+      icon: <Share2 size={28} className="text-foreground" />,
+      onAction: handleShare,
+    },
+    community: {
+      title: t("dashboard.promoCard.community.title"),
+      body: t("dashboard.promoCard.community.body"),
+      button: t("dashboard.promoCard.community.button"),
+      icon: <WhatsAppIcon size={28} />,
+      onAction: handleJoinCommunity,
+    },
+    thirdSlot: {
+      title: t("dashboard.promoCard.thirdSlot.title"),
+      body: t("dashboard.promoCard.thirdSlot.body"),
+      button: t("dashboard.promoCard.thirdSlot.button"),
+      icon: <Sparkles size={28} className="text-foreground" />,
+      onAction: handleThirdSlotAction,
+    },
+  };
 
   return (
-    <div className="flex flex-col items-center gap-2 rounded-lg border border-border bg-card p-5 text-center">
-      <Text
-        variant="body-lg"
-        className="font-semibold"
-        malayalam={isMalayaliMode}
-      >
-        {slideContent.title}
-      </Text>
-      <Text
-        variant="body-sm"
-        className="text-muted-foreground"
-        malayalam={isMalayaliMode}
-      >
-        {slideContent.body}
-      </Text>
-      <div className="mt-2">
-        <Button
-          variant="primary"
-          title={slideContent.button}
-          onClick={slideContent.onAction}
-          malayalam={isMalayaliMode}
-        />
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {CARD_ORDER.map((cardId) => {
+        const card = cardContent[cardId];
 
-      {/* Dot indicators — purely visual, not clickable. The rotation
-          is time-based only; jumping to a specific slide isn't a
-          need this card has right now. */}
-      <div className="flex flex-row gap-1.5 mt-1">
-        {SLIDE_ORDER.map((slide, index) => (
+        return (
           <div
-            key={slide}
-            className={
-              index === slideIndex
-                ? "h-1.5 w-4 rounded-full bg-primary"
-                : "h-1.5 w-1.5 rounded-full bg-muted"
-            }
-          />
-        ))}
-      </div>
+            key={cardId}
+            className="flex flex-col items-center gap-2 rounded-lg border border-border bg-card p-5 text-center"
+          >
+            <div className="flex items-center justify-center h-12 w-12 rounded-full bg-secondary mb-1">
+              {card.icon}
+            </div>
+
+            <Text
+              variant="body-lg"
+              className="font-semibold"
+              malayalam={isMalayaliMode}
+            >
+              {card.title}
+            </Text>
+            <Text
+              variant="body-sm"
+              className="text-muted-foreground"
+              malayalam={isMalayaliMode}
+            >
+              {card.body}
+            </Text>
+            <div className="mt-2">
+              <Button
+                variant="primary"
+                title={card.button}
+                onClick={card.onAction}
+                malayalam={isMalayaliMode}
+              />
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

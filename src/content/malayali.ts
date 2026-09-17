@@ -12,6 +12,10 @@ export const malayali: Record<ContentKey, string> = {
     "കൂട്ടത്തിൽ കൂടിക്കോ, തനിച്ച് നിക്കണ്ട 😎",
   "dashboard.promoCard.community.button": "Join ചെയ്യ്",
 
+  "dashboard.promoCard.thirdSlot.title": "വരുന്നുണ്ട് മക്കളേ",
+  "dashboard.promoCard.thirdSlot.body": "എന്തോ ഒരു സാധനം ഉണ്ടാക്കുന്നുണ്ട് 😏",
+  "dashboard.promoCard.thirdSlot.button": "കാത്തിരിക്ക്",
+
   "donation.prompt.title": "പൈസ കിട്ടി അല്ലേ! 🎉",
   "donation.prompt.body":
     "നീ കുറേ നേടുന്നുണ്ടല്ലോ... ഒരു ചായക്കാശ് എങ്കിലും താടാ 😏",

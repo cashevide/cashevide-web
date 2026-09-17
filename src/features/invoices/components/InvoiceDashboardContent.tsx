@@ -84,14 +84,17 @@ export function InvoiceDashboardContent() {
             />
           )}
 
-          {/* Rotating promo card — shown in both modes, content/tone
-              differs (professional in normal mode, meme-style in
-              Malayali Mode; see DashboardPromoCard.tsx). Deliberately
-              NOT part of the gap-6 flow above — mt-12 (double the
-              normal 24px rhythm) reads as a clearly separate,
-              secondary section rather than another dashboard detail,
-              so it doesn't compete with the actual revenue/balance
-              numbers for attention. */}
+          {/* Three promo cards, side-by-side on desktop / stacked on
+              mobile (see DashboardPromoCard.tsx). Content/tone differs
+              by mode (professional in normal mode, meme-style in
+              Malayali Mode). Deliberately NOT part of the gap-6 flow
+              above — mt-12 (double the normal 24px rhythm) reads as a
+              clearly separate, secondary section rather than another
+              dashboard detail, so it doesn't compete with the actual
+              revenue/balance numbers for attention. Full container
+              width here (unlike the old single rotating card) since
+              three cards need the room to sit side-by-side instead of
+              being squeezed into a narrow centered column. */}
           {!dashboard.isLoading && !dashboard.isError && (
             <div className="mt-12">
               <DashboardPromoCard />

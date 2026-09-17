@@ -8,10 +8,15 @@ export const en: Record<ContentKey, string> = {
   "dashboard.promoCard.share.body": "Share it with a friend who could use it.",
   "dashboard.promoCard.share.button": "Share App",
 
-  "dashboard.promoCard.community.title": "Join Our Community",
+  "dashboard.promoCard.community.title": "Join Our WhatsApp Community",
   "dashboard.promoCard.community.body":
     "Connect with other freelancers using Cashevide.",
   "dashboard.promoCard.community.button": "Join Now",
+
+  "dashboard.promoCard.thirdSlot.title": "Coming Soon",
+  "dashboard.promoCard.thirdSlot.body":
+    "We're working on something new for you.",
+  "dashboard.promoCard.thirdSlot.button": "Learn More",
 
   "donation.prompt.title": "Invoice marked as paid 🎉",
   "donation.prompt.body":
