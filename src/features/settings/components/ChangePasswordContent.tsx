@@ -36,7 +36,11 @@ export function ChangePasswordContent() {
   if (profileQuery.isLoading) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader title="Change Password" showBackButton />
+        <ScreenHeader
+          title="Change Password"
+          showBackButton
+          showCreditPoints={false}
+        />
         <div className="flex flex-1 items-center justify-center">
           <Spinner />
         </div>
@@ -46,7 +50,11 @@ export function ChangePasswordContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader title="Change Password" showBackButton />
+      <ScreenHeader
+        title="Change Password"
+        showBackButton
+        showCreditPoints={false}
+      />
 
       <Container variant="narrow" scroll>
         <div className="flex flex-1 flex-col justify-center px-6 py-10 gap-8">
@@ -72,7 +80,11 @@ export function ChangePasswordContent() {
               error={errorMessage}
             />
 
-            <div className="flex items-center">
+            {/* justify-center (not items-center, which only controls
+                cross-axis alignment and does nothing for a single
+                child in a row) — this is what actually centers the
+                button horizontally in the row. */}
+            <div className="flex justify-center">
               <Button
                 variant="primary"
                 title={hasPassword ? "Change Password" : "Set Password"}
