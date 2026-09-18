@@ -3,7 +3,12 @@ import { useState } from "react";
 import { useContent } from "../../../content/useContent";
 import { useMalayaliModeStore } from "../../../stores/malayaliModeStore";
 import { useUserProfile } from "../../profile/hooks/useUserProfile";
-import { buildReferralLink } from "../../../utils/referral";
+import {
+  buildReferralClipboardText,
+  buildReferralLink,
+  REFERRAL_SHARE_TEXT,
+  REFERRAL_SHARE_TITLE,
+} from "../../../utils/referral";
 import { Text } from "../../../components/ui/Text";
 import { Button } from "../../../components/ui/Button";
 import { Toast } from "../../../components/ui/Toast";
@@ -14,13 +19,6 @@ import { SupportFlow } from "../../donation/components/SupportFlow";
 // the invite link ever changes; nothing else references it directly.
 const WHATSAPP_COMMUNITY_LINK =
   "https://chat.whatsapp.com/CnulzmDp7YlC0yipL7eFUA";
-
-// Shared between the Web Share API call and the clipboard fallback
-// below — both need the same wording, so it's defined once here
-// rather than risking the two copies drifting apart.
-const SHARE_TITLE = "Cashevide";
-const SHARE_TEXT =
-  "Check out Cashevide — invoicing and payment tracking for freelancers.";
 
 // Three cards, always visible side-by-side (stacked on mobile) — no
 // rotation/carousel, in this fixed display order (Donation first).
@@ -63,8 +61,8 @@ export function DashboardPromoCard() {
     const shareUrl = buildReferralLink(userProfile.data?.referral_code);
 
     const shareData = {
-      title: SHARE_TITLE,
-      text: SHARE_TEXT,
+      title: REFERRAL_SHARE_TITLE,
+      text: REFERRAL_SHARE_TEXT,
       url: shareUrl,
     };
 
@@ -97,7 +95,7 @@ export function DashboardPromoCard() {
     // bare link — clipboard is the fallback path precisely because
     // there's no native share sheet to carry that wording, so it has
     // to be part of what gets copied or it's lost entirely.
-    const clipboardText = `${SHARE_TITLE}\n\n${SHARE_TEXT}\n\n${shareUrl}`;
+    const clipboardText = buildReferralClipboardText(shareUrl);
 
     if (navigator.clipboard) {
       await navigator.clipboard.writeText(clipboardText);
