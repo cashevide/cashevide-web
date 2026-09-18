@@ -41,8 +41,12 @@ export function LegalDocumentContent() {
   if (legalDocumentQuery.isLoading) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader showBackButton onBackPress={handleBack} />
-        <Container variant="narrow">
+        <ScreenHeader
+          showBackButton
+          onBackPress={handleBack}
+          showCreditPoints={false}
+        />
+        <Container variant="desktop">
           <div className="flex flex-1 items-center justify-center">
             <Spinner />
           </div>
@@ -54,8 +58,12 @@ export function LegalDocumentContent() {
   if (legalDocumentQuery.isError) {
     return (
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-        <ScreenHeader showBackButton onBackPress={handleBack} />
-        <Container variant="narrow">
+        <ScreenHeader
+          showBackButton
+          onBackPress={handleBack}
+          showCreditPoints={false}
+        />
+        <Container variant="desktop">
           <div className="flex flex-1 flex-col items-center justify-center px-6 gap-6">
             <Text variant="body" className="text-destructive text-center">
               {notFoundError?.response?.data?.detail ??
@@ -72,10 +80,19 @@ export function LegalDocumentContent() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-background">
-      <ScreenHeader showBackButton onBackPress={handleBack} />
+      <ScreenHeader
+        showBackButton
+        onBackPress={handleBack}
+        showCreditPoints={false}
+      />
 
-      <Container variant="narrow" scroll>
-        <div className="px-6 py-6 flex flex-col gap-1">
+      <Container variant="desktop" scroll>
+        {/* Container is desktop-width (1200px) so the header and this
+            page line up, but that's far too wide for comfortable
+            reading of dense legal text — max-w-[720px] caps just the
+            text column while the outer Container keeps the page's
+            standard desktop width. */}
+        <div className="w-full max-w-[720px] mx-auto px-6 py-6 flex flex-col gap-1">
           <Text variant="heading">
             {document?.document_type === "TERMS"
               ? "Terms and Conditions"
