@@ -100,7 +100,7 @@ export function LegalDocumentContent() {
           </Text>
 
           <Text variant="body-sm" className="text-muted-foreground mb-4">
-            Version {document?.version} — Effective {document?.effective_date}
+            Version {document?.version} - Effective {document?.effective_date}
           </Text>
 
           <MarkdownContent content={document?.content ?? ""} />

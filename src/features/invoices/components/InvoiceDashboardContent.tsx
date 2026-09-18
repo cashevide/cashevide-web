@@ -49,11 +49,9 @@ export function InvoiceDashboardContent() {
     // of Container's flex-1 + overflow-y-auto below getting a real,
     // bounded box to scroll within.
     <div className="flex-1 min-h-0 flex flex-col overflow-hidden bg-background">
-      {/* Deliberate deviation from Expo, which used a Logo here (this
-          screen's own special case). Since Dashboard is now its own
-          top-level tab, a plain "Dashboard" title matches the standard
-          ScreenHeader pattern every other tab page uses (Profile,
-          Settings, etc.) — the credit-points badge stays on the right. */}
+      {/* Plain title, matching the standard ScreenHeader pattern every
+          other tab page uses (Profile, Settings, etc.) — the
+          credit-points badge stays pinned to the right. */}
       <ScreenHeader title="Dashboard" />
 
       <Container variant="desktop" scroll>

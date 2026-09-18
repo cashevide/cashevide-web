@@ -8,6 +8,7 @@ import {
   Scale,
   UserPlus,
   Coffee,
+  Code2,
   type LucideIcon,
 } from "lucide-react";
 
@@ -114,7 +115,10 @@ export function SettingsContent() {
   // Separate card from the core settings menu above — these two rows
   // are "support the app" actions (grow it / fund it), not app
   // configuration, so grouping them with Account/Security/etc. would
-  // mix unrelated categories under one heading.
+  // mix unrelated categories under one heading. "About the Developer"
+  // sits in this card too rather than its own — it's the same kind of
+  // "community/support" row (an external, non-configuration link),
+  // not app configuration either.
   const supportItems: SettingsMenuItem[] = [
     {
       icon: UserPlus,
@@ -125,6 +129,12 @@ export function SettingsContent() {
       icon: Coffee,
       label: "Buy Me a Coffee",
       onClick: () => setIsSupportFlowOpen(true),
+    },
+    {
+      icon: Code2,
+      label: "About the Developer",
+      onClick: () =>
+        window.open("https://noufal.me", "_blank", "noopener,noreferrer"),
     },
   ];
 
