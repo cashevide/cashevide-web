@@ -134,6 +134,11 @@ export function InvoiceEditContent() {
   // editable (the saved record can be missing something this invoice
   // needs) but collapsed behind this toggle by default.
   const [isEditingClientDetails, setIsEditingClientDetails] = useState(false);
+  // A manually-typed client (no catalog record) has no discrete "I
+  // picked something" event to collapse on, unlike selecting from the
+  // list — so it stays expanded until this explicit "Done" is used,
+  // rather than collapsing mid-keystroke the moment a name is typed.
+  const [isClientManuallyDone, setIsClientManuallyDone] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -280,7 +285,28 @@ export function InvoiceEditContent() {
 
   function handleClearClient() {
     setSelectedClientId(null);
+    // Unlike Clear on an item (which keeps the typed title/price so a
+    // catalog item can become a manual one), clearing a client resets
+    // the fields too — the person asked to start over on the client,
+    // not to keep the catalog record's data around as if they'd typed
+    // it themselves.
+    setName("");
+    setEmail("");
+    setPhone("");
+    setAddress("");
+    setIsClientManuallyDone(false);
   }
+
+  // A manual client needs at least a name before "Done" makes sense —
+  // matches handleSubmit's own minimum ("Select an existing client or
+  // enter a client name"). A catalog-selected client always has a
+  // name already, so its own Done (to re-collapse after "Edit
+  // details") isn't gated on this.
+  const hasManualClientMinimum =
+    selectedClientId == null && name.trim().length > 0;
+  const isClientCollapsed =
+    selectedClientId != null ||
+    (hasManualClientMinimum && isClientManuallyDone);
 
   function handleAddItem() {
     setItems((prev) => [...prev, createEmptyItem()]);
@@ -525,17 +551,34 @@ export function InvoiceEditContent() {
                     Client
                   </Text>
 
-                  {selectedClientId != null ? (
-                    <>
-                      <div className="flex flex-row items-center justify-between gap-3 rounded-lg border border-border bg-secondary/30 p-4">
-                        <div className="flex-1 flex flex-col gap-0.5 min-w-0">
-                          <Text
-                            variant="body"
-                            className="font-semibold truncate"
-                          >
-                            {name}
-                          </Text>
-                        </div>
+                  {selectedClientId == null && (
+                    <button
+                      type="button"
+                      onClick={() => setClientPickerVisible(true)}
+                      className="cursor-pointer self-start"
+                    >
+                      <Text variant="body-sm" className="text-link pl-1">
+                        Select from existing clients
+                      </Text>
+                    </button>
+                  )}
+
+                  {isClientCollapsed && !isEditingClientDetails && (
+                    <div className="flex flex-row items-center justify-between gap-3 rounded-lg border border-border bg-secondary/30 p-4">
+                      <div className="flex-1 flex flex-col gap-0.5 min-w-0">
+                        <Text variant="body" className="font-semibold truncate">
+                          {name}
+                        </Text>
+                      </div>
+                      {/* Only clears the catalog link for a client
+                          picked from the list — name/email/phone/
+                          address the person already entered stay put,
+                          so this turns a saved client into a
+                          manually-entered one rather than wiping the
+                          fields. A manual client that reached this
+                          summary via "Done" has no such link to
+                          clear, so it doesn't show this button. */}
+                      {selectedClientId != null && (
                         <button
                           type="button"
                           onClick={handleClearClient}
@@ -548,66 +591,29 @@ export function InvoiceEditContent() {
                             Clear
                           </Text>
                         </button>
-                      </div>
-
-                      {/* Collapsed by default — see InvoiceCreateContent
-                          for why these stay editable rather than
-                          locked or hidden entirely. */}
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setIsEditingClientDetails((prev) => !prev)
-                        }
-                        className="cursor-pointer self-start"
-                      >
-                        <Text variant="body-sm" className="text-link pl-1">
-                          {isEditingClientDetails
-                            ? "Hide details"
-                            : "Edit details"}
-                        </Text>
-                      </button>
-
-                      {isEditingClientDetails && (
-                        <div className="flex flex-col gap-3">
-                          <Input
-                            placeholder="Client name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                          />
-                          <Input
-                            placeholder="Email (optional)"
-                            type="email"
-                            autoCapitalize="none"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                          />
-                          <Input
-                            placeholder="Phone (optional)"
-                            type="tel"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                          />
-                          <Input
-                            placeholder="Address (optional)"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
-                            multiline
-                          />
-                        </div>
                       )}
-                    </>
-                  ) : (
-                    <div className="flex flex-col gap-3">
-                      <button
-                        type="button"
-                        onClick={() => setClientPickerVisible(true)}
-                        className="cursor-pointer self-start"
-                      >
-                        <Text variant="body-sm" className="text-link pl-1">
-                          Select from existing clients
-                        </Text>
-                      </button>
+                    </div>
+                  )}
 
+                  {isClientCollapsed && !isEditingClientDetails && (
+                    <button
+                      type="button"
+                      onClick={() => setIsEditingClientDetails(true)}
+                      className="cursor-pointer self-start"
+                    >
+                      <Text variant="body-sm" className="text-link pl-1">
+                        Edit details
+                      </Text>
+                    </button>
+                  )}
+
+                  {/* Fields show whenever the client isn't in its
+                      collapsed summary state — that's either a manual
+                      entry still being typed in (nothing to summarize
+                      yet), or "Edit details" was tapped on an
+                      already-collapsed row. */}
+                  {(!isClientCollapsed || isEditingClientDetails) && (
+                    <div className="flex flex-col gap-3">
                       <Input
                         placeholder="Client name"
                         value={name}
@@ -632,6 +638,34 @@ export function InvoiceEditContent() {
                         onChange={(e) => setAddress(e.target.value)}
                         multiline
                       />
+
+                      {/* Explicit collapse to re-enter the summary
+                          state. For a manually-typed client (no
+                          catalog link), this only appears once there's
+                          a name to summarize — typing alone doesn't
+                          auto-collapse, so this needs a deliberate
+                          action. For a catalog-selected client
+                          reopened via "Edit details", it's always
+                          available since there's already a full
+                          record to fall back to. */}
+                      {(hasManualClientMinimum || selectedClientId != null) && (
+                        <div className="flex flex-row justify-end">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (selectedClientId == null) {
+                                setIsClientManuallyDone(true);
+                              }
+                              setIsEditingClientDetails(false);
+                            }}
+                            className="cursor-pointer"
+                          >
+                            <Text variant="body-sm" className="text-link pl-1">
+                              Done
+                            </Text>
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
