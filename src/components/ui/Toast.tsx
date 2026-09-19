@@ -5,7 +5,7 @@ interface ToastProps {
   visible: boolean;
 }
 
-// Fixed banner pinned to the top of the viewport, above any open
+// Fixed banner pinned to the bottom of the viewport, above any open
 // Modal (z-[60], Modal itself is z-50) — so it stays visible even if
 // the person dismisses a dialog right after triggering it. Purely
 // presentational: the caller owns the visible state and its timing
@@ -23,7 +23,7 @@ export function Toast({ message, visible }: ToastProps) {
   }
 
   return (
-    <div className="fixed inset-x-0 top-6 z-[60] flex justify-center px-4">
+    <div className="fixed inset-x-0 bottom-6 z-[60] flex justify-center px-4">
       <div className="rounded-full bg-foreground px-4 py-2 shadow-lg">
         <Text variant="body-sm" className="font-medium text-background">
           {message}

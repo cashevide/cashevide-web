@@ -68,6 +68,7 @@ export function CreditPointsDialog({
           text: INVITE_TEXT,
           url: inviteLink,
         });
+        onDismiss();
         return;
       } catch {
         // User cancelled the share sheet, or the browser rejected the
@@ -113,6 +114,7 @@ export function CreditPointsDialog({
 
     setJustCopied(true);
     setTimeout(() => setJustCopied(false), 2000);
+    onDismiss();
   }
 
   return (

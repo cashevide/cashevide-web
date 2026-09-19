@@ -22,6 +22,12 @@ export function SignupEmailContent() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
+  // Mirrors LoginContent/PasswordResetEmailContent's pattern: the
+  // format error only shows once the field has been left (blurred)
+  // with invalid content, not while the person is still typing and
+  // simply paused mid-email — focusing the field again clears it so
+  // resuming typing doesn't leave a stale error sitting there.
+  const [emailTouched, setEmailTouched] = useState(false);
 
   const debouncedEmail = useDebouncedValue(email, 500);
 
@@ -31,6 +37,7 @@ export function SignupEmailContent() {
   const isTypingPending = email !== debouncedEmail;
 
   const showFormatError =
+    emailTouched &&
     !isTypingPending &&
     debouncedEmail.length > 0 &&
     !isDebouncedValidEmailFormat;
@@ -106,6 +113,13 @@ export function SignupEmailContent() {
             <Input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onFocus={() => setEmailTouched(false)}
+              onBlur={() => setEmailTouched(true)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && (isCooldownActive || canContinue)) {
+                  handleContinue();
+                }
+              }}
               placeholder="Email"
               type="email"
               isSuccess={availabilityMessage?.isSuccess}

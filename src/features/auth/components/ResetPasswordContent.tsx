@@ -42,6 +42,11 @@ export function ResetPasswordContent() {
           <Input
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && newPassword.length > 0) {
+                handleResetPassword();
+              }
+            }}
             placeholder="New Password"
             isPassword
             error={errorMessages[0]}

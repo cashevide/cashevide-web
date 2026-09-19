@@ -89,6 +89,11 @@ export function PasswordResetOtpContent() {
             value={otp}
             onChangeText={setOtp}
             error={verifyOtpErrorMessages.length > 0}
+            onEnter={() => {
+              if (isOtpComplete) {
+                handleVerify();
+              }
+            }}
             autoFocus
           />
 

@@ -356,10 +356,10 @@ export function InvoiceCreateContent() {
             </Text>
             <Text
               variant="body-sm"
-              className="text-center text-muted-foreground"
+              className="max-w-sm text-center text-muted-foreground"
             >
               Add your business name, logo, and address before creating an
-              invoice — this information appears on every invoice you send.
+              invoice - this information appears on every invoice you send.
             </Text>
             <div className="mt-2">
               <Button

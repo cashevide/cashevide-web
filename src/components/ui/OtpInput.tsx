@@ -9,6 +9,12 @@ interface OtpInputProps {
   error?: boolean;
   disabled?: boolean;
   autoFocus?: boolean;
+  // Fires on Enter from any digit box — the screens using this always
+  // pair it with an already-disabled Verify button until the code is
+  // complete, so there's no separate "is it complete" check needed
+  // here; the caller's own guard (mirroring the button's disabled
+  // condition) decides whether to actually submit.
+  onEnter?: () => void;
 }
 
 export function OtpInput({
@@ -18,6 +24,7 @@ export function OtpInput({
   error = false,
   disabled = false,
   autoFocus = false,
+  onEnter,
 }: OtpInputProps) {
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
@@ -48,6 +55,10 @@ export function OtpInput({
   function handleKeyDown(index: number, key: string) {
     if (key === "Backspace" && !digits[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
+    }
+
+    if (key === "Enter") {
+      onEnter?.();
     }
   }
 

@@ -75,6 +75,11 @@ export function ChangePasswordContent() {
             <Input
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && canSubmit) {
+                  handleChangePassword();
+                }
+              }}
               placeholder="New Password"
               isPassword
               error={errorMessage}

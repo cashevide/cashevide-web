@@ -97,6 +97,11 @@ export function AccountSetupContent() {
           <Input
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && canSubmit) {
+                handleCreateAccount();
+              }
+            }}
             placeholder="Password"
             isPassword
             error={signupErrorMessages[0]}

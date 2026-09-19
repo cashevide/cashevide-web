@@ -86,6 +86,11 @@ export function PasswordResetEmailContent() {
             onChange={(e) => setEmail(e.target.value)}
             onFocus={() => setEmailTouched(false)}
             onBlur={() => setEmailTouched(true)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleContinue();
+              }
+            }}
             placeholder="Email"
             type="email"
             error={emailError}

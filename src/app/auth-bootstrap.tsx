@@ -2,6 +2,8 @@ import { type PropsWithChildren, useEffect } from "react";
 
 import { refreshTokenApi } from "../features/auth/api/tokenApi";
 import { useAuthStore } from "../stores/authStore";
+import { Logo } from "../components/ui/Logo";
+import { Spinner } from "../components/ui/Spinner";
 
 export function AuthBootstrap({ children }: PropsWithChildren) {
   const isBootstrapping = useAuthStore((state) => state.isBootstrapping);
@@ -42,8 +44,9 @@ export function AuthBootstrap({ children }: PropsWithChildren) {
 
   if (isBootstrapping) {
     return (
-      <div className="flex min-h-svh items-center justify-center">
-        <span className="text-sm">Loading…</span>
+      <div className="flex min-h-svh flex-col items-center justify-center gap-8 bg-background">
+        <Logo width={72} />
+        <Spinner />
       </div>
     );
   }

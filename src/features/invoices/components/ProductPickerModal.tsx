@@ -73,14 +73,15 @@ export function ProductPickerModal({
                 type="button"
                 key={product.slug}
                 onClick={() => handleSelect(product)}
-                className="flex flex-col gap-0.5 bg-card border border-border rounded-lg p-3 text-left cursor-pointer transition-colors duration-200 hover:bg-card/80 hover:border-border/60"
+                className="flex flex-row items-center justify-between gap-3 bg-card border border-border rounded-lg p-3 text-left cursor-pointer transition-colors duration-200 hover:bg-card/80 hover:border-border/60"
               >
-                <Text variant="body-sm" className="font-semibold truncate">
+                <Text variant="body" className="font-semibold truncate min-w-0">
                   {product.title}
                 </Text>
                 <Text
-                  variant="caption"
-                  className="text-muted-foreground truncate"
+                  variant="body-sm"
+                  numeric
+                  className="text-muted-foreground shrink-0"
                 >
                   {product.unit_price}
                 </Text>

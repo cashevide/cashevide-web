@@ -83,6 +83,11 @@ export function GoogleReferralContent() {
               <Input
                 value={referralCode}
                 onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && canContinue) {
+                    handleContinue();
+                  }
+                }}
                 placeholder="Referral Code"
                 isSuccess={referralCheckMessage?.isSuccess}
                 error={

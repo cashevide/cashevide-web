@@ -190,12 +190,7 @@ export function EditBusinessProfileContent() {
             onChange={(e) => setBusinessEmail(e.target.value)}
           />
 
-          <div className="flex flex-col gap-1">
-            <Text variant="body-sm" className="text-muted-foreground">
-              Currency
-            </Text>
-            <CurrencyPicker value={currency} onChange={setCurrency} />
-          </div>
+          <CurrencyPicker value={currency} onChange={setCurrency} />
 
           <Input
             placeholder="Website (optional)"
@@ -203,18 +198,6 @@ export function EditBusinessProfileContent() {
             autoCapitalize="none"
             value={website}
             onChange={(e) => setWebsite(e.target.value)}
-          />
-
-          <Input
-            placeholder="GST Number (optional)"
-            value={gstNumber}
-            onChange={(e) => setGstNumber(e.target.value)}
-          />
-
-          <Input
-            placeholder="VAT Number (optional)"
-            value={vatNumber}
-            onChange={(e) => setVatNumber(e.target.value)}
           />
 
           {errorMessage && (
