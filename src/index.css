@@ -132,6 +132,20 @@ body,
 }
 
 /*
+  Without this, pulling down past the top of the page (or overscrolling
+  the bottom) hands the gesture to the browser, which triggers native
+  pull-to-refresh / rubber-band bounce. That reads as "a website" even
+  inside the installed PWA, since it's the browser engine's own gesture,
+  not something the app controls. Containing it here stops the pull
+  from propagating past our own scroll container, closer to how a
+  native app behaves.
+*/
+html,
+body {
+  overscroll-behavior-y: contain;
+}
+
+/*
   Tailwind v4's Preflight intentionally dropped the `cursor: pointer`
   default on <button> that v3 had (buttons now use the browser's
   native `cursor: default`, per the v4 upgrade guide). Every button
@@ -380,4 +394,21 @@ body {
 
 *::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-muted-foreground);
+}
+
+/*
+  Mobile viewports scroll by touch, not by dragging the bar, so the
+  visual scrollbar only adds clutter there. This hides it below the
+  sm breakpoint (640px) while leaving the styled thin scrollbar above
+  it for mouse/trackpad users. Scrolling itself is untouched — only
+  the bar's rendering is suppressed.
+*/
+@media (max-width: 640px) {
+  * {
+    scrollbar-width: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
+  }
 }
