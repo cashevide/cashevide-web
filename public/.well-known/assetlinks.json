@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.cashevide.app.twa",
+      "sha256_cert_fingerprints": [
+        "77:4F:21:C0:F0:B2:34:2C:8E:88:76:2E:65:36:BF:D9:66:21:E9:62:6A:D8:0A:EE:DB:97:E1:A6:B0:EF:BA:0F"
+      ]
+    }
+  }
+]
