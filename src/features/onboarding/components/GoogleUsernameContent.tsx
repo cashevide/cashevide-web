@@ -96,7 +96,7 @@ export function GoogleUsernameContent() {
           <div className="flex items-center justify-center">
             <Button
               variant="primary"
-              title="Create Google Account"
+              title="Create Account"
               onClick={handleCreateAccount}
               disabled={!isUsernameAvailable}
             />
